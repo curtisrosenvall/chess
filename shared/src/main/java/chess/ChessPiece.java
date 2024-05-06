@@ -1,7 +1,7 @@
 package chess;
 import java.util.ArrayList;
 import java.util.Collection;
-import chess.pieces.PieceMovesCalculator;
+
 
 /**
  * Represents a single chess piece.
@@ -10,7 +10,7 @@ import chess.pieces.PieceMovesCalculator;
 public class ChessPiece {
     protected PieceType type;
     protected ChessGame.TeamColor color;
-    protected PieceMovesCalculator moveCalculator;
+
 
     // Constructor
     public ChessPiece(ChessGame.TeamColor color, PieceType type) {
