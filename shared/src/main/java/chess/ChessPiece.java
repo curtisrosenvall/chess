@@ -1,6 +1,7 @@
 package chess;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 
 /**
@@ -65,7 +66,7 @@ public class ChessPiece {
 
     @Override
     public int hashCode() {
-        return 31 * color.hashCode() + type.hashCode();
+        return Objects.hash(type, color);
     }
 
     @Override

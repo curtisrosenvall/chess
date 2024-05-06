@@ -50,13 +50,31 @@ public class ChessBoard {
     public void resetBoard() {
 
         // Initialize white pieces
-        addPiece(new ChessPosition(0, 0), new Rook(ChessGame.TeamColor.WHITE));
+        addPiece(new ChessPosition(0, 0), new Rook(TeamColor.WHITE));
+        addPiece(new ChessPosition(0, 1), new Knight(TeamColor.WHITE));
+        addPiece(new ChessPosition(0, 2), new Bishop(TeamColor.WHITE));
+        addPiece(new ChessPosition(0, 3), new Queen(TeamColor.WHITE));
+        addPiece(new ChessPosition(0, 4), new King(TeamColor.WHITE));
+        addPiece(new ChessPosition(0, 5), new Bishop(TeamColor.WHITE));
+        addPiece(new ChessPosition(0, 6), new Knight(TeamColor.WHITE));
         addPiece(new ChessPosition(0, 7), new Rook(TeamColor.WHITE));
+        for (int i = 0; i < 8; i++) {
+            addPiece(new ChessPosition(1, i), new Pawn(TeamColor.WHITE));
+        }
 
 
         // Initialize black pieces
         addPiece(new ChessPosition(7, 0), new Rook(TeamColor.BLACK));
+        addPiece(new ChessPosition(7, 1), new Knight(TeamColor.BLACK));
+        addPiece(new ChessPosition(7, 2), new Bishop(TeamColor.BLACK));
+        addPiece(new ChessPosition(7, 3), new Queen(TeamColor.BLACK));
+        addPiece(new ChessPosition(7, 4), new King(TeamColor.BLACK));
+        addPiece(new ChessPosition(7, 5), new Bishop(TeamColor.BLACK));
+        addPiece(new ChessPosition(7, 6), new Knight(TeamColor.BLACK));
         addPiece(new ChessPosition(7, 7), new Rook(TeamColor.BLACK));
+        for (int i = 0; i < 8; i++) {
+            addPiece(new ChessPosition(6, i), new Pawn(TeamColor.BLACK));
+        }
 
     }
 
