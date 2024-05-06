@@ -1,21 +1,22 @@
 package chess;
-import chess.pieces.PawnMovement;
-import chess.pieces.PieceMovement;
 import java.util.ArrayList;
 import java.util.Collection;
+import chess.pieces.PieceMovesCalculator;
 
 /**
  * Represents a single chess piece.
  * Note: You can add to this class, but you may not alter the signature of the existing methods.
  */
 public class ChessPiece {
-    private ChessGame.TeamColor teamColor;
-    private PieceType type;
+    protected PieceType type;
+    protected ChessGame.TeamColor color;
+    protected PieceMovesCalculator moveCalculator;
 
     // Constructor
-    public ChessPiece(ChessGame.TeamColor pieceColor, PieceType type) {
+    public ChessPiece(ChessGame.TeamColor color, PieceType type) {
         this.type = type;
-        this.teamColor = getTeamColor();
+        this.color = color;
+
     }
 
 
@@ -29,11 +30,12 @@ public class ChessPiece {
 
 
 
+
     /**
      * Returns the team color of this chess piece.
      */
     public ChessGame.TeamColor getTeamColor() {
-        return teamColor;
+        return color;
     }
 
     /**
@@ -49,8 +51,28 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
         return new ArrayList<>();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return type == that.type && color == that.color;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * color.hashCode() + type.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "ChessPiece{" +
+                "type=" + type +
+                ", color=" + color +
+                '}';
     }
 }

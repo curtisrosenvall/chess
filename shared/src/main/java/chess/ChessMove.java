@@ -1,45 +1,49 @@
 package chess;
 
-/**
- * Represents moving a chess piece on a chessboard
- * <p>
- * Note: You can add to this class, but you may not alter
- * signature of the existing methods.
- */
+import java.util.Objects;
+
 public class ChessMove {
-    private ChessPosition startPosition;
-    private ChessPosition endPosition;
-    private ChessPiece.PieceType promotionPiece;
+    private ChessPosition start;
+    private ChessPosition end;
+    private ChessPiece.PieceType pieceType;  // Add piece type
 
-    public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
-                     ChessPiece.PieceType promotionPiece) {
-        this.startPosition = startPosition;
-        this.endPosition = endPosition;
-        this.promotionPiece = promotionPiece;
-
+    public ChessMove(ChessPosition start, ChessPosition end, ChessPiece.PieceType pieceType) {
+        this.start = start;
+        this.end = end;
+        this.pieceType = pieceType;  // Store the piece type
     }
 
-    /**
-     * @return ChessPosition of starting location
-     */
-    public ChessPosition getStartPosition() {
-        return startPosition;
+    public ChessPosition getStart() {
+        return start;
     }
 
-    /**
-     * @return ChessPosition of ending location
-     */
-    public ChessPosition getEndPosition() {
-       return endPosition;
+    public ChessPosition getEnd() {
+        return end;
     }
 
-    /**
-     * Gets the type of piece to promote a pawn to if pawn promotion is part of this
-     * chess move
-     *
-     * @return Type of piece to promote a pawn to, or null if no promotion
-     */
-    public ChessPiece.PieceType getPromotionPiece() {
-        return promotionPiece;
+    public ChessPiece.PieceType getPieceType() {
+        return pieceType;  // Getter for piece type
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessMove chessMove = (ChessMove) o;
+        return Objects.equals(start, chessMove.start) && Objects.equals(end, chessMove.end) && pieceType == chessMove.pieceType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, end, pieceType);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessMove{" +
+                "start=" + start +
+                ", end=" + end +
+                ", pieceType=" + pieceType +
+                '}';
     }
 }

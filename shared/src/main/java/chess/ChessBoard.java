@@ -1,4 +1,6 @@
 package chess;
+import chess.ChessGame.TeamColor;
+import chess.pieces.*;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -21,7 +23,6 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-
         squares[position.getRow()][position.getColumn()] = piece;
     }
 
@@ -33,42 +34,32 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-
         return squares[position.getRow()][position.getColumn()];
     }
+
+    // Checks if the position is within the board limits
+    public boolean isPositionValid(ChessPosition position) {
+        return position.getRow() >= 0 && position.getRow() < 8 &&
+                position.getColumn() >= 0 && position.getColumn() < 8;
+    }
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        // Clear the board
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                squares[i][j] = null;
-            }
-        }
 
-        // Setup pawns
-        for (int i = 0; i < 8; i++) {
-            addPiece(new ChessPosition(2, i + 1), new ChessPiece(ChessPiece.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
-            addPiece(new ChessPosition(7, i + 1), new ChessPiece(ChessPiece.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
-        }
+        // Initialize white pieces
+        addPiece(new ChessPosition(0, 0), new Rook(ChessGame.TeamColor.WHITE));
+        addPiece(new ChessPosition(0, 7), new Rook(TeamColor.WHITE));
 
-        // Setup other pieces
-        TeamColor[] colors = {ChessGame.TeamColor.WHITE, ChessGame.TeamColor.BLACK};
-        int[] rows = {1, 8};
-        for (int colorIndex = 0; colorIndex < colors.length; colorIndex++) {
-            TeamColor color = colors[colorIndex];
-            int row = rows[colorIndex];
-            addPiece(new ChessPosition(row, 1), new ChessPiece(color, ChessPiece.PieceType.ROOK));
-            addPiece(new ChessPosition(row, 8), new ChessPiece(color, ChessPiece.PieceType.ROOK));
-            addPiece(new ChessPosition(row, 2), new ChessPiece(color, ChessPiece.PieceType.KNIGHT));
-            addPiece(new ChessPosition(row, 7), new ChessPiece(color, ChessPiece.PieceType.KNIGHT));
-            addPiece(new ChessPosition(row, 3), new ChessPiece(color, ChessPiece.PieceType.BISHOP));
-            addPiece(new ChessPosition(row, 6), new ChessPiece(color, ChessPiece.PieceType.BISHOP));
-            addPiece(new ChessPosition(row, 4), new ChessPiece(color, ChessPiece.PieceType.QUEEN));
-            addPiece(new ChessPosition(row, 5), new ChessPiece(color, ChessPiece.PieceType.KING));
-        }
+
+        // Initialize black pieces
+        addPiece(new ChessPosition(7, 0), new Rook(TeamColor.BLACK));
+        addPiece(new ChessPosition(7, 7), new Rook(TeamColor.BLACK));
+
     }
+
+
 
 }
