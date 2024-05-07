@@ -9,14 +9,14 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter the signature of the existing methods.
  */
 public class ChessPiece {
-    protected PieceType type;
-    protected ChessGame.TeamColor color;
+    protected ChessGame.TeamColor pieceColor;
+    protected ChessPiece.PieceType type;
 
 
     // Constructor
-    public ChessPiece(ChessGame.TeamColor color, PieceType type) {
+    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+        this.pieceColor = pieceColor;
         this.type = type;
-        this.color = color;
 
     }
 
@@ -36,7 +36,7 @@ public class ChessPiece {
      * Returns the team color of this chess piece.
      */
     public ChessGame.TeamColor getTeamColor() {
-        return color;
+        return pieceColor;
     }
 
     /**
@@ -53,12 +53,30 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-        Collection<ChessMove> moves = new ArrayList<>();
+        Collection<ChessMove> validMoves;
 
+        ChessPiece piece = board.getPiece(position);
+
+        if(piece.getPieceType() == PieceType.KING) {
+            kingMovesCalculator kingMoves = new KingMovesCalculator(board, position);
+            validmoves = kingMoves.getKingMoves();
+        } else if (piece.getPieceType() == PieceType.QUEEN) {
+            queenMovesCalculator queenMoves = new QueenMovesCalculator(board, position);
+        } else if (piece.getPieceType() == PieceType.BISHOP) {
+            bishopMovesCalculator bishopMoves = new BishopMovesCalculator(board, position);
+        } else if (piece.getPieceType() == PieceType.KNIGHT) {
+            knightMovesCalculator knightMoves = new KnightMovesCalculator(board,position);
+        } else if (piece.getPieceType() == PieceType.ROOK) {
+            rookMovesCalculator rookMoves = new RookMovesCalculator(board,position);
+        }else if(piece.getPieceType() == PieceType.PAWN) {
+            pawnMovesCalculator pawnMoves = new PawnMovesCalculator(board,position);
+        }else {
+            validMoves = null;
+        }
         // Implement the logic to calculate valid moves based on the specific piece type
         // Each chess piece has its own movement rules
 
-        return moves;
+        return validmoves;
     }
 
 
@@ -67,19 +85,19 @@ public class ChessPiece {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChessPiece that = (ChessPiece) o;
-        return type == that.type && color == that.color;
+        return type == that.type && pieceColor == that.pieceColor;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, color);
+        return Objects.hash(type, pieceColor);
     }
 
     @Override
     public String toString() {
         return "ChessPiece{" +
                 "type=" + type +
-                ", color=" + color +
+                ", color=" + pieceColor +
                 '}';
     }
 }
