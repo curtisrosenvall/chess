@@ -12,6 +12,8 @@ import static passoff.chess.TestUtilities.validateMoves;
 
 public class PawnMoveTests {
 
+
+
     @Test
     public void pawnMiddleOfBoardWhite() {
         validateMoves("""

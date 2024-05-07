@@ -43,7 +43,7 @@ public class ChessPiece {
      * Returns the type of this chess piece.
      */
     public PieceType getPieceType() {
-        return type;
+      return type;
     }
 
     /**
@@ -53,8 +53,14 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
-        return new ArrayList<>();
+        Collection<ChessMove> moves = new ArrayList<>();
+
+        // Implement the logic to calculate valid moves based on the specific piece type
+        // Each chess piece has its own movement rules
+
+        return moves;
     }
+
 
     @Override
     public boolean equals(Object o) {

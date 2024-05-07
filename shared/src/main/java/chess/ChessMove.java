@@ -1,16 +1,17 @@
 package chess;
-
+import chess.ChessPiece.PieceType;
 import java.util.Objects;
 
 public class ChessMove {
     private ChessPosition start;
     private ChessPosition end;
-    private ChessPiece.PieceType pieceType;  // Add piece type
+    private PieceType pieceType;
 
-    public ChessMove(ChessPosition start, ChessPosition end, ChessPiece.PieceType pieceType) {
+
+    public ChessMove(ChessPosition start, ChessPosition end, PieceType pieceType) {
         this.start = start;
         this.end = end;
-        this.pieceType = pieceType;  // Store the piece type
+        this.pieceType = pieceType;
     }
 
     public ChessPosition getStart() {
@@ -21,8 +22,13 @@ public class ChessMove {
         return end;
     }
 
-    public ChessPiece.PieceType getPieceType() {
-        return pieceType;  // Getter for piece type
+
+    @Override
+    public String toString() {
+        return "ChessMove{" +
+                "start=" + start +
+                ", end=" + end +
+                '}';
     }
 
     @Override
@@ -33,17 +39,9 @@ public class ChessMove {
         return Objects.equals(start, chessMove.start) && Objects.equals(end, chessMove.end) && pieceType == chessMove.pieceType;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(start, end, pieceType);
-    }
 
     @Override
-    public String toString() {
-        return "ChessMove{" +
-                "start=" + start +
-                ", end=" + end +
-                ", pieceType=" + pieceType +
-                '}';
+    public int hashCode() {
+        return Objects.hash(start, end);
     }
 }
