@@ -1,6 +1,7 @@
 package chess;
-import chess.ChessGame.TeamColor;
-import chess.pieces.*;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -44,36 +45,54 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+        ChessPiece.PieceType queen = ChessPiece.PieceType.QUEEN;
+        ChessPiece.PieceType rook = ChessPiece.PieceType.ROOK;
+        ChessPiece.PieceType knight = ChessPiece.PieceType.KNIGHT;
+        ChessPiece.PieceType king = ChessPiece.PieceType.KING;
+        ChessPiece.PieceType pawn = ChessPiece.PieceType.PAWN;
+        ChessPiece.PieceType bishop = ChessPiece.PieceType.BISHOP;
 
-        // Initialize white pieces
-        addPiece(new ChessPosition(0, 0), new Rook(TeamColor.WHITE));
-        addPiece(new ChessPosition(0, 1), new Knight(TeamColor.WHITE));
-        addPiece(new ChessPosition(0, 2), new Bishop(TeamColor.WHITE));
-        addPiece(new ChessPosition(0, 3), new Queen(TeamColor.WHITE));
-        addPiece(new ChessPosition(0, 4), new King(TeamColor.WHITE));
-        addPiece(new ChessPosition(0, 5), new Bishop(TeamColor.WHITE));
-        addPiece(new ChessPosition(0, 6), new Knight(TeamColor.WHITE));
-        addPiece(new ChessPosition(0, 7), new Rook(TeamColor.WHITE));
-        for (int i = 0; i < 8; i++) {
-            addPiece(new ChessPosition(1, i), new Pawn(TeamColor.WHITE));
+        ChessGame.TeamColor white = ChessGame.TeamColor.WHITE;
+        ChessGame.TeamColor black = ChessGame.TeamColor.BLACK;
+
+        addPiece( new ChessPosition(1,1), new ChessPiece(white, rook));
+        addPiece( new ChessPosition(1,2), new ChessPiece(white, knight));
+        addPiece( new ChessPosition(1,3), new ChessPiece(white, bishop));
+        addPiece( new ChessPosition(1,4), new ChessPiece(white, queen));
+        addPiece( new ChessPosition(1,5), new ChessPiece(white, king));
+        addPiece( new ChessPosition(1,6), new ChessPiece(white, bishop));
+        addPiece( new ChessPosition(1,7), new ChessPiece(white, knight));
+        addPiece( new ChessPosition(1,8), new ChessPiece(white, rook));
+
+        for(int i = 1; i <= 8; i++) {
+            addPiece( new ChessPosition(2,i), new ChessPiece(white, pawn));
         }
 
+        addPiece( new ChessPosition(8,1), new ChessPiece(black, rook));
+        addPiece( new ChessPosition(8,2), new ChessPiece(black, knight));
+        addPiece( new ChessPosition(8,3), new ChessPiece(black, bishop));
+        addPiece( new ChessPosition(8,4), new ChessPiece(black, queen));
+        addPiece( new ChessPosition(8,5), new ChessPiece(black, king));
+        addPiece( new ChessPosition(8,6), new ChessPiece(black, bishop));
+        addPiece( new ChessPosition(8,7), new ChessPiece(black, knight));
+        addPiece( new ChessPosition(8,8), new ChessPiece(black, rook));
 
-        // Initialize black pieces
-        addPiece(new ChessPosition(7, 0), new Rook(TeamColor.BLACK));
-        addPiece(new ChessPosition(7, 1), new Knight(TeamColor.BLACK));
-        addPiece(new ChessPosition(7, 2), new Bishop(TeamColor.BLACK));
-        addPiece(new ChessPosition(7, 3), new Queen(TeamColor.BLACK));
-        addPiece(new ChessPosition(7, 4), new King(TeamColor.BLACK));
-        addPiece(new ChessPosition(7, 5), new Bishop(TeamColor.BLACK));
-        addPiece(new ChessPosition(7, 6), new Knight(TeamColor.BLACK));
-        addPiece(new ChessPosition(7, 7), new Rook(TeamColor.BLACK));
-        for (int i = 0; i < 8; i++) {
-            addPiece(new ChessPosition(6, i), new Pawn(TeamColor.BLACK));
+        for(int i = 1; i <= 8; i++) {
+            addPiece( new ChessPosition(7,i), new ChessPiece(black, pawn));
         }
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessBoard that = (ChessBoard) o;
+        return Objects.deepEquals(squares, that.squares);
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(squares);
+    }
 }
