@@ -7,51 +7,51 @@ public class KingMovesCalculator {
 
     Collection<ChessMove> ValidMovesCalculator;
 
-    public KingMovesCalculator(ChessBoard board, ChessPosition position) {
+    public KingMovesCalculator(ChessBoard board, ChessPosition startPosition) {
 
         ValidMovesCalculator = new ArrayList<>();
-        ValidMovesCalculator testMove = new ValidMovesCalculator();
+        ValidMovesCalculator validMove = new ValidMovesCalculator();
 
         //^
-        ChessPosition endPosition = new ChessPosition(position.getRow() + 1, position.getColumn());
+        ChessPosition endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn());
         if(endPosition.getRow() <= 8)
-            testMove.movePiece(ValidMovesCalculator, board, position, endPosition);
+            validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
 
 
         //->
-        endPosition = new ChessPosition(position.getRow(), position.getColumn() + 1);
+        endPosition = new ChessPosition(startPosition.getRow(), startPosition.getColumn() + 1);
         if(endPosition.getColumn() <=8)
-            testMove.movePiece(ValidMovesCalculator, board, position, endPosition);
+            validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
 
         //<
-        endPosition = new ChessPosition(position.getRow(), position.getColumn() - 1);
+        endPosition = new ChessPosition(startPosition.getRow(), startPosition.getColumn() - 1);
         if(endPosition.getColumn() >= 1)
-            testMove.movePiece(ValidMovesCalculator, board, position, endPosition);
+            validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
 
         //D ->
-        endPosition = new ChessPosition(position.getRow() - 1, position.getColumn() + 1);
+        endPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn() + 1);
         if((endPosition.getRow() >= 1) && (endPosition.getColumn() <= 8))
-            testMove.movePiece(ValidMovesCalculator, board, position, endPosition);
+            validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
 
         //^ ->
-        endPosition = new ChessPosition(position.getRow() + 1, position.getColumn() + 1);
+        endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() + 1);
         if((endPosition.getRow() <= 8) && (endPosition.getColumn() >= 1))
-            testMove.movePiece(ValidMovesCalculator, board, position, endPosition);
+            validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
 
         //^ <-
-        endPosition = new ChessPosition(position.getRow() + 1, position.getColumn() - 1);
+        endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() - 1);
         if((endPosition.getRow() <= 8) && (endPosition.getColumn() >= 1))
-            testMove.movePiece(ValidMovesCalculator, board, position, endPosition);
+            validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
 
         //D
-        endPosition = new ChessPosition(position.getRow() - 1, position.getColumn());
+        endPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());
         if(endPosition.getRow() >= 1)
-            testMove.movePiece(ValidMovesCalculator, board, position, endPosition);
+            validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
 
         //D <-
-        endPosition = new ChessPosition(position.getRow() - 1, position.getColumn() - 1);
+        endPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn() - 1);
         if((endPosition.getRow() >= 1) && (endPosition.getColumn() >= 1))
-            testMove.movePiece(ValidMovesCalculator, board, position, endPosition);
+            validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
 
 
 

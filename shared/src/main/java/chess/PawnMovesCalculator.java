@@ -11,33 +11,33 @@ public class PawnMovesCalculator {
 
         ValidMovesCalculator = new ArrayList<>();
         ChessGame.TeamColor pieceColor = board.getPiece(startPosition).getTeamColor();
-        boolean valid = true;
+        boolean validPosition = true;
 
 
         if(pieceColor == ChessGame.TeamColor.WHITE) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn());
-            valid = pawnTest(board, startPosition, endPosition);
-            if((startPosition.getRow() == 2) && valid) {
+            validPosition = pawnTest(board, startPosition, endPosition);
+            if((startPosition.getRow() == 2) && validPosition) {
                 endPosition = new ChessPosition(startPosition.getRow() + 2, startPosition.getColumn());
-                valid = pawnTest(board, startPosition, endPosition);
+                validPosition = pawnTest(board, startPosition, endPosition);
             }
             endPosition  = new ChessPosition( startPosition.getRow() + 1, startPosition.getColumn() - 1);
-            valid = pawnCapture(board, startPosition, endPosition);
+            validPosition = pawnCapture(board, startPosition, endPosition);
             endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() + 1);
-            valid = pawnCapture(board, startPosition, endPosition);
+            validPosition = pawnCapture(board, startPosition, endPosition);
         }
 
         else if (pieceColor == ChessGame.TeamColor.BLACK) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());
-            valid = pawnTest(board, startPosition, endPosition);
-            if((startPosition.getRow() == 7) && valid) {
+            validPosition = pawnTest(board, startPosition, endPosition);
+            if((startPosition.getRow() == 7) && validPosition) {
                 endPosition = new ChessPosition(startPosition.getRow() - 2, startPosition.getColumn());
-                valid = pawnTest(board, startPosition, endPosition);
+                validPosition = pawnTest(board, startPosition, endPosition);
             }
             endPosition  = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn() - 1);
-            valid = pawnCapture(board, startPosition, endPosition);
+            validPosition = pawnCapture(board, startPosition, endPosition);
             endPosition = new ChessPosition( startPosition.getRow() - 1, startPosition.getColumn() + 1);
-            valid = pawnCapture(board, startPosition, endPosition);
+            validPosition = pawnCapture(board, startPosition, endPosition);
         } else {
             ValidMovesCalculator = null;
         }

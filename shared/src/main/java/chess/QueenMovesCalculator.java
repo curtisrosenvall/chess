@@ -10,43 +10,43 @@ public class QueenMovesCalculator {
     public QueenMovesCalculator(ChessBoard board, ChessPosition startPosition) {
 
         ValidMovesCalculator = new ArrayList<>();
-        ValidMovesCalculator testMove = new ValidMovesCalculator();
+        ValidMovesCalculator validMove = new ValidMovesCalculator();
 
         //^
-        boolean valid = true;
+        boolean validPosition = true;
         int i = 1;
-        while(valid) {
+        while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn());
             if (endPosition.getRow() > 8) {
-                valid = false;
+                validPosition = false;
             } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
+                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
             }
             i++;
         }
 
         //->
-        valid = true;
+        validPosition = true;
         i = 1;
-        while(valid) {
+        while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow(), startPosition.getColumn() + i);
             if (endPosition.getColumn() > 8) {
-                valid = false;
+                validPosition = false;
             } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
+                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
             }
             i++;
         }
 
         //^ ->
-        valid = true;
+        validPosition = true;
         i = 1;
-        while(valid) {
+        while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() + i);
             if ((endPosition.getRow() > 8) || (endPosition.getColumn() > 8)) {
-                valid = false;
+                validPosition = false;
             } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
+                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
             }
             i++;
         }
@@ -54,66 +54,66 @@ public class QueenMovesCalculator {
 
 
         //D ->
-        valid = true;
+        validPosition = true;
         i = 1;
-        while(valid) {
+        while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() + i);
             if ((endPosition.getRow() < 1) || (endPosition.getColumn() > 8)) {
-                valid = false;
+                validPosition = false;
             } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
+                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
             }
             i++;
         }
 
         //^ ->
-        valid = true;
+        validPosition = true;
         i = 1;
-        while(valid) {
+        while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() - i);
             if((endPosition.getRow() > 8) || (endPosition.getColumn() < 1)) {
-                valid = false;
+                validPosition = false;
             } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
+                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
             }
             i++;
         }
 
         //D
-        valid = true;
+        validPosition = true;
         i = 1;
-        while(valid) {
+        while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn());
             if (endPosition.getRow() < 1) {
-                valid = false;
+                validPosition = false;
             } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
+                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
             }
             i++;
         }
 
         //D <-
-        valid = true;
+        validPosition = true;
         i = 1;
-        while(valid) {
+        while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() - i);
             if ((endPosition.getRow() < 1) || (endPosition.getColumn() < 1)) {
-                valid = false;
+                validPosition = false;
             } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
+                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
             }
             i++;
         }
 
         //<-
-        valid = true;
+        validPosition = true;
         i = 1;
-        while(valid) {
+        while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow(), startPosition.getColumn() - i);
             if(endPosition.getColumn() < 1) {
-                valid = false;
+                validPosition = false;
             } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
+                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
             }
             i++;
         }
