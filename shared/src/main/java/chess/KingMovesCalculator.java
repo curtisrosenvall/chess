@@ -17,7 +17,7 @@ public class KingMovesCalculator {
         if(testPosition.getRow() <= 8)
             testClass.testMove(ValidMovesCalculator, board, position, testPosition);
 
-        
+
         //->
         testPosition = new ChessPosition(position.getRow(), position.getColumn() + 1);
         if(testPosition.getColumn() <=8)

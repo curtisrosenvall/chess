@@ -62,6 +62,12 @@ public class ChessPiece {
         } else if (piece.getPieceType() == PieceType.KING) {
             KingMovesCalculator king = new KingMovesCalculator(board, position);
             validMoves = king.getKingMoves();
+        }  else if (piece.getPieceType() == PieceType.BISHOP) {
+            BishopMovesCalculator bishop = new BishopMovesCalculator(board, position);
+            validMoves = bishop.getBishopMoves();
+        }  else if (piece.getPieceType() == PieceType.PAWN) {
+                PawnMovesCalculator pawn = new PawnMovesCalculator(board, position);
+                validMoves = pawn.getPawnMoves();
         }else {
             validMoves = null;
         }

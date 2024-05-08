@@ -10,10 +10,6 @@ public class ValidMovesCalculator {
 
     }
 
-    /*public Collection<ChessMove> getValidMoves() {
-        return validMoves;
-    }*/
-
     public boolean testMove(Collection<ChessMove> validMovesCalculator, ChessBoard board, ChessPosition startPos, ChessPosition testPosition) {
         if(board.getPiece(testPosition) == null) {
             addNewMove(validMovesCalculator, startPos, testPosition);
