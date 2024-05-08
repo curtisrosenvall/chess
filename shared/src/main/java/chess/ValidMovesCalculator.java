@@ -1,17 +1,33 @@
 package chess;
 
 import java.util.Collection;
-import java.util.ArrayList;
 
 public class ValidMovesCalculator {
 
-    private Collection<ChessMove> validMoves;
+    private Collection<ChessMove>  ValidMovesCalculator;
 
     public ValidMovesCalculator() {
 
     }
-    public void addNewMove(Collection<ChessMove> validMoves, ChessPosition startPosistion, ChessPosition endPosistion) {
-        ChessMove newMove = new ChessMove(startPosistion, endPosistion, null);
+
+    /*public Collection<ChessMove> getValidMoves() {
+        return validMoves;
+    }*/
+
+    public boolean testMove(Collection<ChessMove> validMovesCalculator, ChessBoard board, ChessPosition startPos, ChessPosition testPosition) {
+        if(board.getPiece(testPosition) == null) {
+            addNewMove(validMovesCalculator, startPos, testPosition);
+            return true;
+        } else if (board.getPiece(testPosition).getTeamColor() == board.getPiece(startPos).getTeamColor()) {
+            return false;
+        } else {
+            addNewMove(validMovesCalculator, startPos, testPosition);
+            return false;
+        }
+    }
+
+    public void addNewMove(Collection<ChessMove> validMoves, ChessPosition curPos, ChessPosition newPos) {
+        ChessMove newMove = new ChessMove(curPos, newPos, null);
         validMoves.add(newMove);
     }
 }
