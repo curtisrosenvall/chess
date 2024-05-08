@@ -4,20 +4,19 @@ import java.util.Collection;
 
 public class ValidMovesCalculator {
 
-    private Collection<ChessMove>  ValidMovesCalculator;
 
     public ValidMovesCalculator() {
 
     }
 
-    public boolean testMove(Collection<ChessMove> validMovesCalculator, ChessBoard board, ChessPosition startPos, ChessPosition testPosition) {
-        if(board.getPiece(testPosition) == null) {
-            addNewMove(validMovesCalculator, startPos, testPosition);
+    public boolean movePiece(Collection<ChessMove> validMovesCalculator, ChessBoard board, ChessPosition startPos, ChessPosition endPosition) {
+        if(board.getPiece(endPosition) == null) {
+            addNewMove(validMovesCalculator, startPos, endPosition);
             return true;
-        } else if (board.getPiece(testPosition).getTeamColor() == board.getPiece(startPos).getTeamColor()) {
+        } else if (board.getPiece(endPosition).getTeamColor() == board.getPiece(startPos).getTeamColor()) {
             return false;
         } else {
-            addNewMove(validMovesCalculator, startPos, testPosition);
+            addNewMove(validMovesCalculator, startPos, endPosition);
             return false;
         }
     }

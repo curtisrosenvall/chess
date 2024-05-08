@@ -11,7 +11,7 @@ public class BishopMovesCalculator {
     public BishopMovesCalculator(ChessBoard board, ChessPosition position) {
 
         ValidMovesCalculator = new ArrayList<>();
-        ValidMovesCalculator testClass = new ValidMovesCalculator();
+        ValidMovesCalculator testMove = new ValidMovesCalculator();
 
         //^ ->
         boolean valid = true;
@@ -21,7 +21,7 @@ public class BishopMovesCalculator {
             if ((nextPosition.getRow() > 8) || (nextPosition.getColumn() > 8)) {
                 valid = false;
             } else {
-                valid = testClass.testMove(ValidMovesCalculator, board, position, nextPosition);
+                valid = testMove.movePiece(ValidMovesCalculator, board, position, nextPosition);
             }
             i++;
         }
@@ -34,7 +34,7 @@ public class BishopMovesCalculator {
             if ((nextPosition.getRow() > 8) || (nextPosition.getColumn() < 1)) {
                 valid = false;
             } else {
-                valid = testClass.testMove(ValidMovesCalculator, board, position, nextPosition);
+                valid = testMove.movePiece(ValidMovesCalculator, board, position, nextPosition);
             }
             i++;
         }
@@ -47,7 +47,7 @@ public class BishopMovesCalculator {
             if ((nextPosition.getRow() < 1) || (nextPosition.getColumn() < 1)) {
                 valid = false;
             } else {
-                valid = testClass.testMove(ValidMovesCalculator, board, position, nextPosition);
+                valid = testMove.movePiece(ValidMovesCalculator, board, position, nextPosition);
             }
             i++;
         }
@@ -60,7 +60,7 @@ public class BishopMovesCalculator {
             if ((nextPosition.getRow() < 1) || (nextPosition.getColumn() > 8)) {
                 valid = false;
             } else {
-                valid = testClass.testMove(ValidMovesCalculator, board, position, nextPosition);
+                valid = testMove.movePiece(ValidMovesCalculator, board, position, nextPosition);
             }
             i++;
         }
