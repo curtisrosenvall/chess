@@ -49,35 +49,34 @@ public class ChessPiece {
      * Does not take into account moves that are illegal due to leaving the king in
      * danger
      *
-     * @return Collection of valid moves
-     */
+     * @return Collection of valid moves*/
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
 
-        Collection<ChessMove> validMoves;
+        Collection<ChessMove> ValidMovesCalculator;
         ChessPiece piece = board.getPiece(position);
 
         if (piece.getPieceType() == PieceType.KNIGHT) {
             KnightMovesCalculator knight = new KnightMovesCalculator(board, position);
-            validMoves = knight.getKnightMoves();
+            ValidMovesCalculator = knight.getKnightMoves();
         } else if (piece.getPieceType() == PieceType.KING) {
             KingMovesCalculator king = new KingMovesCalculator(board, position);
-            validMoves = king.getKingMoves();
+            ValidMovesCalculator = king.getKingMoves();
         }  else if (piece.getPieceType() == PieceType.BISHOP) {
             BishopMovesCalculator bishop = new BishopMovesCalculator(board, position);
-            validMoves = bishop.getBishopMoves();
+            ValidMovesCalculator = bishop.getBishopMoves();
         }  else if (piece.getPieceType() == PieceType.PAWN) {
             PawnMovesCalculator pawn = new PawnMovesCalculator(board, position);
-            validMoves = pawn.getPawnMoves();
+            ValidMovesCalculator = pawn.getPawnMoves();
         }else if (piece.getPieceType() == PieceType.ROOK) {
             RookMovesCalculator rook = new RookMovesCalculator(board, position);
-            validMoves = rook.getRookMoves();
+            ValidMovesCalculator = rook.getRookMoves();
         }else if (piece.getPieceType() == PieceType.QUEEN) {
             QueenMovesCalculator queen = new QueenMovesCalculator(board, position);
-            validMoves = queen.getQueenMoves();
+            ValidMovesCalculator = queen.getQueenMoves();
         }else {
-            validMoves = null;
+            ValidMovesCalculator = null;
         }
-        return validMoves;
+        return ValidMovesCalculator;
     }
 
     @Override

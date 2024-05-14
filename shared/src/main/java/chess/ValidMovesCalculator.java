@@ -21,8 +21,8 @@ public class ValidMovesCalculator {
         }
     }
 
-    public void addNewMove(Collection<ChessMove> validMoves, ChessPosition curPos, ChessPosition newPos) {
+    public void addNewMove(Collection<ChessMove> ValidMovesCalculator, ChessPosition curPos, ChessPosition newPos) {
         ChessMove newMove = new ChessMove(curPos, newPos, null);
-        validMoves.add(newMove);
+        ValidMovesCalculator.add(newMove);
     }
 }

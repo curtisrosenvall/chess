@@ -54,8 +54,6 @@ public class KingMovesCalculator {
             validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
 
 
-
-
     }
 
     public Collection<ChessMove> getKingMoves () {

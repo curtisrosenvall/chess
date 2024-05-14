@@ -44,7 +44,6 @@ public class PawnMovesCalculator {
     }
 
     public Collection<ChessMove> getPawnMoves() {
-
         return ValidMovesCalculator;
     }
 

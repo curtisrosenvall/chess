@@ -66,7 +66,7 @@ public class QueenMovesCalculator {
             i++;
         }
 
-        //^ ->
+        //^ <-
         validPosition = true;
         i = 1;
         while(validPosition) {

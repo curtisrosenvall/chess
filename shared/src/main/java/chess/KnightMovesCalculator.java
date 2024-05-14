@@ -30,7 +30,7 @@ public class KnightMovesCalculator {
             validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
         }
 
-        //2 -> 2
+        //up 1 right 2
         endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() + 2);
         if((endPosition.getRow() <= 8) && (endPosition.getColumn() <= 8)) {
             validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
