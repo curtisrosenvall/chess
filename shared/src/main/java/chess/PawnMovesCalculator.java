@@ -17,13 +17,13 @@ public class PawnMovesCalculator {
         if(pieceColor == ChessGame.TeamColor.WHITE) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn());
             validPosition = pawnTest(board, startPosition, endPosition);
-            if((startPosition.getRow() == 2) && validPosition) {
+            if(startPosition.getRow() == 2 && validPosition) {
                 endPosition = new ChessPosition(startPosition.getRow() + 2, startPosition.getColumn());
                 validPosition = pawnTest(board, startPosition, endPosition);
             }
             endPosition  = new ChessPosition( startPosition.getRow() + 1, startPosition.getColumn() - 1);
             validPosition = pawnCapture(board, startPosition, endPosition);
-            endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() + 1);
+            endPosition = new ChessPosition(startPosition.getRow() + 2, startPosition.getColumn() + 1);
             validPosition = pawnCapture(board, startPosition, endPosition);
         }
 
@@ -64,7 +64,7 @@ public class PawnMovesCalculator {
     }
 
     public void addPromotionMove(ChessPosition startPosition, ChessPosition endPosition) {
-        if((endPosition.getRow() == 8) || (endPosition.getRow() == 1)) {
+        if((endPosition.getRow() == 8 )|| (endPosition.getRow() == 1)) {
             ChessMove newQueenMove = new ChessMove(startPosition, endPosition, ChessPiece.PieceType.QUEEN);
             ValidMovesCalculator.add(newQueenMove);
             ChessMove newRookMove = new ChessMove(startPosition, endPosition, ChessPiece.PieceType.ROOK);
