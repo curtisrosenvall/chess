@@ -10,10 +10,11 @@ import java.util.Iterator;
  * signature of the existing methods.
  */
 public class ChessGame {
-    private TeamColor colorTurn;
-    private boolean checkCase;
-    private ChessBoard newGame;
-    private ChessMove lastMove;
+    private TeamColor colorTurn;  // Tracks the current team's turn.
+    private boolean checkCase;    // Flag to indicate if the game is currently checking for 'check' conditions.
+    private ChessBoard newGame;   // The chessboard associated with the current game.
+    private ChessMove lastMove;   // Stores the last move made in the game.
+
     public ChessGame() {
         colorTurn = TeamColor.WHITE;
         newGame = new ChessBoard();
@@ -55,6 +56,14 @@ public class ChessGame {
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
+
+
+    /**
+     * Calculates and retrieves all valid moves for a piece at the given position.
+     * This method also filters out moves that would put or leave one's king in check.
+     * @param startPosition The starting position of the piece for which moves are calculated.
+     * @return A collection of valid moves for the piece, or null if no piece is present at the starting position.
+     */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         Collection<ChessMove> possibleMoves;
 
@@ -94,6 +103,12 @@ public class ChessGame {
      *
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
+     */
+
+    /**
+     * Performs a move on the chessboard and updates the game state accordingly.
+     * @param move The chess move to perform.
+     * @throws InvalidMoveException If the move is invalid.
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         if(move == null)
