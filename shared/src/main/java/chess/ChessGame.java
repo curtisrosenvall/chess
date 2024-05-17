@@ -215,6 +215,16 @@ public class ChessGame {
         return anyValidMoves(teamColor);
     }
 
+    /**
+     * Determines if any valid moves are available for the specified team. This method is used to check conditions such as
+     * stalemate or checkmate by simulating potential moves for all pieces belonging to the team and checking if any of
+     * these moves would successfully remove the king from check without placing it back into check.
+     *
+     * @param teamColor The color of the team (WHITE or BLACK) for which to determine if any valid moves exist.
+     * @return false if there is at least one legal move available for the specified team that does not result in the team's
+     * king being in check after the move. Returns true if no such moves exist, indicating a potential stalemate or checkmate.
+     */
+
     public boolean anyValidMoves(TeamColor teamColor) {
         ChessBoard moveBoard = getCopy();
         AllPositions allPieces = new AllPositions(moveBoard);
@@ -274,6 +284,16 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return newGame;
     }
+
+    /**
+     * Creates and returns a deep copy of the current chess board. This method is essential for game state simulation
+     * where changes like potential moves are tested without affecting the actual game state. Cloning the board ensures
+     * that all manipulations during these tests do not alter the real game board.
+     *
+     * @return A deep copy of the current ChessBoard object.
+     * @throws RuntimeException if the ChessBoard class does not support cloning, encapsulating the underlying
+     * CloneNotSupportedException into a more general unchecked exception that indicates a configuration or coding error.
+     */
 
     public ChessBoard getCopy() {
         try {
