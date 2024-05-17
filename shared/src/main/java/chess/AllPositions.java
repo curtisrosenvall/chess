@@ -13,7 +13,19 @@ public class AllPositions {
     public AllPositions(ChessBoard board) {
         whiteTeamMoves = new ArrayList<>();
         blackTeamMoves = new ArrayList<>();
-// looping through the whole board and seeing all the pieces and positions for all the players adding them to their respective Arraylist
+
+//
+//
+//          The AllPositions class is responsible for calculating and storing all possible moves for each team in a chess game,
+//          as well as tracking the positions of the white and black kings. This class analyzes the entire chessboard to:
+//          Identify the position of each king and store these positions.
+//          Collect all valid moves for each chess piece on the board, segregated by team (white or black).
+//          Provide methods to access and modify these positions and move lists, facilitating game state management and decision-making in chess gameplay.
+//          The class ensures that every piece's potential moves are evaluated and stored, allowing for efficient game analysis and strategy development.
+//         
+
+
+
         for(int i = 1; i < 9; i++) {
             for(int j = 1; j < 9; j++) {
                 if((board.getPiece(new ChessPosition(i,j)) != null)) {
@@ -39,7 +51,7 @@ public class AllPositions {
         }
     }
 
-//    all the methods needed for working with the king... figuring out the position and understanding what moves can be applied
+
 
     public void setBlackKingPos(ChessPosition blackKingPos) {
         this.blackKingPos = blackKingPos;
