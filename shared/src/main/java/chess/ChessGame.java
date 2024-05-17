@@ -114,12 +114,12 @@ public class ChessGame {
         if(move == null)
             throw new InvalidMoveException();
 
-        //First check to see if the move is valid
+
         ChessPosition checkPos = move.getEndPosition();
         if((checkPos.getRow() < 1) || (checkPos.getRow() > 8) || (checkPos.getColumn() < 1) || (checkPos.getColumn() > 8)) {
             throw new InvalidMoveException();
         }
-        //Get a copy of the piece at the starting position
+
         ChessBoard moveBoard = getCopy();
         ChessPiece piece = moveBoard.getPiece(move.getStartPosition());
 
@@ -131,14 +131,14 @@ public class ChessGame {
 
 
         if(piece.pieceMoves(moveBoard, move.getStartPosition()).contains(move)) {
-            //Set the starting position to null
+
             moveBoard.addPiece(move.getStartPosition(), null);
 
-            //If the promotion is null, then set the new position to the copy of the piece
+
             if(move.getPromotionPiece() == null) {
                 moveBoard.addPiece(move.getEndPosition(), piece);
             }
-            //If the promotion isn't null, then set the new position to the promotion piece
+           
             else {
                 moveBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
             }
