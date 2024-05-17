@@ -9,10 +9,10 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
+public class ChessBoard implements Cloneable {
     private ChessPiece[][] square = new ChessPiece[8][8];
+    private ChessMove lastMove;
     public ChessBoard() {
-
     }
 
     /**
@@ -36,12 +36,14 @@ public class ChessBoard {
         return square[position.getRow() - 1][position.getColumn() - 1];
     }
 
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-
+        ChessGame.TeamColor whiteTeam = ChessGame.TeamColor.WHITE;
+        ChessGame.TeamColor blackTeam = ChessGame.TeamColor.BLACK;
 
         ChessPiece.PieceType rook = ChessPiece.PieceType.ROOK;
         ChessPiece.PieceType knight = ChessPiece.PieceType.KNIGHT;
@@ -51,13 +53,9 @@ public class ChessBoard {
         ChessPiece.PieceType pawn = ChessPiece.PieceType.PAWN;
 
 
-        ChessGame.TeamColor blackTeam = ChessGame.TeamColor.BLACK;
-        ChessGame.TeamColor whiteTeam = ChessGame.TeamColor.WHITE;
-
-
         addPiece( new ChessPosition(1,1), new ChessPiece(whiteTeam, rook));
         addPiece( new ChessPosition(1,2), new ChessPiece(whiteTeam, knight));
-        addPiece( new ChessPosition(1,3), new ChessPiece(whiteTeam, bishop));
+        addPiece( new ChessPosition(1,3), new ChessPiece(whiteTeam, bishop ));
         addPiece( new ChessPosition(1,4), new ChessPiece(whiteTeam, queen));
         addPiece( new ChessPosition(1,5), new ChessPiece(whiteTeam, king));
         addPiece( new ChessPosition(1,6), new ChessPiece(whiteTeam, bishop));
@@ -82,6 +80,7 @@ public class ChessBoard {
         }
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -93,5 +92,43 @@ public class ChessBoard {
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(square);
+    }
+
+    @Override
+    public String toString() {
+        String stringOut = "ChessBoard{" + "board=";
+        for(int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                stringOut += square[i][j];
+            }
+        }
+        //Arrays.toString(board) +
+        //", whiteTeam=" + whiteTeam +
+        //", blackTeam=" + blackTeam +
+        //'}';
+        return stringOut;
+    }
+
+    @Override
+    protected ChessBoard clone() throws CloneNotSupportedException {
+        ChessBoard clone = (ChessBoard) super.clone();
+        ChessPiece[][] clonedBoard = new ChessPiece[8][8];
+        for(int i = 1; i < 9; i++) {
+            for(int j = 1; j < 9; j++) {
+                if(getPiece(new ChessPosition(i,j)) != null) {
+                    clonedBoard[i-1][j-1] = (ChessPiece) getPiece(new ChessPosition(i,j)).clone();
+                }
+            }
+        }
+        clone.square = clonedBoard;
+        return clone;
+    }
+
+    public ChessMove getLastMove() {
+        return lastMove;
+    }
+
+    public void setLastMove(ChessMove lastMove) {
+        this.lastMove = lastMove;
     }
 }

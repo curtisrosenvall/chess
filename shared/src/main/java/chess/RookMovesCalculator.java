@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 public class RookMovesCalculator {
 
-    Collection<ChessMove> ValidMovesCalculator;
+    Collection<ChessMove> validMovesCalculator;
 
     public RookMovesCalculator(ChessBoard board, ChessPosition startPosition) {
 
-        ValidMovesCalculator = new ArrayList<>();
+        validMovesCalculator = new ArrayList<>();
         ValidMovesCalculator validMove = new ValidMovesCalculator();
 
         //Right
@@ -17,11 +17,7 @@ public class RookMovesCalculator {
         int i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition( startPosition.getRow(), startPosition.getColumn() + i);
-            if (endPosition.getColumn() > 8) {
-                validPosition = false;
-            } else {
-                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
-            }
+            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -30,11 +26,7 @@ public class RookMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow(), startPosition.getColumn() - i);
-            if(endPosition.getColumn() < 1) {
-                validPosition = false;
-            } else {
-                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
-            }
+            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -43,11 +35,7 @@ public class RookMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn());
-            if(endPosition.getRow() < 1) {
-                validPosition = false;
-            } else {
-                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
-            }
+            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -56,16 +44,12 @@ public class RookMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition( startPosition.getRow() + i, startPosition.getColumn());
-            if (endPosition.getRow() > 8) {
-                validPosition = false;
-            } else {
-                validPosition = validMove.movePiece(ValidMovesCalculator, board, startPosition, endPosition);
-            }
+            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
     }
 
     public Collection<ChessMove> getRookMoves() {
-        return ValidMovesCalculator;
+        return validMovesCalculator;
     }
 }

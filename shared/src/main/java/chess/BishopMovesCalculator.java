@@ -6,72 +6,74 @@ import java.util.Objects;
 
 public class BishopMovesCalculator {
 
-    Collection<ChessMove> ValidMovesCalculator;
+    Collection<ChessMove> validMovesCalculator;
 
-    public BishopMovesCalculator(ChessBoard board, ChessPosition position) {
+    public BishopMovesCalculator(ChessBoard board, ChessPosition startPosition) {
 
-        ValidMovesCalculator = new ArrayList<>();
-        ValidMovesCalculator testMove = new ValidMovesCalculator();
+        validMovesCalculator = new ArrayList<>();
+        ValidMovesCalculator validMove = new ValidMovesCalculator();
 
-        //^ ->
-        boolean valid = true;
+        //Up and to the right
+        boolean validPosition = true;
         int i = 1;
-        while (valid) {
-            ChessPosition nextPosition = new ChessPosition(position.getRow() + i, position.getColumn() + i);
-            if ((nextPosition.getRow() > 8) || (nextPosition.getColumn() > 8)) {
-                valid = false;
-            } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, position, nextPosition);
-            }
+        while(validPosition) {
+            ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() + i);
+            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
-        //^ <-
-        valid = true;
+        //Down and to the right
+        validPosition = true;
         i = 1;
-        while (valid) {
-            ChessPosition nextPosition = new ChessPosition(position.getRow() + i, position.getColumn() - i);
-            if ((nextPosition.getRow() > 8) || (nextPosition.getColumn() < 1)) {
-                valid = false;
-            } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, position, nextPosition);
-            }
+        while(validPosition) {
+            ChessPosition enPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() + i);
+            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, enPosition);
             i++;
         }
 
-        //D <-
-        valid = true;
+        //Down and to the left
+        validPosition = true;
         i = 1;
-        while (valid) {
-            ChessPosition nextPosition = new ChessPosition(position.getRow() - i, position.getColumn() - i);
-            if ((nextPosition.getRow() < 1) || (nextPosition.getColumn() < 1)) {
-                valid = false;
-            } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, position, nextPosition);
-            }
+        while(validPosition) {
+            ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() - i);
+            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
-        //D ->
-        valid = true;
+        //Up and to the left
+        validPosition = true;
         i = 1;
-        while (valid) {
-            ChessPosition nextPosition = new ChessPosition(position.getRow() - i, position.getColumn() + i);
-            if ((nextPosition.getRow() < 1) || (nextPosition.getColumn() > 8)) {
-                valid = false;
-            } else {
-                valid = testMove.movePiece(ValidMovesCalculator, board, position, nextPosition);
-            }
+        while(validPosition) {
+            ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() - i);
+            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
-
-
-
-
     }
 
     public Collection<ChessMove> getBishopMoves() {
-        return ValidMovesCalculator;
+        return validMovesCalculator;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BishopMovesCalculator that = (BishopMovesCalculator) o;
+        return Objects.equals(validMovesCalculator, that.validMovesCalculator);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(validMovesCalculator);
+    }
+
+    @Override
+    public String toString() {
+        String output = "BishopValidMoves{" +
+                "validMoves= ";
+        for (ChessMove move : validMovesCalculator) {
+            output += "{ " + move.getStartPosition() + "," + move.getEndPosition() + "} ";
+        }
+        return output;
     }
 }
-

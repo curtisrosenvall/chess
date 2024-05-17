@@ -10,7 +10,7 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 
-public class ChessPiece {
+public class ChessPiece implements Cloneable {
     private final ChessGame.TeamColor pieceColor;
     private final ChessPiece.PieceType type;
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
@@ -49,34 +49,37 @@ public class ChessPiece {
      * Does not take into account moves that are illegal due to leaving the king in
      * danger
      *
-     * @return Collection of valid moves*/
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
+     * @return Collection of valid moves
+     */
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition startPosition) {
 
-        Collection<ChessMove> ValidMovesCalculator;
-        ChessPiece piece = board.getPiece(position);
+        Collection<ChessMove> validMovesCalculator;
 
-        if (piece.getPieceType() == PieceType.KNIGHT) {
-            KnightMovesCalculator knight = new KnightMovesCalculator(board, position);
-            ValidMovesCalculator = knight.getKnightMoves();
+        ChessPiece piece = board.getPiece(startPosition);
+
+
+        if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
+            BishopMovesCalculator bishop = new BishopMovesCalculator(board, startPosition);
+            validMovesCalculator = bishop.getBishopMoves();
+        } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
+            RookMovesCalculator rook = new RookMovesCalculator(board, startPosition);
+            validMovesCalculator = rook.getRookMoves();
+        } else if (piece.getPieceType() == ChessPiece.PieceType.QUEEN) {
+            QueenMovesCalculator queen = new QueenMovesCalculator(board, startPosition);
+            validMovesCalculator = queen.getQueenMoves();
         } else if (piece.getPieceType() == PieceType.KING) {
-            KingMovesCalculator king = new KingMovesCalculator(board, position);
-            ValidMovesCalculator = king.getKingMoves();
-        }  else if (piece.getPieceType() == PieceType.BISHOP) {
-            BishopMovesCalculator bishop = new BishopMovesCalculator(board, position);
-            ValidMovesCalculator = bishop.getBishopMoves();
-        }  else if (piece.getPieceType() == PieceType.PAWN) {
-            PawnMovesCalculator pawn = new PawnMovesCalculator(board, position);
-            ValidMovesCalculator = pawn.getPawnMoves();
-        }else if (piece.getPieceType() == PieceType.ROOK) {
-            RookMovesCalculator rook = new RookMovesCalculator(board, position);
-            ValidMovesCalculator = rook.getRookMoves();
-        }else if (piece.getPieceType() == PieceType.QUEEN) {
-            QueenMovesCalculator queen = new QueenMovesCalculator(board, position);
-            ValidMovesCalculator = queen.getQueenMoves();
-        }else {
-            ValidMovesCalculator = null;
+            KingMovesCalculator king = new KingMovesCalculator(board, startPosition);
+            validMovesCalculator = king.getKingMoves();
+        } else if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
+            PawnMovesCalculator pawn = new PawnMovesCalculator(board, startPosition);
+            validMovesCalculator = pawn.getPawnMoves();
+        } else if (piece.getPieceType() == PieceType.KNIGHT) {
+            KnightMovesCalculator knight = new KnightMovesCalculator(board, startPosition);
+            validMovesCalculator = knight.getKnightMoves();
+        } else {
+            validMovesCalculator = null;
         }
-        return ValidMovesCalculator;
+        return validMovesCalculator;
     }
 
     @Override
@@ -98,5 +101,10 @@ public class ChessPiece {
                 "pieceColor=" + pieceColor +
                 ", type=" + type +
                 '}';
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
