@@ -39,6 +39,8 @@ public class AllPositions {
         }
     }
 
+//    all the methods needed for working with the king... figuring out the position and understanding what moves can be applied
+
     public void setBlackKingPos(ChessPosition blackKingPos) {
         this.blackKingPos = blackKingPos;
     }
