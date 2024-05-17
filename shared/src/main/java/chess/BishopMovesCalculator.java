@@ -18,7 +18,7 @@ public class BishopMovesCalculator {
         int i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() + i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -27,7 +27,7 @@ public class BishopMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition enPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() + i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, enPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, enPosition);
             i++;
         }
 
@@ -36,7 +36,7 @@ public class BishopMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() - i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -45,7 +45,7 @@ public class BishopMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() - i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
     }
