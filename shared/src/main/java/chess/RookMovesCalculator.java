@@ -17,7 +17,7 @@ public class RookMovesCalculator {
         int i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition( startPosition.getRow(), startPosition.getColumn() + i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -26,7 +26,7 @@ public class RookMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow(), startPosition.getColumn() - i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -35,7 +35,7 @@ public class RookMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn());
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -44,7 +44,7 @@ public class RookMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition( startPosition.getRow() + i, startPosition.getColumn());
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
     }

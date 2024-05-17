@@ -17,7 +17,7 @@ public class QueenMovesCalculator {
         int i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn());
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -26,7 +26,7 @@ public class QueenMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() + i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -35,7 +35,7 @@ public class QueenMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow(), startPosition.getColumn() + i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -44,7 +44,7 @@ public class QueenMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() + i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -53,7 +53,7 @@ public class QueenMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn());
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -62,7 +62,7 @@ public class QueenMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() - i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, endPosition);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
             i++;
         }
 
@@ -71,7 +71,7 @@ public class QueenMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition testPos = new ChessPosition(startPosition.getRow(), startPosition.getColumn() - i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, testPos);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, testPos);
             i++;
         }
 
@@ -80,7 +80,7 @@ public class QueenMovesCalculator {
         i = 1;
         while(validPosition) {
             ChessPosition testPos = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() - i);
-            validPosition = validMove.LoopTest(validMovesCalculator, board, startPosition, testPos);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, testPos);
             i++;
         }
     }
