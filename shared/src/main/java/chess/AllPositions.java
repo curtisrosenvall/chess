@@ -13,7 +13,7 @@ public class AllPositions {
     public AllPositions(ChessBoard board) {
         whiteTeamMoves = new ArrayList<>();
         blackTeamMoves = new ArrayList<>();
-
+// looping through the whole board and seeing all the pieces and positions for all the players adding them to their respective Arraylist
         for(int i = 1; i < 9; i++) {
             for(int j = 1; j < 9; j++) {
                 if((board.getPiece(new ChessPosition(i,j)) != null)) {
