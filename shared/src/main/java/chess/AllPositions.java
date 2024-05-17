@@ -22,7 +22,7 @@ public class AllPositions {
 //          Collect all valid moves for each chess piece on the board, segregated by team (white or black).
 //          Provide methods to access and modify these positions and move lists, facilitating game state management and decision-making in chess gameplay.
 //          The class ensures that every piece's potential moves are evaluated and stored, allowing for efficient game analysis and strategy development.
-//         
+//
 
 
 

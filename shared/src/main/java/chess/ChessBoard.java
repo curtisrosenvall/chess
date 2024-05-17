@@ -109,6 +109,12 @@ public class ChessBoard implements Cloneable {
         return stringOut;
     }
 
+    /**
+     * Creates and returns a deep copy of this ChessBoard.
+     * @return A new ChessBoard object with the same piece arrangement as this one.
+     * @throws CloneNotSupportedException if the ChessPiece objects in the board do not support cloning.
+     */
+
     @Override
     protected ChessBoard clone() throws CloneNotSupportedException {
         ChessBoard clone = (ChessBoard) super.clone();
@@ -124,9 +130,19 @@ public class ChessBoard implements Cloneable {
         return clone;
     }
 
+    /**
+     * Retrieves the last move made on this chessboard.
+     * @return The most recent ChessMove made.
+     */
+
     public ChessMove getLastMove() {
         return lastMove;
     }
+
+    /**
+     * Sets the last move made on this chessboard.
+     * @param lastMove The move to record as the last move.
+     */
 
     public void setLastMove(ChessMove lastMove) {
         this.lastMove = lastMove;
