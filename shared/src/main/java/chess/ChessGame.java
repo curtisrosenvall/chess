@@ -65,6 +65,7 @@ public class ChessGame {
      * @return A collection of valid moves for the piece, or null if no piece is present at the starting position.
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+
         Collection<ChessMove> possibleMoves;
 
         newGame.setLastMove(lastMove);
@@ -120,35 +121,35 @@ public class ChessGame {
             throw new InvalidMoveException();
         }
 
-        ChessBoard moveBoard = getCopy();
-        ChessPiece piece = moveBoard.getPiece(move.getStartPosition());
+        ChessBoard ClonedBoard = getCopy();
+        ChessPiece piece = ClonedBoard.getPiece(move.getStartPosition());
 
-        if(moveBoard.getPiece(move.getStartPosition()) == null)
+        if(ClonedBoard.getPiece(move.getStartPosition()) == null)
             throw new InvalidMoveException();
 
-        if(!checkCase && (moveBoard.getPiece(move.getStartPosition()).getTeamColor() != colorTurn))
+        if(!checkCase && (ClonedBoard.getPiece(move.getStartPosition()).getTeamColor() != colorTurn))
             throw new InvalidMoveException();
 
 
-        if(piece.pieceMoves(moveBoard, move.getStartPosition()).contains(move)) {
+        if(piece.pieceMoves(ClonedBoard, move.getStartPosition()).contains(move)) {
 
-            moveBoard.addPiece(move.getStartPosition(), null);
+            ClonedBoard.addPiece(move.getStartPosition(), null);
 
 
             if(move.getPromotionPiece() == null) {
-                moveBoard.addPiece(move.getEndPosition(), piece);
+                ClonedBoard.addPiece(move.getEndPosition(), piece);
             }
-           
+
             else {
-                moveBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+                ClonedBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
             }
         } else {
             throw new InvalidMoveException();
         }
 
-        setBoard(moveBoard);
-        if(!isInCheck(moveBoard.getPiece(move.getEndPosition()).getTeamColor())) {
-            setBoard(moveBoard);
+        setBoard(ClonedBoard);
+        if(!isInCheck(ClonedBoard.getPiece(move.getEndPosition()).getTeamColor())) {
+            setBoard(ClonedBoard);
             changeTeamTurn();
         } else
             throw new InvalidMoveException();
