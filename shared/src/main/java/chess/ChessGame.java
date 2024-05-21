@@ -165,8 +165,8 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         checkCase = true;
-        ChessBoard moveBoard = getCopy();
-        AllPositions allPieces = new AllPositions(moveBoard);
+        ChessBoard clonedBoard = getCopy();
+        AllPositions allPieces = new AllPositions(clonedBoard);
 
         if(teamColor == TeamColor.WHITE) {
             ChessPosition whiteKingPos = allPieces.getWhiteKingPos();
@@ -227,8 +227,8 @@ public class ChessGame {
      */
 
     public boolean anyValidMoves(TeamColor teamColor) {
-        ChessBoard moveBoard = getCopy();
-        AllPositions allPieces = new AllPositions(moveBoard);
+        ChessBoard clonedBoard = getCopy();
+        AllPositions allPieces = new AllPositions(clonedBoard);
 
         if(teamColor == TeamColor.WHITE) {
             Collection<ChessMove> whiteMoves = allPieces.getWhiteTeamMoves();
