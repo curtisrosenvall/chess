@@ -13,26 +13,32 @@ public class MemoryAuthDAO implements AuthDAO {
         mapOfAuthData = new HashMap<>();
     }
 
+    @Override
     public void clear(){
         mapOfAuthData.clear();
     }
 
+    @Override
     public void createAuth(String token, AuthData data){
         mapOfAuthData.put(token, data);
     }
 
+    @Override
     public void deleteAuth(String token){
         mapOfAuthData.remove(token);
     }
 
+    @Override
     public AuthData getAuth(String token){
         return mapOfAuthData.get(token);
     }
 
+    @Override
     public int size(){
         return mapOfAuthData.size();
     }
 
+    @Override
     public ArrayList<AuthData> getAllAuths() {
         ArrayList<AuthData> allAuths = new ArrayList<>();
         for(Map.Entry<String, AuthData> entry : mapOfAuthData.entrySet()) {
