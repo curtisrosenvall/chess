@@ -37,6 +37,14 @@ public class Database {
         return authDatabase.getAuth(token) == null;
     }
 
+    public boolean isAuthNameEmpty(String name) throws DataAccessException {
+        try {
+            return getAuthName(name) == null;
+        } catch(DataAccessException ex) {
+            return true;
+        }
+    }
+
 
     public boolean isGameEmpty(int id) throws DataAccessException {
         return gameDatabase.getGame(id) == null;

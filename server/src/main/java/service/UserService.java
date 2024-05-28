@@ -2,8 +2,10 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.Database;
+import request.LoginRequest;
 import request.RegisterRequest;
 import model.*;
+import response.LoginResponse;
 import response.RegisterResponse;
 import java.util.UUID;
 
@@ -27,6 +29,29 @@ public class UserService {
             result = new RegisterResponse(true, null, name, authToken);
         } catch(DataAccessException ex) {
             result = new RegisterResponse(false, "Unable to create user", null, null);
+        }
+        return result;
+    }
+
+    public LoginResponse loginUser(LoginRequest request) {
+        String name = request.getUsername();
+        String password = request.getPassword();
+        LoginResponse result;
+        try {
+            UserData user = database.getUser(name);
+            if(user.password().equals(password)) {
+                if(!database.isAuthNameEmpty(name)) {
+                    String authToken = database.getAuthName(name).authToken();
+                    database.deleteAuth(authToken);
+                }
+                String newToken = newAuthToken();
+                database.createAuth(newToken, name);
+                result = new LoginResponse(true, null, name, newToken);
+            }
+            else
+                throw new DataAccessException("Invalid Password");
+        } catch(DataAccessException ex) {
+            result = new LoginResponse(false, ex.getMessage(), null, null);
         }
         return result;
     }
