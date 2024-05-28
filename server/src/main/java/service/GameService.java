@@ -3,7 +3,7 @@ import dataaccess.*;
 import model.*;
 import request.*;
 import response.*;
-
+import java.util.ArrayList;
 public class GameService {
 
     Database database;
@@ -54,6 +54,20 @@ public class GameService {
             result = new JoinGameResponse(true, null);
         } catch(DataAccessException ex) {
             result = new JoinGameResponse(false, ex.getMessage());
+        }
+        return result;
+    }
+
+    //List
+    public ListGamesResponse listGames(ListGamesRequest request) {
+        String authToken = request.getAuthToken();
+        ListGamesResponse result;
+        try {
+            database.getAuth(authToken);
+            ArrayList<GameData> games = database.getGameList();
+            result = new ListGamesResponse (true, null, games);
+        } catch(DataAccessException ex) {
+            result = new ListGamesResponse(false, ex.getMessage(), null);
         }
         return result;
     }

@@ -22,6 +22,8 @@ public class Server {
         Spark.post("/game", (req, res) -> (new CreateGame(database)).handle(req, res));
         Spark.put("/game", (req, res) -> (new JoinGame(database)).handle(req, res));
         Spark.delete("/db", (req, res) -> (new ClearAll(database)).handle(req, res));
+        Spark.get("/game", (req, res) -> (new ListGames(database)).handle(req, res));
+
 
         Spark.awaitInitialization();
         return Spark.port();

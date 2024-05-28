@@ -118,12 +118,18 @@ public class Database {
 
     public GameData getGameName(String name) throws DataAccessException {
         ArrayList<GameData> gameList = gameDatabase.getAllGames();
-        for (GameData game: gameList){
-            if(game.gameName().equals(name))
+        if (gameList == null || gameList.isEmpty()) {
+            throw new DataAccessException("Not valid Game Name");
+        }
+        for (GameData game : gameList) {
+            if (game != null && game.gameName().equals(name)) {
                 return game;
+            }
         }
         throw new DataAccessException("Not valid Game Name");
     }
+
+
 
     public ArrayList<GameData> getGameList() throws DataAccessException {
         return gameDatabase.getAllGames();
