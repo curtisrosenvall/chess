@@ -1,6 +1,7 @@
 package handler;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
+import request.CreateGameRequest;
 import spark.Request;
 import spark.Response;
 import request.RegisterRequest;
@@ -10,13 +11,14 @@ import response.ParentResponse;
 public class methodHandlers {
 
     public Object getBody(Request request, String requestType) throws DataAccessException {
-        if(requestType.equals("RegisterRequest")) {
+        if(requestType.equals("RegisterRequest"))
             return new Gson().fromJson(request.body(), RegisterRequest.class);
-        }else if (requestType.equals("LoginRequest")) {
+        else if(requestType.equals("LoginRequest"))
             return new Gson().fromJson(request.body(), LoginRequest.class);
-        }else {
-            throw new DataAccessException("Invalid request type");
-        }
+        else if(requestType.equals("CreateGameRequest"))
+            return new Gson().fromJson(request.body(), CreateGameRequest.class);
+        else  //Clear, Logout, ListGames don't have bodies
+            throw new DataAccessException("Bad Request");
     }
 
     public String getAuth(Request request){
