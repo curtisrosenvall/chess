@@ -23,11 +23,13 @@ public class JoinGame implements Route{
     public Object handle(Request request, Response response){
         JoinGameRequest joinRequest;
         String token;
+        GameData game;
         try{
             joinRequest = (JoinGameRequest) methodHandlers.getBody(request, "JoinGameRequest");
             methodHandlers.isNullString(joinRequest.getPlayerColor());
             methodHandlers.isNullInteger(joinRequest.getGameId());
             token = methodHandlers.getAuth(request);
+            game = database.getGame(joinRequest.getGameId());
         } catch(DataAccessException e) {
             return methodHandlers.getResponse(response,400,new JoinGameResponse(null, "Error, bad request"));
         }
@@ -36,12 +38,11 @@ public class JoinGame implements Route{
             methodHandlers.isNullString(token);
             database.getAuth(token);
             joinRequest.setAuthToken(token);
-            auth = database.getAuth(token);
+            database.getAuth(token);
         } catch(DataAccessException ex) {
             return methodHandlers.getResponse(response, 401, new JoinGameResponse(null, "Error, unauthorized"));
         }
         try {
-            GameData game = database.getGame(joinRequest.getGameId());
             String playerColor = joinRequest.getPlayerColor();
             if(playerColor.equalsIgnoreCase("WHITE")) {
                 if(database.getPlayerFromColor(game, "WHITE") != null)

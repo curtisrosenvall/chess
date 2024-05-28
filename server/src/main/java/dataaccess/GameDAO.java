@@ -51,13 +51,6 @@ public interface GameDAO {
      */
     void updateGame(int id, GameData game) throws DataAccessException;
 
-    /**
-     * Deletes a specific game identified by its unique ID from the data store.
-     *
-     * @param id the unique identifier of the game to delete.
-     * @throws DataAccessException if an error occurs during the data access operation.
-     */
-    void deleteGame(int id) throws DataAccessException;
 
     /**
      * Returns the number of games currently stored in the data store.

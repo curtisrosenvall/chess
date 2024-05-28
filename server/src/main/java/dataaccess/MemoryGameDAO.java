@@ -46,10 +46,6 @@ public class MemoryGameDAO implements GameDAO {
         mapOfGameData.replace(id, game);
     }
 
-    @Override
-    public void deleteGame(int id) {
-        mapOfGameData.remove(id);
-    }
 
     @Override
     public int size() {

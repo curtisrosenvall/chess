@@ -1,22 +1,19 @@
 package service;
 
-import dataaccess.DataAccessException;
-import dataaccess.Database;
-import request.LoginRequest;
-import request.LogoutRequest;
-import request.RegisterRequest;
+
+import dataaccess.*;
 import model.*;
-import response.LoginResponse;
-import response.LogoutResponse;
-import response.RegisterResponse;
+import request.*;
+import response.*;
+
 import java.util.UUID;
 
 public class UserService {
 
-    Database database;
+    Database dataBase;
 
-    public UserService(Database database) {
-        this.database = database;
+    public UserService(Database dataBase) {
+        this.dataBase = dataBase;
     }
 
     public RegisterResponse createUser(RegisterRequest request) {
@@ -25,12 +22,12 @@ public class UserService {
         String email = request.getEmail();
         RegisterResponse result;
         try {
-            database.createUser(name, password,email);
+            dataBase.createUser(name, password,email);
             String authToken = newAuthToken();
-            database.createAuth(authToken, name);
+            dataBase.createAuth(authToken, name);
             result = new RegisterResponse(true, null, name, authToken);
         } catch(DataAccessException ex) {
-            result = new RegisterResponse(false, "Unable to create user", null, null);
+            result = new RegisterResponse(false, ex.getMessage(), null, null);
         }
         return result;
     }
@@ -40,14 +37,10 @@ public class UserService {
         String password = request.getPassword();
         LoginResponse result;
         try {
-            UserData user = database.getUser(name);
+            UserData user = dataBase.getUser(name);
             if(user.password().equals(password)) {
-                if(!database.isAuthNameEmpty(name)) {
-                    String authToken = database.getAuthName(name).authToken();
-                    database.deleteAuth(authToken);
-                }
                 String newToken = newAuthToken();
-                database.createAuth(newToken, name);
+                dataBase.createAuth(newToken, name);
                 result = new LoginResponse(true, null, name, newToken);
             }
             else
@@ -62,8 +55,8 @@ public class UserService {
         LogoutResponse result;
         try {
             String authToken = request.getAuthToken();
-            database.getAuth(authToken);
-            database.deleteAuth(authToken);
+            dataBase.getAuth(authToken);
+            dataBase.deleteAuth(authToken);
             result = new LogoutResponse(true, null);
         } catch(DataAccessException ex) {
             result = new LogoutResponse(false, "Error: " + ex.getMessage());
@@ -71,25 +64,7 @@ public class UserService {
         return result;
     }
 
-
     public String newAuthToken() {
         return UUID.randomUUID().toString();
-    }
-
-    public UserData getUser(String name) {
-        try {
-            return database.getUser(name);
-        } catch(DataAccessException ex) {
-            System.out.println("Caught DataAccessException, no user to return");
-            return null;
-        }
-    }
-
-    public void deleteUser(String name) {
-        try {
-            database.deleteUser(name);
-        } catch(DataAccessException ex) {
-            System.out.println("Caught DataAccessException, no user to delete");
-        }
     }
 }
