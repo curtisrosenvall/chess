@@ -29,7 +29,7 @@ public class ClearAll implements Route {
         } else {
             methodHandlers.getResponse(response, 500, ClearResponse);
         }
-        return new Gson().toJson(ClearResponse);
-    }
 
+ return new Gson().toJson(ClearResponse);
+    }
 }

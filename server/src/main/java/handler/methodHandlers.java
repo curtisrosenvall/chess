@@ -24,10 +24,22 @@ public class methodHandlers {
         return request.headers("Authorization");
     }
 
-    public String getResponse(Response response, int status, ParentResponse objectClass ) throws DataAccessException {
+    public String getResponse(Response response, int status, ParentResponse objectClass ) {
         response.status(status);
         response.type("application/json");
         objectClass.nullSuccess();
         return new Gson().toJson(objectClass);
+    }
+
+    public boolean isNullString(String variable) throws DataAccessException {
+        if(variable == null)
+            throw new DataAccessException("Error: bad request");
+        return true;
+    }
+
+    public boolean isNullInteger(Integer num) throws DataAccessException {
+        if(num == null)
+            throw new DataAccessException("Error: bad request");
+        return true;
     }
 }

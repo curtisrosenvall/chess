@@ -2,9 +2,6 @@ package service;
 import dataaccess.*;
 import response.ClearResponse;
 
-
-
-
 public class ClearGameService {
 
     Database database;
