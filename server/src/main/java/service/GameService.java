@@ -12,6 +12,8 @@ public class GameService {
         this.database = database;
     }
 
+//    create
+
     public CreateGameResponse createGame(CreateGameRequest request) {
         String authToken = request.getAuthToken();
         String gameName = request.getGameName();
@@ -25,6 +27,33 @@ public class GameService {
             result = new CreateGameResponse(true, null, game.gameId());
         } catch(DataAccessException ex) {
             result = new CreateGameResponse(false, "Error: " + ex.getMessage(), null);
+        }
+        return result;
+    }
+
+    //Join
+    public JoinGameResponse joinGame(JoinGameRequest request) {
+        String authToken = request.getAuthToken();
+        JoinGameResponse result;
+        try {
+            AuthData auth = database.getAuth(authToken);
+            GameData game = database.getGame(request.getGameId());
+            GameData newGame;
+            Boolean spectator = false;
+            if(request.getPlayerColor().equalsIgnoreCase("WHITE")) {
+                if(database.getPlayerFromColor(game, "WHITE") != null)
+                    throw new DataAccessException("Error: already taken");
+                newGame = new GameData(game.gameId(), auth.username(), game.blackUsername(), game.gameName(), game.game());
+                database.updateGame(newGame);
+            } else if (request.getPlayerColor().equalsIgnoreCase("BLACK")) {
+                if(database.getPlayerFromColor(game, "BLACK") != null)
+                    throw new DataAccessException("Error: already taken");
+                newGame = new GameData(game.gameId(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
+                database.updateGame(newGame);
+            }
+            result = new JoinGameResponse(true, null);
+        } catch(DataAccessException ex) {
+            result = new JoinGameResponse(false, ex.getMessage());
         }
         return result;
     }
