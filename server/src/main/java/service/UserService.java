@@ -3,9 +3,11 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.Database;
 import request.LoginRequest;
+import request.LogoutRequest;
 import request.RegisterRequest;
 import model.*;
 import response.LoginResponse;
+import response.LogoutResponse;
 import response.RegisterResponse;
 import java.util.UUID;
 
@@ -55,6 +57,20 @@ public class UserService {
         }
         return result;
     }
+
+    public LogoutResponse logoutUser(LogoutRequest request) {
+        LogoutResponse result;
+        try {
+            String authToken = request.getAuthToken();
+            database.getAuth(authToken);
+            database.deleteAuth(authToken);
+            result = new LogoutResponse(true, null);
+        } catch(DataAccessException ex) {
+            result = new LogoutResponse(false, "Error: " + ex.getMessage());
+        }
+        return result;
+    }
+
 
     public String newAuthToken() {
         return UUID.randomUUID().toString();
