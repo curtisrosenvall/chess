@@ -1,8 +1,8 @@
 package result;
 
 public class LoginResult extends ParentResult{
-    private String username;
-    private String authToken;
+    private final String username;
+    private final String authToken;
 
     public LoginResult(Boolean success, String message, String username, String authToken) {
         super(success,message);

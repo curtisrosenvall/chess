@@ -121,35 +121,35 @@ public class ChessGame {
             throw new InvalidMoveException();
         }
 
-        ChessBoard ClonedBoard = getCopy();
-        ChessPiece piece = ClonedBoard.getPiece(move.getStartPosition());
+        ChessBoard clonedBoard = getCopy();
+        ChessPiece piece = clonedBoard.getPiece(move.getStartPosition());
 
-        if(ClonedBoard.getPiece(move.getStartPosition()) == null)
+        if(clonedBoard.getPiece(move.getStartPosition()) == null)
             throw new InvalidMoveException();
 
-        if(!checkCase && (ClonedBoard.getPiece(move.getStartPosition()).getTeamColor() != colorTurn))
+        if(!checkCase && (clonedBoard.getPiece(move.getStartPosition()).getTeamColor() != colorTurn))
             throw new InvalidMoveException();
 
 
-        if(piece.pieceMoves(ClonedBoard, move.getStartPosition()).contains(move)) {
+        if(piece.pieceMoves(clonedBoard, move.getStartPosition()).contains(move)) {
 
-            ClonedBoard.addPiece(move.getStartPosition(), null);
+            clonedBoard.addPiece(move.getStartPosition(), null);
 
 
             if(move.getPromotionPiece() == null) {
-                ClonedBoard.addPiece(move.getEndPosition(), piece);
+                clonedBoard.addPiece(move.getEndPosition(), piece);
             }
 
             else {
-                ClonedBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+                clonedBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
             }
         } else {
             throw new InvalidMoveException();
         }
 
-        setBoard(ClonedBoard);
-        if(!isInCheck(ClonedBoard.getPiece(move.getEndPosition()).getTeamColor())) {
-            setBoard(ClonedBoard);
+        setBoard(clonedBoard);
+        if(!isInCheck(clonedBoard.getPiece(move.getEndPosition()).getTeamColor())) {
+            setBoard(clonedBoard);
             changeTeamTurn();
         } else
             throw new InvalidMoveException();

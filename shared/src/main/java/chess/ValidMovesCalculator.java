@@ -11,7 +11,7 @@ import java.util.Collection;
 
 public class ValidMovesCalculator {
 
-    private Collection<ChessMove> validMovesCalculator;
+    private final Collection<ChessMove> validMovesCalculator;
 
     public ValidMovesCalculator() {
         validMovesCalculator = new ArrayList<>();

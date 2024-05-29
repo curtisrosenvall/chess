@@ -2,7 +2,7 @@ package request;
 
 public class ListGamesRequest extends ParentRequest {
 
-    private String authToken;
+    private final String authToken;
 
     public ListGamesRequest(String authToken) {
         super();

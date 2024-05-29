@@ -13,11 +13,11 @@ import spark.Route;
 public class ClearAll implements Route {
 
     Database database;
-    MethodHandlers MethodHandlers;
+    MethodHandlers methodHandlers;
 
     public ClearAll(Database database) {
         this.database = database;
-        MethodHandlers = new MethodHandlers();
+        methodHandlers = new MethodHandlers();
     }
 
     @Override
@@ -25,9 +25,9 @@ public class ClearAll implements Route {
         ClearGameService clear = new ClearGameService(database);
         ClearResult clearResult = clear.deleteAll();
         if(clearResult.isSuccess()) {
-            MethodHandlers.getResponse(response, 200, clearResult);
+            methodHandlers.getResponse(response, 200, clearResult);
         } else {
-            MethodHandlers.getResponse(response, 500, clearResult);
+            methodHandlers.getResponse(response, 500, clearResult);
         }
         return new Gson().toJson(clearResult);
     }
