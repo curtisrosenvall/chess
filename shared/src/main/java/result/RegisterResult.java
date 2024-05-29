@@ -1,11 +1,11 @@
-package response;
+package result;
 
-public class RegisterResponse extends ParentResponse {
+public class RegisterResult extends ParentResult {
 
     private String username;
     private String authToken;
 
-    public RegisterResponse(Boolean success, String message,String username, String authToken) {
+    public RegisterResult(Boolean success, String message,String username, String authToken) {
         super(success, message);
         this.username = username;
         this.authToken = authToken;

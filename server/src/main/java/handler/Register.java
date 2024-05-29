@@ -2,7 +2,7 @@ package handler;
 
 import dataaccess.DataAccessException;
 import dataaccess.Database;
-import response.RegisterResponse;
+import result.RegisterResponse;
 import spark.Request;
 import spark.Response;
 import request.*;

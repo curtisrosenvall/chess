@@ -7,7 +7,7 @@ import spark.Request;
 import spark.Response;
 import request.RegisterRequest;
 import request.LoginRequest;
-import response.ParentResponse;
+import result.ParentResponse;
 
 public class methodHandlers {
 

@@ -1,10 +1,10 @@
-package response;
+package result;
 
-public class ParentResponse {
+public class ParentResult {
     private Boolean success;
     private final String message;
 
-    public ParentResponse(Boolean success, String message) {
+    public ParentResult(Boolean success, String message) {
         this.message = message;
         this.success = success;
     }

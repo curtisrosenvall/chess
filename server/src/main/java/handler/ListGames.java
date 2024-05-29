@@ -1,9 +1,9 @@
 package handler;
 import dataaccess.DataAccessException;
 import request.ListGamesRequest;
-import response.JoinGameResponse;
-import response.ListGamesResponse;
-import response.LoginResponse;
+import result.JoinGameResponse;
+import result.ListGamesResponse;
+import result.LoginResult;
 import spark.Request;
 import spark.Route;
 import spark.Response;
@@ -41,7 +41,7 @@ public class ListGames implements Route {
                 return methodHandlers.getResponse(response, 500, listGamesResult);
             }
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response, 401, new LoginResponse(null, "Error: unauthorized", null, null));
+            return methodHandlers.getResponse(response, 401, new LoginResult(null, "Error: unauthorized", null, null));
         }
     }
 }

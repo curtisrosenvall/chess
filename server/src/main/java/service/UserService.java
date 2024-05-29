@@ -4,7 +4,7 @@ package service;
 import dataaccess.*;
 import model.*;
 import request.*;
-import response.*;
+import result.*;
 
 import java.util.UUID;
 
@@ -32,21 +32,21 @@ public class UserService {
         return result;
     }
 
-    public LoginResponse loginUser(LoginRequest request) {
+    public LoginResult loginUser(LoginRequest request) {
         String name = request.getUsername();
         String password = request.getPassword();
-        LoginResponse result;
+        LoginResult result;
         try {
             UserData user = dataBase.getUser(name);
             if(user.password().equals(password)) {
                 String newToken = newAuthToken();
                 dataBase.createAuth(newToken, name);
-                result = new LoginResponse(true, null, name, newToken);
+                result = new LoginResult(true, null, name, newToken);
             }
             else
                 throw new DataAccessException("Invalid Password");
         } catch(DataAccessException ex) {
-            result = new LoginResponse(false, ex.getMessage(), null, null);
+            result = new LoginResult(false, ex.getMessage(), null, null);
         }
         return result;
     }

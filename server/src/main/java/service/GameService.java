@@ -2,7 +2,7 @@ package service;
 import dataaccess.*;
 import model.*;
 import request.*;
-import response.*;
+import result.*;
 import java.util.ArrayList;
 public class GameService {
 
@@ -11,8 +11,6 @@ public class GameService {
     public GameService(Database database) {
         this.database = database;
     }
-
-//    create
 
     public CreateGameResponse createGame(CreateGameRequest request) {
         String authToken = request.getAuthToken();
@@ -31,7 +29,6 @@ public class GameService {
         return result;
     }
 
-    //Join
     public JoinGameResponse joinGame(JoinGameRequest request) {
         String authToken = request.getAuthToken();
         JoinGameResponse result;
@@ -39,7 +36,6 @@ public class GameService {
             AuthData auth = database.getAuth(authToken);
             GameData game = database.getGame(request.getGameId());
             GameData newGame;
-            Boolean spectator = false;
             if(request.getPlayerColor().equalsIgnoreCase("WHITE")) {
                 if(database.getPlayerFromColor(game, "WHITE") != null)
                     throw new DataAccessException("Error: already taken");
@@ -58,7 +54,6 @@ public class GameService {
         return result;
     }
 
-    //List
     public ListGamesResponse listGames(ListGamesRequest request) {
         String authToken = request.getAuthToken();
         ListGamesResponse result;

@@ -2,8 +2,8 @@ package handler;
 import dataaccess.DataAccessException;
 import dataaccess.Database;
 import request.LogoutRequest;
-import response.LoginResponse;
-import response.LogoutResponse;
+import result.LoginResult;
+import result.LogoutResponse;
 import spark.Request;
 import spark.Route;
 import spark.Response;
@@ -40,7 +40,7 @@ public class Logout implements Route {
             else
                 return methodHandlers.getResponse(response, 500, logoutResponse);
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response, 401, new LoginResponse(null, "Error: unauthorized", null, null));
+            return methodHandlers.getResponse(response, 401, new LoginResult(null, "Error: unauthorized", null, null));
         }
     }
 }

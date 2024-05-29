@@ -6,7 +6,7 @@ import spark.Request;
 import model.GameData;
 import service.GameService;
 import request.*;
-import response.*;
+import result.*;
 import spark.Response;
 import spark.Route;
 

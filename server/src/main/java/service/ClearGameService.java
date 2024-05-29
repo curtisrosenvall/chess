@@ -1,6 +1,6 @@
 package service;
 import dataaccess.*;
-import response.ClearResponse;
+import result.*;
 
 public class ClearGameService {
 

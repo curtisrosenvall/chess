@@ -3,7 +3,7 @@ import service.ClearGameService;
 import spark.Request;
 import spark.Route;
 import spark.Response;
-import response.ClearResponse;
+import result.ClearResponse;
 import com.google.gson.Gson;
 
 
