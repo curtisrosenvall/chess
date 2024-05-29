@@ -12,11 +12,7 @@ import java.util.ArrayList;
  */
 public interface AuthDAO {
 
-    /**
-     * Clears all authentication data from the database.
-     *
-     * @throws DataAccessException if there is an error during the database operation
-     */
+    
     void clear() throws DataAccessException;
 
     /**
@@ -52,10 +48,4 @@ public interface AuthDAO {
      */
     int size();
 
-    /**
-     * Retrieves all authentication entries from the database.
-     *
-     * @return an ArrayList containing all authentication data entries
-     */
-    ArrayList<AuthData> getAllAuths();
 }

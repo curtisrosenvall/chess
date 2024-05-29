@@ -37,8 +37,7 @@ public class MemoryAuthDAO implements AuthDAO {
         return mapOfAuthData.size();
     }
 
-    @Override
-    public ArrayList<AuthData> getAllAuths() {
+    public ArrayList<AuthData> getAuth() {
         ArrayList<AuthData> allAuths = new ArrayList<>();
         for(Map.Entry<String, AuthData> entry : mapOfAuthData.entrySet()) {
             allAuths.add(entry.getValue());
