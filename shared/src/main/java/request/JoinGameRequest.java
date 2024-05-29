@@ -3,8 +3,8 @@ package request;
 public class JoinGameRequest extends ParentRequest{
 
     private String authToken;
-    private String playerColor;
-    private int gameId;
+    private final String playerColor;
+    private final int gameId;
 
     public JoinGameRequest(String authToken, String playerColor, int gameId) {
         super();

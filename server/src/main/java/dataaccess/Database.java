@@ -1,9 +1,7 @@
 package dataaccess;
-import java.util.ArrayList;
-import model.AuthData;
-import model.UserData;
-import model.GameData;
+import model.*;
 
+import java.util.ArrayList;
 
 public class Database {
 
@@ -22,11 +20,9 @@ public class Database {
         userDatabase.clear();
         gameDatabase.clear();
     }
-
     public boolean isAllEmpty() {
         return (authDatabase.size() == 0) && (userDatabase.size() == 0) && (gameDatabase.size() == 0);
     }
-
 
     //Create Methods
     public void createUser(String name, String password, String email) throws DataAccessException {
