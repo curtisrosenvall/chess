@@ -8,23 +8,23 @@ import java.util.HashMap;
 public class MemoryGameDAO implements GameDAO{
 
     HashMap<Integer, GameData> map;
-    int numGames;
+    int numberOfGames;
 
     public MemoryGameDAO() {
         map = new HashMap<>();
-        numGames = 0;
+        numberOfGames = 0;
     }
 
     @Override
     public void clear() {
         map.clear();
-        numGames = 0;
+        numberOfGames = 0;
     }
 
     @Override
     public void createGame(String name) {
-        numGames++;
-        map.put(numGames, new GameData(numGames, null, null, name, new ChessGame()));
+        numberOfGames++;
+        map.put(numberOfGames, new GameData(numberOfGames, null, null, name, new ChessGame()));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class MemoryGameDAO implements GameDAO{
     @Override
     public ArrayList<GameData> listGames() {
         ArrayList<GameData> gameList = new ArrayList<>();
-        for(int i = 1; i <= numGames; i++) {
+        for(int i = 1; i <= numberOfGames; i++) {
             gameList.add(getGame(i));
         }
         return gameList;
