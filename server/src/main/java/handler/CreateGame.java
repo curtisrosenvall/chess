@@ -1,12 +1,11 @@
 package handler;
+
 import dataaccess.DataAccessException;
-import result.CreateGameResult;
-import spark.Request;
-import spark.Response;
-import service.*;
 import dataaccess.Database;
-import request.CreateGameRequest;
-import spark.Route;
+import request.*;
+import result.*;
+import service.GameService;
+import spark.*;
 
 public class CreateGame implements Route {
 

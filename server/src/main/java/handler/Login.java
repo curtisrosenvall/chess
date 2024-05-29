@@ -1,12 +1,14 @@
 package handler;
+
+import dataaccess.DataAccessException;
 import dataaccess.Database;
-import spark.Response;
+import model.UserData;
+import request.LoginRequest;
+import result.LoginResult;
+import service.UserService;
 import spark.Request;
+import spark.Response;
 import spark.Route;
-import request.*;
-import result.*;
-import model.*;
-import service.*;
 
 public class Login implements Route {
 
@@ -22,42 +24,27 @@ public class Login implements Route {
     public Object handle(Request request, Response response) {
         LoginRequest loginRequest;
         UserData user;
-
         try {
-            // Attempt to parse the request and validate the fields
             loginRequest = (LoginRequest) methodHandlers.getBody(request, "LoginRequest");
             methodHandlers.isNullString(loginRequest.getUsername());
             methodHandlers.isNullString(loginRequest.getPassword());
-
+        } catch(DataAccessException ex) {
+            return methodHandlers.getResponse(response, 401, new LoginResult(null, "Error: bad request", null, null));
+        }
+        try {
             user = database.getUser(loginRequest.getUsername());
-            if (user == null || !user.password().equals(loginRequest.getPassword())) {
-                throw new UnauthorizedAccessException("Error: unauthorized");
-            }
-
-            // Attempt to log the user in
             UserService login = new UserService(database);
             LoginResult loginResult = login.loginUser(loginRequest);
-            if (loginResult.isSuccess()) {
-                return methodHandlers.getResponse(response, 200, loginResult);
-            } else {
-                return methodHandlers.getResponse(response, 500, loginResult);
-            }
-        } catch (IllegalArgumentException ex) {
-            // Catch any issues with the request format or missing fields
-            return methodHandlers.getResponse(response, 400, new LoginResult(null, "Error: bad request", null, null));
-        } catch (UnauthorizedAccessException ex) {
-            // Catch unauthorized access attempts
+            if(user.password().equals(loginRequest.getPassword())) {
+                if(loginResult.isSuccess()) {
+                    return methodHandlers.getResponse(response, 200, loginResult);
+                } else {
+                    return methodHandlers.getResponse(response, 500, loginResult);
+                }
+            } else
+                throw new DataAccessException("Error: unauthorized");
+        } catch(DataAccessException ex) {
             return methodHandlers.getResponse(response, 401, new LoginResult(null, "Error: unauthorized", null, null));
-        } catch (Exception ex) {
-            // Catch any other unexpected exceptions
-            return methodHandlers.getResponse(response, 500, new LoginResult(null, "Error: internal server error", null, null));
-        }
-    }
-
-    // Define custom exception for unauthorized access
-    private class UnauthorizedAccessException extends Exception {
-        public UnauthorizedAccessException(String message) {
-            super(message);
         }
     }
 }
