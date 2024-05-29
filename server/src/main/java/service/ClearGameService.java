@@ -1,6 +1,7 @@
 package service;
+
 import dataaccess.*;
-import result.*;
+import result.ClearResult;
 
 public class ClearGameService {
 

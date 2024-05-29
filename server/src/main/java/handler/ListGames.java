@@ -1,24 +1,24 @@
 package handler;
-import dataaccess.DataAccessException;
-import request.ListGamesRequest;
 
+import dataaccess.DataAccessException;
+import dataaccess.Database;
+import request.ListGamesRequest;
 import result.JoinGameResult;
 import result.ListGamesResult;
 import result.LoginResult;
+import service.GameService;
 import spark.Request;
-import spark.Route;
 import spark.Response;
-import dataaccess.Database;
-import model.AuthData;
-import service.*;
+import spark.Route;
 
 public class ListGames implements Route {
+
     Database database;
-    methodHandlers methodHandlers;
+    MethodHandlers methodHandlers;
 
     public ListGames(Database database) {
         this.database = database;
-        methodHandlers = new methodHandlers();
+        methodHandlers = new MethodHandlers();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ListGames implements Route {
             return methodHandlers.getResponse(response,400, new JoinGameResult(null, "Error: bad request"));
         }
         try {
-            AuthData auth = database.getAuth(token);
+            database.getAuth(token);
             GameService listGames = new GameService(database);
             ListGamesResult listGamesResult = listGames.listGames(listRequest);
             if(listGamesResult.isSuccess()) {

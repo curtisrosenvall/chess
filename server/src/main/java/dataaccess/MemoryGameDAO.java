@@ -1,56 +1,53 @@
 package dataaccess;
-import java.util.ArrayList;
+
 import chess.ChessGame;
 import model.GameData;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MemoryGameDAO implements GameDAO {
+public class MemoryGameDAO implements GameDAO{
 
-    HashMap<Integer, GameData> mapOfGameData;
-    int numberOfGames;
+    HashMap<Integer, GameData> map;
+    int numGames;
 
     public MemoryGameDAO() {
-        mapOfGameData = new HashMap<>();
-        numberOfGames = 0;
+        map = new HashMap<>();
+        numGames = 0;
     }
 
-
     @Override
-    public void clear(){
-        mapOfGameData.clear();
+    public void clear() {
+        map.clear();
+        numGames = 0;
     }
 
     @Override
     public void createGame(String name) {
-        numberOfGames++;
-        mapOfGameData.put(numberOfGames, new GameData(numberOfGames, null, null, name, new ChessGame()));
+        numGames++;
+        map.put(numGames, new GameData(numGames, null, null, name, new ChessGame()));
     }
 
     @Override
     public GameData getGame(int id) {
-        return mapOfGameData.get(id);
+        return map.get(id);
     }
 
     @Override
-    public ArrayList<GameData> getAllGames() {
-        ArrayList<GameData> listOfGames = new ArrayList<>();
-        for(int i = 1; i <= numberOfGames; i++) {
-            listOfGames.add(getGame(i));
+    public ArrayList<GameData> listGames() {
+        ArrayList<GameData> gameList = new ArrayList<>();
+        for(int i = 1; i <= numGames; i++) {
+            gameList.add(getGame(i));
         }
-        return listOfGames;
+        return gameList;
     }
 
     @Override
     public void updateGame(int id, GameData game) {
-        mapOfGameData.put(id, game);
+        map.put(id, game);
     }
-
 
     @Override
     public int size() {
-        return mapOfGameData.size();
+        return map.size();
     }
-
-
 }

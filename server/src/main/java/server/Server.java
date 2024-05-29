@@ -1,5 +1,6 @@
 package server;
-import dataaccess.Database;
+
+import dataaccess.*;
 import handler.*;
 import spark.*;
 
@@ -12,8 +13,8 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
+        //Create DAOs to pass through
         database = new Database();
-
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", (req, res) -> (new Register(database)).handle(req,res));

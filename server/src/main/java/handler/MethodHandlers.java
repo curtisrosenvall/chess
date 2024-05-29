@@ -1,4 +1,5 @@
 package handler;
+
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import request.*;
@@ -6,9 +7,11 @@ import result.ParentResult;
 import spark.Request;
 import spark.Response;
 
-public class methodHandlers {
+public class MethodHandlers {
 
+    public MethodHandlers() {
 
+    }
 
     public Object getBody(Request request, String requestType) throws DataAccessException {
         if(requestType.equals("RegisterRequest"))

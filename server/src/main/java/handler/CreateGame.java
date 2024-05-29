@@ -10,11 +10,11 @@ import spark.*;
 public class CreateGame implements Route {
 
     Database database;
-    methodHandlers methodHandlers;
+    MethodHandlers MethodHandlers;
 
     public CreateGame(Database database) {
         this.database = database;
-        methodHandlers = new methodHandlers();
+        MethodHandlers = new MethodHandlers();
     }
 
     @Override
@@ -22,25 +22,25 @@ public class CreateGame implements Route {
         CreateGameRequest createRequest;
         String token;
         try {
-            createRequest = (CreateGameRequest) methodHandlers.getBody(request, "CreateGameRequest");
-            methodHandlers.isNullString(createRequest.getGameName());
-            token = methodHandlers.getAuthorization(request);
+            createRequest = (CreateGameRequest) MethodHandlers.getBody(request, "CreateGameRequest");
+            MethodHandlers.isNullString(createRequest.getGameName());
+            token = MethodHandlers.getAuthorization(request);
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response,400, new CreateGameResult(null, "Error: bad request", null));
+            return MethodHandlers.getResponse(response,400, new CreateGameResult(null, "Error: bad request", null));
         }
         try {
-            methodHandlers.isNullString(token);
+            MethodHandlers.isNullString(token);
             database.getAuth(token);
             createRequest.setAuthToken(token);
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response, 401, new CreateGameResult(null, "Error: unauthorized",null));
+            return MethodHandlers.getResponse(response, 401, new CreateGameResult(null, "Error: unauthorized",null));
         }
         GameService createGame = new GameService(database);
         CreateGameResult createGameResult = createGame.createGame(createRequest);
         if(createGameResult.isSuccess()) {
-            return methodHandlers.getResponse(response, 200, createGameResult);
+            return MethodHandlers.getResponse(response, 200, createGameResult);
         } else {
-            return methodHandlers.getResponse(response, 500, createGameResult);
+            return MethodHandlers.getResponse(response, 500, createGameResult);
         }
     }
 }

@@ -1,4 +1,5 @@
 package handler;
+
 import dataaccess.DataAccessException;
 import dataaccess.Database;
 import model.GameData;
@@ -12,11 +13,11 @@ import spark.Route;
 public class JoinGame implements Route {
 
     Database database;
-    methodHandlers methodHandlers;
+    MethodHandlers methodHandlers;
 
     public JoinGame(Database database) {
         this.database = database;
-        methodHandlers = new methodHandlers();
+        methodHandlers = new MethodHandlers();
     }
 
     @Override

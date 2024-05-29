@@ -1,45 +1,46 @@
 package dataaccess;
+
 import model.*;
 
 import java.util.ArrayList;
 
 public class Database {
 
-    AuthDAO authDatabase;
-    UserDAO userDatabase;
-    GameDAO gameDatabase;
+    AuthDAO authDataBase;
+    UserDAO userDataBase;
+    GameDAO gameDataBase;
 
     public Database() {
-        authDatabase = new MemoryAuthDAO();
-        userDatabase = new MemoryUserDAO();
-        gameDatabase = new MemoryGameDAO();
+        authDataBase = new MemoryAuthDAO();
+        userDataBase = new MemoryUserDAO();
+        gameDataBase = new MemoryGameDAO();
     }
 
     public void clearAll() throws DataAccessException {
-        authDatabase.clear();
-        userDatabase.clear();
-        gameDatabase.clear();
+        authDataBase.clear();
+        userDataBase.clear();
+        gameDataBase.clear();
     }
     public boolean isAllEmpty() {
-        return (authDatabase.size() == 0) && (userDatabase.size() == 0) && (gameDatabase.size() == 0);
+        return (authDataBase.size() == 0) && (userDataBase.size() == 0) && (gameDataBase.size() == 0);
     }
 
     //Create Methods
     public void createUser(String name, String password, String email) throws DataAccessException {
         if(isUserEmpty(name))
-            userDatabase.createUser(name, new UserData(name, password, email));
+            userDataBase.createUser(name, new UserData(name, password, email));
         else
             throw new DataAccessException("Error: already taken");
     }
     public void createGame(String name) throws DataAccessException {
         if(isGameEmpty(name))
-            gameDatabase.createGame(name);
+            gameDataBase.createGame(name);
         else
             throw new DataAccessException("Game taken");
     }
     public void createAuth(String token, String name) throws DataAccessException {
         if(isAuthEmpty(token))
-            authDatabase.createAuth(token, new AuthData(token, name));
+            authDataBase.createAuth(token, new AuthData(token, name));
         else
             throw new DataAccessException("Auth taken");
     }
@@ -49,34 +50,30 @@ public class Database {
         if(isAuthEmpty(token))
             throw new DataAccessException("Not valid token");
         else
-            return authDatabase.getAuth(token);
+            return authDataBase.getAuth(token);
     }
     public UserData getUser(String name) throws DataAccessException {
         if(isUserEmpty(name))
             throw new DataAccessException("Not valid Username");
         else
-            return userDatabase.getUser(name);
+            return userDataBase.getUser(name);
     }
     public GameData getGame(int gameID) throws DataAccessException {
         if(isGameEmpty(gameID))
             throw new DataAccessException("Not valid GameID");
         else
-            return gameDatabase.getGame(gameID);
+            return gameDataBase.getGame(gameID);
     }
     public GameData getGameName(String name) throws DataAccessException {
-        ArrayList<GameData> gameList = gameDatabase.getAllGames();
-        if (gameList == null || gameList.isEmpty()) {
+        ArrayList<GameData> gameList = gameDataBase.listGames();
+        if(gameList.isEmpty())
             throw new DataAccessException("Not valid Game Name");
-        }
-        for (GameData game : gameList) {
-            if (game != null && game.gameName().equals(name)) {
+        for(GameData game : gameList) {
+            if(game.gameName().equals(name))
                 return game;
-            }
         }
         throw new DataAccessException("Not valid Game Name");
     }
-
-
     public boolean noGameName(String name) {
         try {
             getGameName(name);
@@ -86,7 +83,7 @@ public class Database {
         }
     }
     public ArrayList<GameData> getGameList() throws DataAccessException {
-        return gameDatabase.getAllGames();
+        return gameDataBase.listGames();
     }
     public String getPlayerFromColor(GameData game, String color) {
         if(color.equals("WHITE"))
@@ -96,13 +93,13 @@ public class Database {
 
     //is_Empty
     public boolean isAuthEmpty(String token) throws DataAccessException {
-        return authDatabase.getAuth(token) == null;
+        return authDataBase.getAuth(token) == null;
     }
     public boolean isUserEmpty(String name) throws DataAccessException {
-        return userDatabase.getUser(name) == null;
+        return userDataBase.getUser(name) == null;
     }
     public boolean isGameEmpty(int gameID) throws DataAccessException {
-        return gameDatabase.getGame(gameID) == null;
+        return gameDataBase.getGame(gameID) == null;
     }
     public boolean isGameEmpty(String name) {
         try {
@@ -117,10 +114,10 @@ public class Database {
         if(isAuthEmpty(token))
             throw new DataAccessException("Not valid token");
         else
-            authDatabase.deleteAuth(token);
+            authDataBase.deleteAuth(token);
     }
 
     public void updateGame(GameData newGame) throws DataAccessException{
-        gameDatabase.updateGame(newGame.gameId(), newGame);
+        gameDataBase.updateGame(newGame.gameID(), newGame);
     }
 }

@@ -1,6 +1,7 @@
 package handler;
 
 import dataaccess.DataAccessException;
+
 import dataaccess.Database;
 import model.UserData;
 import request.LoginRequest;
@@ -13,11 +14,11 @@ import spark.Route;
 public class Login implements Route {
 
     Database database;
-    methodHandlers methodHandlers;
+    MethodHandlers methodHandlers;
 
     public Login(Database database) {
         this.database = database;
-        methodHandlers = new methodHandlers();
+        methodHandlers = new MethodHandlers();
     }
 
     @Override

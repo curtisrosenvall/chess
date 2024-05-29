@@ -2,22 +2,24 @@ package handler;
 
 import dataaccess.DataAccessException;
 import dataaccess.Database;
-import result.*;
+import request.RegisterRequest;
+import result.RegisterResult;
+import service.UserService;
 import spark.Request;
 import spark.Response;
-import request.*;
-import service.*;
 import spark.Route;
 
 public class Register implements Route {
+
     Database database;
-    methodHandlers methodHandlers;
+    MethodHandlers methodHandlers;
 
     public Register(Database database) {
         this.database = database;
-        methodHandlers = new methodHandlers();
+        methodHandlers = new MethodHandlers();
     }
 
+    @Override
     public Object handle(Request request, Response response) {
         RegisterRequest registerRequest;
         try {

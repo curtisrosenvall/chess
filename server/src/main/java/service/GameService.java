@@ -22,7 +22,7 @@ public class GameService {
                 throw new DataAccessException("Game already Exists");
             database.createGame(gameName);
             GameData game = database.getGameName(gameName);
-            result = new CreateGameResult(true, null, game.gameId());
+            result = new CreateGameResult(true, null, game.gameID());
         } catch(DataAccessException ex) {
             result = new CreateGameResult(false, "Error: " + ex.getMessage(), null);
         }
@@ -39,12 +39,12 @@ public class GameService {
             if(request.getPlayerColor().equalsIgnoreCase("WHITE")) {
                 if(database.getPlayerFromColor(game, "WHITE") != null)
                     throw new DataAccessException("Error: already taken");
-                newGame = new GameData(game.gameId(), auth.username(), game.blackUsername(), game.gameName(), game.game());
+                newGame = new GameData(game.gameID(), auth.username(), game.blackUsername(), game.gameName(), game.game());
                 database.updateGame(newGame);
             } else if (request.getPlayerColor().equalsIgnoreCase("BLACK")) {
                 if(database.getPlayerFromColor(game, "BLACK") != null)
                     throw new DataAccessException("Error: already taken");
-                newGame = new GameData(game.gameId(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
+                newGame = new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
                 database.updateGame(newGame);
             }
             result = new JoinGameResult(true, null);
