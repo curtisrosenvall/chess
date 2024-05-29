@@ -34,7 +34,7 @@ public class GameService {
         JoinGameResult result;
         try {
             AuthData auth = database.getAuth(authToken);
-            GameData game = database.getGame(request.getGameId());
+            GameData game = database.getGame(request.getGameID());
             GameData newGame;
             if(request.getPlayerColor().equalsIgnoreCase("WHITE")) {
                 if(database.getPlayerFromColor(game, "WHITE") != null)

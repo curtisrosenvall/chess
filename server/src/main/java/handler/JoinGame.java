@@ -1,16 +1,15 @@
 package handler;
 import dataaccess.DataAccessException;
 import dataaccess.Database;
-
-import spark.Request;
 import model.GameData;
+import request.JoinGameRequest;
+import result.JoinGameResult;
 import service.GameService;
-import request.*;
-import result.*;
+import spark.Request;
 import spark.Response;
 import spark.Route;
 
-public class JoinGame implements Route{
+public class JoinGame implements Route {
 
     Database database;
     methodHandlers methodHandlers;
@@ -28,9 +27,9 @@ public class JoinGame implements Route{
         try {
             joinRequest = (JoinGameRequest) methodHandlers.getBody(request, "JoinGameRequest");
             methodHandlers.isNullString(joinRequest.getPlayerColor());
-            methodHandlers.isNullInteger(joinRequest.getGameId());
+            methodHandlers.isNullInteger(joinRequest.getGameID());
             token = methodHandlers.getAuthorization(request);
-            game = database.getGame(joinRequest.getGameId());
+            game = database.getGame(joinRequest.getGameID());
         } catch(DataAccessException ex) {
             return methodHandlers.getResponse(response,400, new JoinGameResult(null, "Error: bad request"));
         }
@@ -62,4 +61,5 @@ public class JoinGame implements Route{
             return methodHandlers.getResponse(response, 500, joinGameResult);
         }
     }
+
 }
