@@ -2,8 +2,10 @@ package handler;
 import dataaccess.DataAccessException;
 import dataaccess.Database;
 import request.LogoutRequest;
+
 import result.LoginResult;
-import result.LogoutResponse;
+
+import result.LogoutResult;
 import spark.Request;
 import spark.Route;
 import spark.Response;
@@ -29,12 +31,12 @@ public class Logout implements Route {
             methodHandlers.isNullString(token);
             logoutRequest = new LogoutRequest(token);
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response,400, new LogoutResponse(null, "Error: bad request"));
+            return methodHandlers.getResponse(response,400, new LogoutResult(null, "Error: bad request"));
         }
         try {
             AuthData auth = database.getAuth(token);
             UserService logout = new UserService(database);
-            LogoutResponse logoutResponse = logout.logoutUser(logoutRequest);
+            LogoutResult logoutResponse = logout.logoutUser(logoutRequest);
             if(logoutResponse.isSuccess())
                 return methodHandlers.getResponse(response, 200, logoutResponse);
             else

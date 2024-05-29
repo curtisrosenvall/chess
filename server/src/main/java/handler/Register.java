@@ -2,7 +2,7 @@ package handler;
 
 import dataaccess.DataAccessException;
 import dataaccess.Database;
-import result.RegisterResponse;
+import result.*;
 import spark.Request;
 import spark.Response;
 import request.*;
@@ -26,10 +26,10 @@ public class Register implements Route {
             methodHandlers.isNullString(registerRequest.getPassword());
             methodHandlers.isNullString(registerRequest.getEmail());
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response,400, new RegisterResponse(null, "Error: Bad Request", null, null));
+            return methodHandlers.getResponse(response,400, new RegisterResult(null, "Error: Bad Request", null, null));
         }
         UserService register = new UserService(database);
-        RegisterResponse registerResult = register.createUser(registerRequest);
+        RegisterResult registerResult = register.createUser(registerRequest);
         if(registerResult.isSuccess()) {
             return methodHandlers.getResponse(response, 200, registerResult);
         } else if(registerResult.getMessage().contains("already taken")) {

@@ -12,26 +12,26 @@ public class GameService {
         this.database = database;
     }
 
-    public CreateGameResponse createGame(CreateGameRequest request) {
+    public CreateGameResult createGame(CreateGameRequest request) {
         String authToken = request.getAuthToken();
         String gameName = request.getGameName();
-        CreateGameResponse result;
+        CreateGameResult result;
         try {
             database.getAuth(authToken);
             if(!database.noGameName(gameName))
                 throw new DataAccessException("Game already Exists");
             database.createGame(gameName);
             GameData game = database.getGameName(gameName);
-            result = new CreateGameResponse(true, null, game.gameId());
+            result = new CreateGameResult(true, null, game.gameId());
         } catch(DataAccessException ex) {
-            result = new CreateGameResponse(false, "Error: " + ex.getMessage(), null);
+            result = new CreateGameResult(false, "Error: " + ex.getMessage(), null);
         }
         return result;
     }
 
-    public JoinGameResponse joinGame(JoinGameRequest request) {
+    public JoinGameResult joinGame(JoinGameRequest request) {
         String authToken = request.getAuthToken();
-        JoinGameResponse result;
+        JoinGameResult result;
         try {
             AuthData auth = database.getAuth(authToken);
             GameData game = database.getGame(request.getGameId());
@@ -47,22 +47,22 @@ public class GameService {
                 newGame = new GameData(game.gameId(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
                 database.updateGame(newGame);
             }
-            result = new JoinGameResponse(true, null);
+            result = new JoinGameResult(true, null);
         } catch(DataAccessException ex) {
-            result = new JoinGameResponse(false, ex.getMessage());
+            result = new JoinGameResult(false, ex.getMessage());
         }
         return result;
     }
 
-    public ListGamesResponse listGames(ListGamesRequest request) {
+    public ListGamesResult listGames(ListGamesRequest request) {
         String authToken = request.getAuthToken();
-        ListGamesResponse result;
+        ListGamesResult result;
         try {
             database.getAuth(authToken);
             ArrayList<GameData> games = database.getGameList();
-            result = new ListGamesResponse (true, null, games);
+            result = new ListGamesResult (true, null, games);
         } catch(DataAccessException ex) {
-            result = new ListGamesResponse(false, ex.getMessage(), null);
+            result = new ListGamesResult(false, ex.getMessage(), null);
         }
         return result;
     }

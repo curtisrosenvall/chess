@@ -32,7 +32,7 @@ public class JoinGame implements Route{
             token = methodHandlers.getAuthorization(request);
             game = database.getGame(joinRequest.getGameId());
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response,400, new JoinGameResponse(null, "Error: bad request"));
+            return methodHandlers.getResponse(response,400, new JoinGameResult(null, "Error: bad request"));
         }
         try {
             methodHandlers.isNullString(token);
@@ -40,7 +40,7 @@ public class JoinGame implements Route{
             joinRequest.setAuthToken(token);
             database.getAuth(token);
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response, 401, new JoinGameResponse(null, "Error: unauthorized"));
+            return methodHandlers.getResponse(response, 401, new JoinGameResult(null, "Error: unauthorized"));
         }
         try {
             String playerColor = joinRequest.getPlayerColor();
@@ -52,10 +52,10 @@ public class JoinGame implements Route{
                     throw new DataAccessException("Error: already taken");
             }
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response, 403, new JoinGameResponse(null, "Error: already taken"));
+            return methodHandlers.getResponse(response, 403, new JoinGameResult(null, "Error: already taken"));
         }
         GameService joinGame = new GameService(database);
-        JoinGameResponse joinGameResult = joinGame.joinGame(joinRequest);
+        JoinGameResult joinGameResult = joinGame.joinGame(joinRequest);
         if(joinGameResult.isSuccess()) {
             return methodHandlers.getResponse(response, 200, joinGameResult);
         } else {

@@ -10,16 +10,16 @@ public class ClearGameService {
         this.database = database;
     }
 
-    public ClearResponse deleteAll()  {
-        ClearResponse result;
+    public ClearResult deleteAll()  {
+        ClearResult result;
         try {
             database.clearAll();
             if(database.isAllEmpty())
-                result = new ClearResponse(true, null);
+                result = new ClearResult(true, null);
             else
                 throw new DataAccessException("Didn't clear the database");
         } catch(DataAccessException ex) {
-            result = new ClearResponse(false, "Error: " + ex.getMessage());
+            result = new ClearResult(false, "Error: " + ex.getMessage());
         }
         return result;
     }

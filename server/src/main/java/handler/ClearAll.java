@@ -1,9 +1,9 @@
 package handler;
+import result.ClearResult;
 import service.ClearGameService;
 import spark.Request;
 import spark.Route;
 import spark.Response;
-import result.ClearResponse;
 import com.google.gson.Gson;
 
 
@@ -23,12 +23,12 @@ public class ClearAll implements Route {
     @Override
     public Object handle(Request request, Response response) {
         ClearGameService clear = new ClearGameService(database);
-        ClearResponse ClearResponse = clear.deleteAll();
-        if(ClearResponse.isSuccess()) {
-            methodHandlers.getResponse(response, 200, ClearResponse);
+        ClearResult clearResult = clear.deleteAll();
+        if(clearResult.isSuccess()) {
+            methodHandlers.getResponse(response, 200, clearResult);
         } else {
-            methodHandlers.getResponse(response, 500, ClearResponse);
+            methodHandlers.getResponse(response, 500, clearResult);
         }
-            return new Gson().toJson(ClearResponse);
+        return new Gson().toJson(clearResult);
     }
 }

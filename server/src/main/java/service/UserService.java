@@ -16,18 +16,18 @@ public class UserService {
         this.dataBase = dataBase;
     }
 
-    public RegisterResponse createUser(RegisterRequest request) {
+    public RegisterResult createUser(RegisterRequest request) {
         String name = request.getUsername();
         String password = request.getPassword();
         String email = request.getEmail();
-        RegisterResponse result;
+        RegisterResult result;
         try {
             dataBase.createUser(name, password,email);
             String authToken = newAuthToken();
             dataBase.createAuth(authToken, name);
-            result = new RegisterResponse(true, null, name, authToken);
+            result = new RegisterResult(true, null, name, authToken);
         } catch(DataAccessException ex) {
-            result = new RegisterResponse(false, ex.getMessage(), null, null);
+            result = new RegisterResult(false, ex.getMessage(), null, null);
         }
         return result;
     }
@@ -51,15 +51,15 @@ public class UserService {
         return result;
     }
 
-    public LogoutResponse logoutUser(LogoutRequest request) {
-        LogoutResponse result;
+    public LogoutResult logoutUser(LogoutRequest request) {
+        LogoutResult result;
         try {
             String authToken = request.getAuthToken();
             dataBase.getAuth(authToken);
             dataBase.deleteAuth(authToken);
-            result = new LogoutResponse(true, null);
+            result = new LogoutResult(true, null);
         } catch(DataAccessException ex) {
-            result = new LogoutResponse(false, "Error: " + ex.getMessage());
+            result = new LogoutResult(false, "Error: " + ex.getMessage());
         }
         return result;
     }

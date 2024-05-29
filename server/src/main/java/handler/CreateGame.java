@@ -1,6 +1,6 @@
 package handler;
 import dataaccess.DataAccessException;
-import result.CreateGameResponse;
+import result.CreateGameResult;
 import spark.Request;
 import spark.Response;
 import service.*;
@@ -27,17 +27,17 @@ public class CreateGame implements Route {
             methodHandlers.isNullString(createRequest.getGameName());
             token = methodHandlers.getAuthorization(request);
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response,400, new CreateGameResponse(null, "Error: bad request", null));
+            return methodHandlers.getResponse(response,400, new CreateGameResult(null, "Error: bad request", null));
         }
         try {
             methodHandlers.isNullString(token);
             database.getAuth(token);
             createRequest.setAuthToken(token);
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response, 401, new CreateGameResponse(null, "Error: unauthorized",null));
+            return methodHandlers.getResponse(response, 401, new CreateGameResult(null, "Error: unauthorized",null));
         }
         GameService createGame = new GameService(database);
-        CreateGameResponse createGameResult = createGame.createGame(createRequest);
+        CreateGameResult createGameResult = createGame.createGame(createRequest);
         if(createGameResult.isSuccess()) {
             return methodHandlers.getResponse(response, 200, createGameResult);
         } else {

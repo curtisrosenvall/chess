@@ -3,11 +3,12 @@ import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
+import result.ParentResult;
 import spark.Request;
 import spark.Response;
 import request.RegisterRequest;
 import request.LoginRequest;
-import result.ParentResponse;
+
 
 public class methodHandlers {
 
@@ -28,7 +29,7 @@ public class methodHandlers {
         return request.headers("Authorization");
     }
 
-    public String getResponse(Response response, int status, ParentResponse objectClass ) {
+    public String getResponse(Response response, int status, ParentResult objectClass ) {
         response.status(status);
         response.type("application/json");
         objectClass.nullSuccess();
