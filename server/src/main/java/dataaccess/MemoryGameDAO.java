@@ -43,7 +43,7 @@ public class MemoryGameDAO implements GameDAO {
 
     @Override
     public void updateGame(int id, GameData game) {
-        mapOfGameData.replace(id, game);
+        mapOfGameData.put(id, game);
     }
 
 

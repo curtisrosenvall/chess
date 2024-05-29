@@ -52,10 +52,4 @@ public interface AuthDAO {
      */
     int size();
 
-    /**
-     * Retrieves all authentication entries from the database.
-     *
-     * @return an ArrayList containing all authentication data entries
-     */
-    ArrayList<AuthData> getAllAuths();
 }

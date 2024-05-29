@@ -25,7 +25,7 @@ public class ListGames implements Route {
         ListGamesRequest listRequest;
         String token;
         try {
-            token = methodHandlers.getAuth(request);
+            token = methodHandlers.getAuthorization(request);
             methodHandlers.isNullString(token);
             listRequest = new ListGamesRequest(token);
         } catch(DataAccessException ex) {

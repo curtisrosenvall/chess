@@ -25,7 +25,7 @@ public class Logout implements Route {
         LogoutRequest logoutRequest;
         String token;
         try {
-            token = methodHandlers.getAuth(request);
+            token = methodHandlers.getAuthorization(request);
             methodHandlers.isNullString(token);
             logoutRequest = new LogoutRequest(token);
         } catch(DataAccessException ex) {

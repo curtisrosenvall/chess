@@ -29,7 +29,7 @@ public class JoinGame implements Route{
             joinRequest = (JoinGameRequest) methodHandlers.getBody(request, "JoinGameRequest");
             methodHandlers.isNullString(joinRequest.getPlayerColor());
             methodHandlers.isNullInteger(joinRequest.getGameId());
-            token = methodHandlers.getAuth(request);
+            token = methodHandlers.getAuthorization(request);
             game = database.getGame(joinRequest.getGameId());
         } catch(DataAccessException ex) {
             return methodHandlers.getResponse(response,400, new JoinGameResponse(null, "Error: bad request"));

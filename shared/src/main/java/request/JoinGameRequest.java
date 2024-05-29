@@ -16,8 +16,8 @@ public class JoinGameRequest extends ParentRequest{
     public String getAuthToken() {
         return authToken;
     }
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+    public void setAuthToken(String token) {
+        authToken = authToken;
     }
 
     public String getPlayerColor() {

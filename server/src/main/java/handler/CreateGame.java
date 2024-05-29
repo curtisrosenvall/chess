@@ -25,7 +25,7 @@ public class CreateGame implements Route {
         try {
             createRequest = (CreateGameRequest) methodHandlers.getBody(request, "CreateGameRequest");
             methodHandlers.isNullString(createRequest.getGameName());
-            token = methodHandlers.getAuth(request);
+            token = methodHandlers.getAuthorization(request);
         } catch(DataAccessException ex) {
             return methodHandlers.getResponse(response,400, new CreateGameResponse(null, "Error: bad request", null));
         }

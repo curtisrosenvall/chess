@@ -20,11 +20,11 @@ public class methodHandlers {
             return new Gson().fromJson(request.body(), CreateGameRequest.class);
         else if(requestType.equals("JoinGameRequest"))
             return new Gson().fromJson(request.body(), JoinGameRequest.class);
-        else  //Clear, Logout, ListGames don't have bodies
+        else
             throw new DataAccessException("Bad Request");
     }
 
-    public String getAuth(Request request){
+    public String getAuthorization(Request request){
         return request.headers("Authorization");
     }
 

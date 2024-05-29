@@ -1,8 +1,8 @@
 package dataaccess;
-import java.util.ArrayList;
+
 import model.AuthData;
 import java.util.HashMap;
-import java.util.Map;
+
 
 public class MemoryAuthDAO implements AuthDAO {
 
@@ -37,12 +37,5 @@ public class MemoryAuthDAO implements AuthDAO {
         return mapOfAuthData.size();
     }
 
-    public ArrayList<AuthData> getAuth() {
-        ArrayList<AuthData> allAuths = new ArrayList<>();
-        for(Map.Entry<String, AuthData> entry : mapOfAuthData.entrySet()) {
-            allAuths.add(entry.getValue());
-        }
-        return allAuths;
-    }
 
 }
