@@ -35,13 +35,33 @@ public class SQLGameDAO implements GameDAO {
     }
 
     @Override
+    public GameData getGame(int id) throws DataAccessException {
+        try(Connection connection = DatabaseManager.getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT  whiteUsername, blackUsername, gameName, game FROM game WHERE gameID=?");
+            preparedStatement.setInt(1,id);
+            ResultSet queryResult = preparedStatement.executeQuery();
+            if(queryResult.next()){
+                String whiteUsername = queryResult.getString("whiteUsername");
+                String blackUsername = queryResult.getString("blackUsername");
+                String gameName = queryResult.getString("gameName");
+                String json = queryResult.getString("game");
+                ChessGame game = new Gson().fromJson(json,ChessGame.class);
+                return new GameData(id,whiteUsername,blackUsername,gameName,game);
+            }
+        }catch (SQLException x){
+            throw new DataAccessException("Error: " + x.getMessage());
+        }
+        return null;
+    }
+
+    @Override
     public void updateGame(int id, GameData game) throws DataAccessException {
         try(Connection connection = DatabaseManager.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE  game SET whiteUsername=?, blackUsername=?, gameName=?, game=? WHERE gameID=?");
             preparedStatement.setString(1,game.whiteUsername());
             preparedStatement.setString(1,game.blackUsername());
             preparedStatement.setString(1,game.gameName());
-            String json = new Gson().toJson(game.game();
+            String json = new Gson().toJson(game.game());
             preparedStatement.setString(4,json);
             preparedStatement.setInt(5,id);
             preparedStatement.executeUpdate();
