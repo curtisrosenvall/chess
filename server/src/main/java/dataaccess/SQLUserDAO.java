@@ -1,39 +1,42 @@
 package dataaccess;
 
-import java.sql.PreparedStatement;
 import com.google.gson.Gson;
 import model.UserData;
+
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 public class SQLUserDAO implements UserDAO {
+
+    public SQLUserDAO() {
+
+    }
 
     @Override
     public void clear() throws DataAccessException {
-        try(Connection connection = DatabaseManager.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("TRUNCATE user");
-                    preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataAccessException("Error: " + e.getMessage());
+        try (Connection conn = DatabaseManager.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement("TRUNCATE user");
+            statement.executeUpdate();
+        } catch(SQLException ex) {
+            throw new DataAccessException("Error: " + ex.getMessage());
         }
     }
 
     @Override
     public void createUser(String name, UserData authData) throws DataAccessException {
-        try(Connection connection = DatabaseManager.getConnection()){
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user(username,password,email,json) VALUES (?,?,?,?)");
-            preparedStatement.setString(1,name);
-            preparedStatement.setString(2, authData.password());
-            preparedStatement.setString(3, authData.email());
+        try(Connection conn = DatabaseManager.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO user (username, password, email, json) VALUES (?,?,?,?)");
+            statement.setString(1,name);
+            statement.setString(2, authData.password());
+            statement.setString(3, authData.email());
             String json = new Gson().toJson(authData);
-            preparedStatement.setString(4, json);
-            preparedStatement.executeUpdate();
+            statement.setString(4, json);
+            statement.executeUpdate();
         } catch(SQLException ex) {
             throw new DataAccessException("Error: " + ex.getMessage());
         }
-
     }
 
     @Override
@@ -51,7 +54,6 @@ public class SQLUserDAO implements UserDAO {
         }
         return null;
     }
-
 
     @Override
     public int size() {
