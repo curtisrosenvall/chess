@@ -1,7 +1,8 @@
 package dataaccess;
-
 import model.*;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Database {
@@ -13,9 +14,55 @@ public class Database {
 
     // Constructor initializes in-memory DAO implementations
     public Database() {
-        authDataBase = new MemoryAuthDAO();
-        userDataBase = new MemoryUserDAO();
-        gameDataBase = new MemoryGameDAO();
+        createTables();
+        authDataBase = new SQLAuthDAO();
+        userDataBase = new SQLUserDAO();
+        gameDataBase = new SQLGameDAO();
+    }
+
+    private void createTables() {
+        try {
+            DatabaseManager.createDatabase();
+        } catch (Exception e) {
+           System.out.println("Database creation failed");
+        }
+        try(Connection connection = DatabaseManager.getConnection()) {
+            String createUserTable = """
+                    CREATE TABLE IF NOT EXISTS user (
+                        username VARCHAR(255) NOT NULL,
+                        password VARCHAR(255) NOT NULL,
+                        email VARCHAR(255) NOT NULL,
+                        json TEXT NOT NULL,
+                        PRIMARY KEY (username)
+                    )""";
+            PreparedStatement createUserStatement = connection.prepareStatement(createUserTable);
+            createUserStatement.executeUpdate();
+
+            String createGameTable = """
+                    CREATE TABLE IF NOT EXISTS game (
+                        gameID INT NOT NULL AUTO_INCREMENT,
+                        whiteUsername VARCHAR(255) DEFAULT NULL,
+                        blackUsername VARCHAR(255) DEFAULT NULL,
+                        gameName VARCHAR(255) NOT NULL,
+                        game TEXT NOT NULL,
+                        PRIMARY KEY (gameID)
+                    )""";
+            PreparedStatement createGameStatement = connection.prepareStatement(createGameTable);
+            createGameStatement.executeUpdate();
+
+            String createAuthTable = """
+                    CREATE TABLE IF NOT EXISTS auth (
+                        authToken VARCHAR(255) NOT NULL,
+                        username VARCHAR(255) NOT NULL,
+                        json TEXT NOT NULL,
+                        PRIMARY KEY (authToken)
+                    )""";
+            PreparedStatement createAuthStatement = connection.prepareStatement(createAuthTable);
+            createAuthStatement.executeUpdate();
+        } catch(Exception ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
+
     }
 
     // Clears all data from the DAOs
