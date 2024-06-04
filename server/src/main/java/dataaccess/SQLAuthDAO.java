@@ -43,7 +43,23 @@ public class SQLAuthDAO  implements AuthDAO {
         }
     }
 
-    
+    @Override
+    public AuthData getAuth(String token) throws DataAccessException {
+        try(Connection connection = DatabaseManager.getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT json FROM auth WHERE authToken=?");
+            preparedStatement.setString(1,token);
+            ResultSet queryResult = preparedStatement.executeQuery();
+            if(queryResult.next()) {
+                String json = queryResult.getString("json");
+                return new Gson().fromJson(json, AuthData.class);
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error: " + e.getMessage());
+        }
+        return null;
+    }
+
+
 
     @Override
     public int size() {
