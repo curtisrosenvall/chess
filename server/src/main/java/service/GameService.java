@@ -1,9 +1,12 @@
 package service;
+
 import dataaccess.*;
 import model.*;
 import request.*;
 import result.*;
+
 import java.util.ArrayList;
+
 public class GameService {
 
     Database database;
@@ -66,5 +69,4 @@ public class GameService {
         }
         return result;
     }
-
 }
