@@ -40,7 +40,7 @@ public class Logout implements Route {
             else
                 return methodHandlers.getResponse(response, 500, logoutResult);
         } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response, 401, new LoginResult(null, "Error: unauthorized", null, null));
+            return methodHandlers.getResponse(response, 401, new LogoutResult(null, "Error: unauthorized"));
         }
     }
 }

@@ -16,10 +16,6 @@ public class UserService {
         this.dataBase = dataBase;
     }
 
-    public String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
-
     public RegisterResult createUser(RegisterRequest request) {
         String name = request.getUsername();
         String hashedPassword = hashPassword(request.getPassword());
@@ -38,7 +34,6 @@ public class UserService {
 
     public LoginResult loginUser(LoginRequest request) {
         String name = request.getUsername();
-        String password = request.getPassword();
         LoginResult result;
         try {
             UserData user = dataBase.getUser(name);
@@ -70,5 +65,9 @@ public class UserService {
 
     public String newAuthToken() {
         return UUID.randomUUID().toString();
+    }
+    public String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+
     }
 }
