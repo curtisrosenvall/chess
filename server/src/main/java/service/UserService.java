@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.*;
 import model.*;
+import org.mindrot.jbcrypt.BCrypt;
 import request.*;
 import result.*;
 
@@ -15,13 +16,17 @@ public class UserService {
         this.dataBase = dataBase;
     }
 
+    public String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
     public RegisterResult createUser(RegisterRequest request) {
         String name = request.getUsername();
-        String password = request.getPassword();
+        String hashedPassword = hashPassword(request.getPassword());
         String email = request.getEmail();
         RegisterResult result;
         try {
-            dataBase.createUser(name, password,email);
+            dataBase.createUser(name, hashedPassword,email);
             String authToken = newAuthToken();
             dataBase.createAuth(authToken, name);
             result = new RegisterResult(true, null, name, authToken);
@@ -37,7 +42,7 @@ public class UserService {
         LoginResult result;
         try {
             UserData user = dataBase.getUser(name);
-            if(user.password().equals(password)) {
+            if(BCrypt.checkpw(request.getPassword(), user.password())) {
                 String newToken = newAuthToken();
                 dataBase.createAuth(newToken, name);
                 result = new LoginResult(true, null, name, newToken);
