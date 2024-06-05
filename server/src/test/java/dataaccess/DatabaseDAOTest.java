@@ -26,4 +26,15 @@ public class DatabaseDAOTest {
             Assertions.fail(e.getMessage());
         }
     }
+
+    @Test
+    public void createAuth() {
+        try{
+            database.createAuth("1234", "name");
+            Assertions.assertNotNull(database.getAuth("1234"));
+            Assertions.assertEquals(1,database.authDataBase.size());
+        } catch (Exception e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
 }
