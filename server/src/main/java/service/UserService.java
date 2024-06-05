@@ -43,7 +43,7 @@ public class UserService {
                 result = new LoginResult(true, null, name, newToken);
             }
             else
-                throw new DataAccessException("Invalid Password");
+                throw new DataAccessException("Test Unauthorized");
         } catch(DataAccessException ex) {
             result = new LoginResult(false, ex.getMessage(), null, null);
         }
