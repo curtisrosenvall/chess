@@ -84,6 +84,7 @@ public class DatabaseDAOTest {
         }
     }
 
+
     @Test
     public void listGames() {
         try{
@@ -99,6 +100,16 @@ public class DatabaseDAOTest {
     }
 
     @Test
+    public void listOneGameSuccess() {
+        try {
+            createGame();
+            database.getGameList();
+        } catch(Exception ex) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
     public void clearUsedDAOs() {
         try {
             database.createAuth("1234","test");
@@ -111,6 +122,8 @@ public class DatabaseDAOTest {
         Assertions.assertTrue(database.isAllEmpty());
     }
 
+ 
+
 //    Negative
 
     @Test
@@ -122,6 +135,16 @@ public class DatabaseDAOTest {
             Assertions.assertTrue(ex.getMessage().contains("already taken"));
         }
     }
+
+    @Test
+    public void getNonExistingUser() {
+        try {
+            database.getUser("name");
+        } catch(Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Not valid Username"));
+        }
+    }
+
 
     @Test
     public void createExistingAuth() {
@@ -149,6 +172,17 @@ public class DatabaseDAOTest {
             createGame();
             database.createGame("testGame");
             Assertions.fail();
+        } catch(Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Game taken"));
+        }
+    }
+
+    @Test
+    public void createGameBadRequest() {
+        try {
+            createGame();
+            database.createGame("testGame");
+            Assertions.assertEquals(1, database.gameDataBase.size());
         } catch(Exception ex) {
             Assertions.assertTrue(ex.getMessage().contains("Game taken"));
         }
