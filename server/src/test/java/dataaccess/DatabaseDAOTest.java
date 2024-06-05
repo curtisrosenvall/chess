@@ -98,6 +98,19 @@ public class DatabaseDAOTest {
 
     }
 
+    @Test
+    public void clearUsedDAOs() {
+        try {
+            database.createAuth("1234","test");
+            createGame();
+            createUser();
+            database.clearAll();
+        } catch(Exception ex) {
+            Assertions.fail();
+        }
+        Assertions.assertTrue(database.isAllEmpty());
+    }
+
 //    Negative
 
     @Test
