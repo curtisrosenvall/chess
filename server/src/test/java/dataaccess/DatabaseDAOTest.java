@@ -49,7 +49,7 @@ public class DatabaseDAOTest {
     }
 
     @Test
-    public void joinGame() {
+    public void joinGameWhite() {
         try{
             createGame();
             GameData game = database.getGame(1);
@@ -59,5 +59,42 @@ public class DatabaseDAOTest {
         } catch (Exception e) {
             Assertions.fail(e.getMessage());
         }
+    }
+    @Test
+    public void joinGameBlack() {
+        try{
+            createGame();
+            GameData game = database.getGame(1);
+            database.updateGame(new GameData(1,  game.whiteUsername(),"Black Player", game.gameName(), game.game()));
+            GameData newGame = database.getGame(1);
+            Assertions.assertNotEquals(newGame.blackUsername(), game.blackUsername());
+        } catch (Exception e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void deleteAuth(){
+        try {
+            createAuth();
+            database.deleteAuth("1234");
+            Assertions.assertEquals(0,database.authDataBase.size());
+        } catch (Exception e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void listGames() {
+        try{
+            database.createGame("firstGame");
+            database.createGame("secondGame");
+            Assertions.assertEquals(2, database.gameDataBase.size());
+            database.getGameList();
+        } catch (Exception ex) {
+            Assertions.fail(ex.getMessage());
+        }
+
+
     }
 }
