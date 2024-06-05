@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.ClearGameService;
 
+import java.sql.PreparedStatement;
+
 public class DatabaseDAOTest {
 
     Database database;
@@ -96,5 +98,37 @@ public class DatabaseDAOTest {
         }
 
 
+    }
+
+//    Negative
+
+    @Test
+    public void createExistingUser() {
+        try {
+            createUser();
+            database.createUser("name", "1234", "email");
+        } catch(Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("already taken"));
+        }
+    }
+
+    @Test
+    public void createExistingAuth() {
+        try{
+            createAuth();
+            database.createAuth("1234", "test");
+            Assertions.fail();
+        } catch(Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Auth taken"));
+        }
+    }
+
+    @Test
+    public void listNoGames() {
+        try{
+            database.getGameList();
+        } catch (Exception e) {
+            Assertions.fail(e.getMessage());
+        }
     }
 }
