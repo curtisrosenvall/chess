@@ -122,7 +122,7 @@ public class DatabaseDAOTest {
         Assertions.assertTrue(database.isAllEmpty());
     }
 
- 
+
 
 //    Negative
 
