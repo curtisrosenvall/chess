@@ -147,4 +147,8 @@ public class ChessBoard implements Cloneable {
     public void setLastMove(ChessMove lastMove) {
         this.lastMove = lastMove;
     }
+
+    public ChessPiece[][] getBoard() {
+        return square;
+    }
 }
