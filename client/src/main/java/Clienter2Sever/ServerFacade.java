@@ -1,14 +1,8 @@
 package Clienter2Sever;
 
 import com.google.gson.Gson;
-import request.CreateGameRequest;
-import request.LoginRequest;
-import request.LogoutRequest;
-import request.RegisterRequest;
-import result.CreateGameResult;
-import result.LoginResult;
-import result.LogoutResult;
-import result.RegisterResult;
+import request.*;
+import result.*;
 
 import java.io.InputStreamReader;
 
@@ -46,5 +40,26 @@ public class ServerFacade {
         URLStrings clientStrings = new URLStrings("/game", "POST", token);
         InputStreamReader reader = clientCommunicator.client2Server(request,clientStrings);
         return new Gson().fromJson(reader, CreateGameResult.class);
+    }
+
+    public ListGamesResult listGames(String token) {
+        ListGamesRequest request = new ListGamesRequest(token);
+        URLStrings clientStrings = new URLStrings("/game", "GET", token);
+        InputStreamReader reader = clientCommunicator.client2Server(request, clientStrings);
+        return new Gson().fromJson(reader, ListGamesResult.class);
+    }
+
+    public JoinGameResult joinGame(Integer gameID, String playerColor, String token) {
+        JoinGameRequest request = new JoinGameRequest(token, playerColor, gameID);
+        URLStrings clientStrings = new URLStrings("/game", "PUT", token);
+        InputStreamReader reader = clientCommunicator.client2Server(request,clientStrings);
+        return new Gson().fromJson(reader, JoinGameResult.class);
+    }
+
+    public ClearRequest clearGame(Integer gameID, String token) {
+        ClearRequest request = new ClearRequest();
+        URLStrings clientStrings = new URLStrings("/db", "DELETE", "");
+        InputStreamReader reader = clientCommunicator.client2Server(request,clientStrings);
+        return new Gson().fromJson(reader, ClearRequest.class);
     }
 }
