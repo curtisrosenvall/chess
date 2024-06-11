@@ -32,6 +32,27 @@ public class GameBoardUI {
         }
     }
 
+    public void printWhiteSideBoard() {
+        printLettersWhite();
+        System.out.println();
+        for(int i = 8; i >= 1; i--) {
+            printRowWhite(i);
+            System.out.println();
+        }
+        printLettersWhite();
+        System.out.println();
+    }
+
+    public void printLettersWhite() {
+        setBorderSquare();
+        printEmptySpace();
+        for(int i = 0; i < 8; i++) {
+            System.out.print(letters[i]);
+        }
+        printEmptySpace();
+        setSquareToNormal();
+    }
+
     public void printLettersBlack() {
         setBorderSquare();
         printEmptySpace();
@@ -45,6 +66,17 @@ public class GameBoardUI {
     public void printRowBlack(int row) {
         printEdge(row);
         for(int i = 8; i >= 1; i--) {
+            setBackGroundColor(row, i);
+            setTextColor(row, i);
+            printPieceType(row, i);
+        }
+        printEdge(row);
+        setSquareToNormal();
+    }
+
+    public void printRowWhite(int row) {
+        printEdge(row);
+        for(int i = 1; i <= 8; i++) {
             setBackGroundColor(row, i);
             setTextColor(row, i);
             printPieceType(row, i);
