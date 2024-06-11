@@ -94,43 +94,43 @@ public class Main {
         }
     }
 
-//    static boolean registerNewUser() {
-//        Scanner scan = new Scanner(System.in);
-//        System.out.println("\nPlease enter your username: ");
-//        String username = scan.nextLine();
-//        System.out.println("Please enter your password: ");
-//        String password = scan.nextLine();
-//        System.out.println("Please enter your email: ");
-//        String email = scan.nextLine();
-//        RegisterResult result = serverFacade.registerUser(username, password, email);
-//
-//        if(result.getAuthToken() == null) {
-//            System.out.println(result.getMessage());
-//            return false;
-//        } else {
-//            System.out.println("Successfully registered.");
-//            authToken = result.getAuthToken();
-//            return true;
-//        }
-//    }
-
-    static boolean loginUser() {
+    static boolean registerNewUser() {
         Scanner scan = new Scanner(System.in);
         System.out.println("\nPlease enter your username: ");
         String username = scan.nextLine();
         System.out.println("Please enter your password: ");
         String password = scan.nextLine();
-        LoginResult result = serverFacade.loginUser(username, password);
+        System.out.println("Please enter your email: ");
+        String email = scan.nextLine();
+        RegisterResult result = serverFacade.registerUser(username, password, email);
 
         if(result.getAuthToken() == null) {
             System.out.println(result.getMessage());
             return false;
         } else {
-            System.out.println("Successfully logged in.");
+            System.out.println("Successfully registered.");
             authToken = result.getAuthToken();
             return true;
         }
     }
+
+//    static boolean loginUser() {
+//        Scanner scan = new Scanner(System.in);
+//        System.out.println("\nPlease enter your username: ");
+//        String username = scan.nextLine();
+//        System.out.println("Please enter your password: ");
+//        String password = scan.nextLine();
+//        LoginResult result = serverFacade.loginUser(username, password);
+//
+//        if(result.getAuthToken() == null) {
+//            System.out.println(result.getMessage());
+//            return false;
+//        } else {
+//            System.out.println("Successfully logged in.");
+//            authToken = result.getAuthToken();
+//            return true;
+//        }
+//    }
 
     static boolean logoutUser() {
         LogoutResult result = serverFacade.logoutUser(authToken);
