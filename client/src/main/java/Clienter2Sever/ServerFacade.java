@@ -1,9 +1,13 @@
 package Clienter2Sever;
 
 import com.google.gson.Gson;
+import request.CreateGameRequest;
 import request.LoginRequest;
+import request.LogoutRequest;
 import request.RegisterRequest;
+import result.CreateGameResult;
 import result.LoginResult;
+import result.LogoutResult;
 import result.RegisterResult;
 
 import java.io.InputStreamReader;
@@ -28,5 +32,19 @@ public class ServerFacade {
         URLStrings clientStrings = new URLStrings("/session", "POST", "");
         InputStreamReader reader = clientCommunicator.client2Server(request,clientStrings);
         return new Gson().fromJson(reader, LoginResult.class);
+    }
+
+    public LogoutResult logoutUser(String token) {
+        LogoutRequest request = new LogoutRequest(token);
+        URLStrings clientStrings = new URLStrings("/session", "DELETE", token);
+        InputStreamReader reader = clientCommunicator.client2Server(request,clientStrings);
+        return new Gson().fromJson(reader, LogoutResult.class);
+    }
+
+    public CreateGameResult createGame(String gameName, String token) {
+        CreateGameRequest request = new CreateGameRequest(token, gameName);
+        URLStrings clientStrings = new URLStrings("/game", "POST", token);
+        InputStreamReader reader = clientCommunicator.client2Server(request,clientStrings);
+        return new Gson().fromJson(reader, CreateGameResult.class);
     }
 }
