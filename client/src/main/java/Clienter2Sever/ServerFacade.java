@@ -1,7 +1,9 @@
 package Clienter2Sever;
 
 import com.google.gson.Gson;
+import request.LoginRequest;
 import request.RegisterRequest;
+import result.LoginResult;
 import result.RegisterResult;
 
 import java.io.InputStreamReader;
@@ -18,6 +20,13 @@ public class ServerFacade {
         RegisterRequest request = new RegisterRequest(username, password, email);
         URLStrings clientStrings = new URLStrings("/user", "POST", "");
         InputStreamReader reader = clientCommunicator.client2Server(request,clientStrings);
-        return new Gson().fromJson(reader, RegisterResult.class)
+        return new Gson().fromJson(reader, RegisterResult.class);
+    }
+
+    public LoginResult loginUser(String username, String password) {
+        LoginRequest request = new LoginRequest(username, password);
+        URLStrings clientStrings = new URLStrings("/session", "POST", "");
+        InputStreamReader reader = clientCommunicator.client2Server(request,clientStrings);
+        return new Gson().fromJson(reader, LoginResult.class);
     }
 }
