@@ -12,7 +12,7 @@ public class ClientCommunicator {
         this.port = port;
     }
 
-    public InputStream client2Server(ParentRequest request, URLClientStrings clientStrings){
-        
+    public InputStream client2Server(ParentRequest request, URLStrings clientStrings){
+
     }
 }
