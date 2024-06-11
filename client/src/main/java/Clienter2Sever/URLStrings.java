@@ -16,7 +16,7 @@ public class URLStrings {
         return urlPath;
     }
 
-    public String getRequestBody() {
+    public String getRequestMethod() {
          return requestMethod;
     }
 
