@@ -23,7 +23,7 @@ public class Main {
         boolean loggedIn = false;
 
         while(!(input.equalsIgnoreCase("quit") || input.equals("2"))) {
-            System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            System.out.println("\n-------------------");
             if(input.equals("start")) {
                 chessClientStartUp();
             } else if(input.equals("help") || input.equals("1")) {
@@ -59,9 +59,9 @@ public class Main {
 
 
     static void chessClientStartUp() {
-        System.out.println("~ Whats up! Welcome to Curt's Chess Game Server");
+        System.out.println("~ Whats up! Welcome to Curt's Chess Game Server :)");
         System.out.println("Please enter the number or name of the option you would like to choose.");
-        System.out.println("If you have any questions, please enter 1 or Help for assistance and explanations.");
+        System.out.println("If you have any questions, please enter '1' or type 'Help' for assistance and explanations.");
     }
 
     static void listOptions(boolean loggedIn) {
@@ -74,7 +74,7 @@ public class Main {
             System.out.println(" 3. Logout");
             System.out.println(" 4. Create Game");
             System.out.println(" 5. List Games");
-            System.out.println(" 6. Play Game");
+            System.out.println(" 6. Play Game/Join Game");
             System.out.println(" 7. Observe Game");
         }
     }
@@ -83,43 +83,36 @@ public class Main {
         System.out.println("\nEntering 1 or help will bring up this explanation again.");
         System.out.println("Entering 2 or quit will close down the program");
         if(!loggedIn) {
-            System.out.println("Entering 3 or register will allow you to create a new user, you just need to input a username, password, and email.");
-            System.out.println("Entering 4 or login will allow you to login an existing user, you just need to input your username and password.");
+            System.out.println("To create a new user, simply enter ‘3’ or type ‘register’. You will then be prompted to provide a username, password, and email address.");
+            System.out.println("Entering ‘4’ or ‘login’ will allow you to log in as an existing user. Simply input your username and password when prompted.");
         } else {
-            System.out.println("Entering 3 or logout will allow you to logout, no need to input anything.");
-            System.out.println("Entering 4 or create game will allow you to create a new game, you just need to input a game name.");
-            System.out.println("Entering 5 or list games will allow you to see all the created games.");
-            System.out.println("Entering 6 or play game will allow you to join a game to play, you just need to input the gameID and team color you want to play.");
-            System.out.println("Entering 7 or observe game will allow you to join a game to observe, you just need to input the gameID you want to watch.");
+            System.out.println("To logout, enter '3' or 'logout'. No further input is needed.");
+            System.out.println("To create a new game, enter '4' or 'create game'. You will need to input a game name.");
+            System.out.println("To list all created games, enter '5' or 'list games'.");
+            System.out.println("To join a game to play, enter '6' or 'play game'. You will need to input the game ID and your team color.");
+            System.out.println("To observe a game, enter '7' or 'observe game'. You will need to input the game ID you want to watch.");
         }
     }
 
-    static boolean registerNewUser() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("\nPlease enter your username: ");
-        String username = scan.nextLine();
-        System.out.println("Please enter your password: ");
-        String password = scan.nextLine();
-        System.out.println("Please enter your email: ");
-        String email = scan.nextLine();
-        RegisterResult result = serverFacade.registerUser(username, password, email);
-
-        if(result.getAuthToken() == null) {
-            System.out.println(result.getMessage());
-            return false;
-        } else {
-            System.out.println("Successfully registered.");
-            authToken = result.getAuthToken();
-            return true;
-        }
-    }
-
-    static void invalidInput() {
-        System.out.println("\nInvalid input. If you are trying to select an option, Please input the number or the exact words of the option.");
-        System.out.println("  For example: to access the help screen, please input '1' or 'help'.");
-        System.out.println("If you are trying to join or observe a game, please make sure you only input the number of that game.");
-        System.out.println("  For example: to join the game with ID of '1', please only enter '1', no spaces or anything but the number");
-    }
+//    static boolean registerNewUser() {
+//        Scanner scan = new Scanner(System.in);
+//        System.out.println("\nPlease enter your username: ");
+//        String username = scan.nextLine();
+//        System.out.println("Please enter your password: ");
+//        String password = scan.nextLine();
+//        System.out.println("Please enter your email: ");
+//        String email = scan.nextLine();
+//        RegisterResult result = serverFacade.registerUser(username, password, email);
+//
+//        if(result.getAuthToken() == null) {
+//            System.out.println(result.getMessage());
+//            return false;
+//        } else {
+//            System.out.println("Successfully registered.");
+//            authToken = result.getAuthToken();
+//            return true;
+//        }
+//    }
 
     static boolean loginUser() {
         Scanner scan = new Scanner(System.in);
@@ -153,27 +146,13 @@ public class Main {
 
     static void createGame() {
         Scanner scan = new Scanner(System.in);
-        System.out.println("\nPlease enter the game name you would like to create: ");
+        System.out.println("\nPlease enter the name of the game you wish to create: ");
         String gameName = scan.nextLine();
         CreateGameResult result = serverFacade.createGame(gameName, authToken);
         if(result.getGameID() == null) {
             System.out.println(result.getMessage());
         } else {
             System.out.println("Successfully created " + gameName + " on Game ID " + result.getGameID());
-        }
-    }
-
-    static void listGames() {
-        ListGamesResult result = serverFacade.listGames(authToken);
-        if(result.getGames() == null) {
-            System.out.println(result.getMessage());
-        } else {
-            System.out.println("List of games: ");
-            for(GameData game : result.getGames()) {
-                System.out.println("Game ID: " + game.gameID() + ", Game Name: " + game.gameName());
-                System.out.println("  White Username: " + ((game.whiteUsername() == null) ? "<Available>" : game.whiteUsername()));
-                System.out.println("  Black Username: " + ((game.blackUsername() == null) ? "<Available>" : game.blackUsername()) + "\n");
-            }
         }
     }
 
@@ -202,6 +181,20 @@ public class Main {
         }
     }
 
+    static void listGames() {
+        ListGamesResult result = serverFacade.listGames(authToken);
+        if(result.getGames() == null) {
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("List of games: ");
+            for(GameData game : result.getGames()) {
+                System.out.println("Game ID: " + game.gameID() + ", Game Name: " + game.gameName());
+                System.out.println("  White Username: " + ((game.whiteUsername() == null) ? "<is Available>" : game.whiteUsername()));
+                System.out.println("  Black Username: " + ((game.blackUsername() == null) ? "<is Available>" : game.blackUsername()) + "\n");
+            }
+        }
+    }
+
     static void observeGame() {
         Scanner scan = new Scanner(System.in);
         System.out.println("\nPlease enter the gameID of the game you would like to observe: ");
@@ -221,6 +214,18 @@ public class Main {
         }
 
     }
+
+    static void invalidInput() {
+        System.out.println("\nInvalid input detected. Please follow these guidelines:");
+        System.out.println("  - To select an option, input the number or the exact word of the option.");
+        System.out.println("    Example: To access the help screen, enter '1' or 'help'.");
+        System.out.println("  - To join or observe a game, input the game number only.");
+        System.out.println("    Example: To join the game with ID '1', enter '1' without any spaces or additional characters.");
+    }
+
+
+
+
 
     static void printBoards() {
         ChessPiece[][] newBoard = new ChessGame().getBoard().getBoard();

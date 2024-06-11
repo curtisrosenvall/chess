@@ -22,27 +22,26 @@ public class ClientCommunicator {
         try {
             String urlString = "http://localhost:" + port + clientStrings.getUrlPath();
             URI uri = new URI(urlString);
-            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-            http.setRequestMethod(clientStrings.getRequestMethod());
-            http.setDoOutput(true);
-            http.addRequestProperty("Authorization", clientStrings.getAuthToken());
+            HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+            connection.setRequestMethod(clientStrings.getRequestMethod());
+            connection.setDoOutput(true);
+            connection.addRequestProperty("Authorization", clientStrings.getAuthToken());
 
             if(!clientStrings.getRequestMethod().equals("GET")) {
-                try (OutputStream requestBody = http.getOutputStream()) {
-                    // Write request body to OutputStream ...
+                try (OutputStream requestBody = connection.getOutputStream()) {
                     String json = new Gson().toJson(request);
                     requestBody.write(json.getBytes());
                 }
             }
 
-            http.connect();
+            connection.connect();
             InputStreamReader reader;
-            if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                InputStream responseBody = http.getInputStream();
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                InputStream responseBody = connection.getInputStream();
                 reader = new InputStreamReader(responseBody);
             }
             else {
-                InputStream responseBody = http.getErrorStream();
+                InputStream responseBody = connection.getErrorStream();
                 reader = new InputStreamReader(responseBody);
             }
             return reader;
