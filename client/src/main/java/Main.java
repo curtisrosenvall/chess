@@ -1,5 +1,5 @@
 import chess.*;
-import clienttosever.ServerFacade;
+import clienttoserver.ServerFacade;
 import model.GameData;
 import result.*;
 import ui.GameBoardUI;
@@ -59,8 +59,8 @@ public class Main {
 
 
     static void chessClientStartUp() {
-        System.out.println("~ Hi! Welcome to the Chess Server! ~");
-        System.out.println("Please input the number or name of what you would like to do.");
+        System.out.println("~ Whats up! Welcome to Curt's Chess Game Server");
+        System.out.println("Please enter the number or name of the option you would like to choose.");
         System.out.println("If you have any questions, please enter 1 or Help for assistance and explanations.");
     }
 
@@ -156,10 +156,10 @@ public class Main {
         System.out.println("\nPlease enter the game name you would like to create: ");
         String gameName = scan.nextLine();
         CreateGameResult result = serverFacade.createGame(gameName, authToken);
-        if(result.getGameId() == null) {
+        if(result.getGameID() == null) {
             System.out.println(result.getMessage());
         } else {
-            System.out.println("Successfully created " + gameName + " on Game ID " + result.getGameId());
+            System.out.println("Successfully created " + gameName + " on Game ID " + result.getGameID());
         }
     }
 

@@ -31,7 +31,7 @@ public class ListGames implements Route {
             listRequest = new ListGamesRequest(token);
         } catch (DataAccessException ex) {
             // Return a 400 error response if there was an issue with the request data
-            return methodHandlers.getResponse(response, 400, new JoinGameResult(null, "Error: bad request"));
+            return methodHandlers.getResponse(response, 400, new JoinGameResult(null, "Error: bad request."));
         }
         try {
             // Validate the token by checking it in the database

@@ -1,12 +1,12 @@
-package clienttosever;
+package clienttoserver;
 
-public class URLClientStrings {
+public class URLStrings {
 
     String urlPath;
     String requestMethod;
     String authToken;
 
-    public URLClientStrings(String path, String method, String token) {
+    public URLStrings(String path, String method, String token) {
         urlPath = path;
         requestMethod = method;
         authToken = token;

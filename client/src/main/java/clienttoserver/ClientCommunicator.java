@@ -1,5 +1,4 @@
-package clienttosever;
-
+package clienttoserver;
 import com.google.gson.Gson;
 import request.*;
 
@@ -19,7 +18,7 @@ public class ClientCommunicator {
         this.port = port;
     }
 
-    public InputStreamReader clientToServer(ParentRequest request, URLClientStrings clientStrings) {
+    public InputStreamReader clientToServer(ParentRequest request, URLStrings clientStrings) {
         try {
             String urlString = "http://localhost:" + port + clientStrings.getUrlPath();
             URI uri = new URI(urlString);
@@ -36,27 +35,24 @@ public class ClientCommunicator {
                 }
             }
 
-            // Make the request
             http.connect();
             InputStreamReader reader;
             if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream responseBody = http.getInputStream();
-                // Read response body from InputStream ...
                 reader = new InputStreamReader(responseBody);
             }
-            else { // SERVER RETURNED AN HTTP ERROR
+            else {
                 InputStream responseBody = http.getErrorStream();
-                // Read and process error response body from InputStream ...
                 reader = new InputStreamReader(responseBody);
             }
             return reader;
 
         } catch(URISyntaxException uriException) {
-            System.out.println("There is something wrong with my URL");
-        } catch(java.net.ProtocolException protocalException) {
+            System.out.println("Something is wrong with the URL donnie");
+        } catch(java.net.ProtocolException protocolException) {
             System.out.println("I can't set my method request");
         } catch(IOException ioException) {
-            System.out.println("Something went wrong while trying to connect");
+            System.out.println("Cannot connect to server");
         }
         return null;
     }

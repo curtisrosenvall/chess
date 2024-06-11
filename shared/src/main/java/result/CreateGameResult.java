@@ -9,7 +9,7 @@ public class CreateGameResult extends ParentResult{
         this.gameID = gameID;
     }
 
-    public Integer getGameId() {
+    public Integer getGameID() {
         return gameID;
     }
 }
