@@ -10,29 +10,11 @@ public class GameBoardUI {
 
     public GameBoardUI(ChessPiece[][] board) {
         this.board = board;
-        this.letters = new String[] {"A", "B", "C", "D", "E", "F", "G", "H"};
-    }
-
-
-    public void printEmptySpace() {
-        System.out.print("   ");
-    }
-
-    public void printEdge(int row) {
-        setBorderSquare();
-        System.out.print(" " + row + " ");
-    }
-
-    public void printBlackSideBoard() {
-        printLettersBlack();
-        System.out.println();
-        for(int i = 0; i <= 8; i++) {
-            printRowBlack(i);
-            System.out.println();
-        }
+        letters = new String[] {" a ", " b ", " c ", " d ", " e ", " f ", " g ", " h "};
     }
 
     public void printWhiteSideBoard() {
+
         printLettersWhite();
         System.out.println();
         for(int i = 8; i >= 1; i--) {
@@ -43,76 +25,15 @@ public class GameBoardUI {
         System.out.println();
     }
 
-    public void printLettersWhite() {
-        setBorderSquare();
-        printEmptySpace();
-        for(int i = 0; i < 8; i++) {
-            System.out.print(letters[i]);
-        }
-        printEmptySpace();
-        setSquareToNormal();
-    }
-
-    public void printLettersBlack() {
-        setBorderSquare();
-        printEmptySpace();
-        for(int i = 7; i >= 0; i--) {
-            System.out.print(letters[i]);
-        }
-        printEmptySpace();
-        setSquareToNormal();
-    }
-
-    public void printRowBlack(int row) {
-        printEdge(row);
-        for(int i = 8; i >= 1; i--) {
-            setBackGroundColor(row, i);
-            setTextColor(row, i);
-            printPieceType(row, i);
-        }
-        printEdge(row);
-        setSquareToNormal();
-    }
-
-    public void printRowWhite(int row) {
-        printEdge(row);
+    public void printBlackSideBoard() {
+        printLettersBlack();
+        System.out.println();
         for(int i = 1; i <= 8; i++) {
-            setBackGroundColor(row, i);
-            setTextColor(row, i);
-            printPieceType(row, i);
+            printRowBlack(i);
+            System.out.println();
         }
-        printEdge(row);
-        setSquareToNormal();
-    }
-
-    public void printPieceType(int row, int col) {
-        if(board[row-1][col-1] == null) {
-            printEmptySpace();
-        } else if(board[row-1][col-1].getPieceType() == ChessPiece.PieceType.PAWN) {
-            System.out.print(" P ");
-        } else if(board[row-1][col-1].getPieceType() == ChessPiece.PieceType.KNIGHT) {
-            System.out.print(" N ");
-        } else if(board[row-1][col-1].getPieceType() == ChessPiece.PieceType.ROOK) {
-            System.out.print(" R ");
-        } else if(board[row-1][col-1].getPieceType() == ChessPiece.PieceType.BISHOP) {
-            System.out.print(" B ");
-        } else if(board[row-1][col-1].getPieceType() == ChessPiece.PieceType.QUEEN) {
-            System.out.print(" Q ");
-        } else {
-            System.out.print(" K ");
-        }
-    }
-
-
-
-    public void setTextColor(int row, int col) {
-        if(board[row-1][col-1] != null) {
-            if(board[row-1][col-1].getTeamColor() == ChessGame.TeamColor.WHITE) {
-                setTextWhiteTeam();
-            } else {
-                setTextBlackTeam();
-            }
-        }
+        printLettersBlack();
+        System.out.println();
     }
 
     public void setBorderSquare() {
@@ -138,6 +59,10 @@ public class GameBoardUI {
             setBackGroundLight();
     }
 
+    public void printEmptySpace() {
+        System.out.print("   ");
+    }
+
     public void setTextWhiteTeam() {
         System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
     }
@@ -146,7 +71,78 @@ public class GameBoardUI {
         System.out.print(EscapeSequences.SET_TEXT_COLOR_BLUE);
     }
 
+    public void setTextColor(int row, int col) {
+        if(board[row-1][col-1] != null) {
+            if(board[row-1][col-1].getTeamColor() == ChessGame.TeamColor.WHITE) {
+                setTextWhiteTeam();
+            } else {
+                setTextBlackTeam();
+            }
+        }
+    }
 
+    public void printLettersWhite() {
+        setBorderSquare();
+        printEmptySpace();
+        for(int i = 0; i < 8; i++) {
+            System.out.print(letters[i]);
+        }
+        printEmptySpace();
+        setSquareToNormal();
+    }
 
+    public void printRowWhite(int row) {
+        printEdge(row);
+        for(int i = 1; i <= 8; i++) {
+            setBackGroundColor(row, i);
+            setTextColor(row, i);
+            printPieceType(row, i);
+        }
+        printEdge(row);
+        setSquareToNormal();
+    }
 
+    public void printRowBlack(int row) {
+        printEdge(row);
+        for(int i = 8; i >= 1; i--) {
+            setBackGroundColor(row, i);
+            setTextColor(row, i);
+            printPieceType(row, i);
+        }
+        printEdge(row);
+        setSquareToNormal();
+    }
+
+    public void printEdge(int row) {
+        setBorderSquare();
+        System.out.print(" " + row + " ");
+    }
+
+    public void printLettersBlack() {
+        setBorderSquare();
+        printEmptySpace();
+        for(int i = 7; i >= 0; i--) {
+            System.out.print(letters[i]);
+        }
+        printEmptySpace();
+        setSquareToNormal();
+    }
+
+    public void printPieceType(int row, int col) {
+        if(board[row-1][col-1] == null) {
+            printEmptySpace();
+        } else if(board[row-1][col-1].getPieceType() == ChessPiece.PieceType.PAWN) {
+            System.out.print(" P ");
+        } else if(board[row-1][col-1].getPieceType() == ChessPiece.PieceType.KNIGHT) {
+            System.out.print(" N ");
+        } else if(board[row-1][col-1].getPieceType() == ChessPiece.PieceType.ROOK) {
+            System.out.print(" R ");
+        } else if(board[row-1][col-1].getPieceType() == ChessPiece.PieceType.BISHOP) {
+            System.out.print(" B ");
+        } else if(board[row-1][col-1].getPieceType() == ChessPiece.PieceType.QUEEN) {
+            System.out.print(" Q ");
+        } else {
+            System.out.print(" K ");
+        }
+    }
 }

@@ -1,8 +1,8 @@
-import Clienter2Sever.ServerFacade;
 import chess.*;
-import result.RegisterResult;
+import clienttosever.ServerFacade;
+import model.GameData;
+import result.*;
 import ui.GameBoardUI;
-
 import java.util.Scanner;
 
 public class Main {
@@ -10,41 +10,42 @@ public class Main {
     static ServerFacade serverFacade;
     static String authToken;
 
-
     public static void main(String[] args) {
+
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);
 
+        //int port =
         serverFacade = new ServerFacade(8080);
 
-        Scanner scanner = new Scanner(System.in);
+        Scanner scan = new Scanner(System.in);
         String input = "start";
         boolean loggedIn = false;
 
         while(!(input.equalsIgnoreCase("quit") || input.equals("2"))) {
             System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            if (input.equals("start")) {
+            if(input.equals("start")) {
                 chessClientStartUp();
-            } else if (input.equals("help") || input.equals("1")) {
+            } else if(input.equals("help") || input.equals("1")) {
                 helpExplainOptions(loggedIn);
-            } else if (!loggedIn) {
-                if (input.equalsIgnoreCase("register") || input.equals("3")) {
+            } else if(!loggedIn) {
+                if(input.equalsIgnoreCase("register") || input.equals("3")) {
                     loggedIn = registerNewUser();
-                } else if (input.equalsIgnoreCase("login") || input.equals("4")) {
+                } else if(input.equalsIgnoreCase("login") || input.equals("4")) {
                     loggedIn = loginUser();
                 } else {
                     invalidInput();
                 }
             } else { //loggedIn = true
-                if (input.equalsIgnoreCase("logout") || input.equals("3")) {
+                if(input.equalsIgnoreCase("logout") || input.equals("3")) {
                     loggedIn = logoutUser();
-                } else if (input.equalsIgnoreCase("create game") || input.equals("4")) {
+                } else if(input.equalsIgnoreCase("create game") || input.equals("4")) {
                     createGame();
-                } else if (input.equalsIgnoreCase("list games") || input.equals("5")) {
+                } else if(input.equalsIgnoreCase("list games") || input.equals("5")) {
                     listGames();
-                } else if (input.equalsIgnoreCase("play game") || input.equals("6")) {
+                } else if(input.equalsIgnoreCase("play game") || input.equals("6")) {
                     joinGame();
-                } else if (input.equalsIgnoreCase("observe game") || input.equals("7")) {
+                } else if(input.equalsIgnoreCase("observe game") || input.equals("7")) {
                     observeGame();
                 } else {
                     invalidInput();
@@ -52,31 +53,31 @@ public class Main {
             }
             listOptions(loggedIn);
             System.out.println("\nPlease input your selection: ");
-            input = scanner.nextLine();
+            input = scan.nextLine();
         }
     }
 
-    static boolean registerNewUser() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Please enter your username: ");
-        String username = scan.nextLine();
-        System.out.println("Please enter your password: ");
-        String password = scan.nextLine();
-        System.out.println("Please enter your email: ");
-        String email = scan.nextLine();
-        RegisterResult result = serverFacade.registerUser(username,password,email);
 
-        if(result.getAuthToken() == null) {
-            System.out.println(result.getMessage());
-            return false;
+    static void chessClientStartUp() {
+        System.out.println("~ Hi! Welcome to the Chess Server! ~");
+        System.out.println("Please input the number or name of what you would like to do.");
+        System.out.println("If you have any questions, please enter 1 or Help for assistance and explanations.");
+    }
+
+    static void listOptions(boolean loggedIn) {
+        System.out.println("\n 1. Help");
+        System.out.println(" 2. Quit");
+        if(!loggedIn) {
+            System.out.println(" 3. Register");
+            System.out.println(" 4. Login");
         } else {
-            System.out.println("Successfully registered.");
-            authToken = result.getAuthToken();
-            return true;
+            System.out.println(" 3. Logout");
+            System.out.println(" 4. Create Game");
+            System.out.println(" 5. List Games");
+            System.out.println(" 6. Play Game");
+            System.out.println(" 7. Observe Game");
         }
     }
-
-
 
     static void helpExplainOptions(boolean loggedIn) {
         System.out.println("\nEntering 1 or help will bring up this explanation again.");
@@ -93,17 +94,149 @@ public class Main {
         }
     }
 
-    static void chessClientStartUp() {
-        System.out.println("~ Hi! Welcome to the Chess Server! ~");
-        System.out.println("Please input the number or name of what you would like to do.");
-        System.out.println("If you have any questions, please enter 1 or Help for assistance and explanations.");
+    static boolean registerNewUser() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nPlease enter your username: ");
+        String username = scan.nextLine();
+        System.out.println("Please enter your password: ");
+        String password = scan.nextLine();
+        System.out.println("Please enter your email: ");
+        String email = scan.nextLine();
+        RegisterResult result = serverFacade.registerUser(username, password, email);
+
+        if(result.getAuthToken() == null) {
+            System.out.println(result.getMessage());
+            return false;
+        } else {
+            System.out.println("Successfully registered.");
+            authToken = result.getAuthToken();
+            return true;
+        }
     }
-//    static void printBoard(){
-//        ChessPiece[][] newBoard = new ChessGame().getBoard().getBoard();
-//        GameBoardUI gameBoard = new GameBoardUI(newBoard);
-//        System.out.println("White Board:");
-//        gameBoard.printWhiteSideBoard();
-//        System.out.println("Black Board:");
-//        gameBoard.printBlackSideBoard();
-//    }
+
+    static void invalidInput() {
+        System.out.println("\nInvalid input. If you are trying to select an option, Please input the number or the exact words of the option.");
+        System.out.println("  For example: to access the help screen, please input '1' or 'help'.");
+        System.out.println("If you are trying to join or observe a game, please make sure you only input the number of that game.");
+        System.out.println("  For example: to join the game with ID of '1', please only enter '1', no spaces or anything but the number");
+    }
+
+    static boolean loginUser() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nPlease enter your username: ");
+        String username = scan.nextLine();
+        System.out.println("Please enter your password: ");
+        String password = scan.nextLine();
+        LoginResult result = serverFacade.loginUser(username, password);
+
+        if(result.getAuthToken() == null) {
+            System.out.println(result.getMessage());
+            return false;
+        } else {
+            System.out.println("Successfully logged in.");
+            authToken = result.getAuthToken();
+            return true;
+        }
+    }
+
+    static boolean logoutUser() {
+        LogoutResult result = serverFacade.logoutUser(authToken);
+        if(result.getMessage() == null) {
+            System.out.println("Successfully logged out.");
+            authToken = null;
+            return false;
+        } else {
+            System.out.println(result.getMessage());
+            return true;
+        }
+    }
+
+    static void createGame() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nPlease enter the game name you would like to create: ");
+        String gameName = scan.nextLine();
+        CreateGameResult result = serverFacade.createGame(gameName, authToken);
+        if(result.getGameId() == null) {
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Successfully created " + gameName + " on Game ID " + result.getGameId());
+        }
+    }
+
+    static void listGames() {
+        ListGamesResult result = serverFacade.listGames(authToken);
+        if(result.getGames() == null) {
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("List of games: ");
+            for(GameData game : result.getGames()) {
+                System.out.println("Game ID: " + game.gameID() + ", Game Name: " + game.gameName());
+                System.out.println("  White Username: " + ((game.whiteUsername() == null) ? "<Available>" : game.whiteUsername()));
+                System.out.println("  Black Username: " + ((game.blackUsername() == null) ? "<Available>" : game.blackUsername()) + "\n");
+            }
+        }
+    }
+
+    static void joinGame() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nPlease enter the gameID of the game you would like to join: ");
+        String gameID = scan.nextLine();
+        System.out.println("Please enter which color you would like to play as (WHITE or BLACK)");
+        String playerColor = scan.nextLine();
+        try {
+            int gameNum = Integer.parseInt(gameID);
+            if(!(playerColor.equalsIgnoreCase("WHITE") || playerColor.equalsIgnoreCase("BLACK")))
+                invalidInput();
+            else {
+                JoinGameResult result = serverFacade.joinGame(gameNum, playerColor, authToken);
+                if(result.getMessage() == null) {
+                    System.out.println("Successfully joined game.");
+                    printBoards();
+                    inGame();
+                } else {
+                    System.out.println(result.getMessage());
+                }
+            }
+        } catch(NumberFormatException ex) {
+            invalidInput();
+        }
+    }
+
+    static void observeGame() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nPlease enter the gameID of the game you would like to observe: ");
+        String gameID = scan.nextLine();
+        try {
+            int gameNum = Integer.parseInt(gameID);
+            JoinGameResult result = serverFacade.joinGame(gameNum, "SPECTATOR", authToken);
+            if(result.getMessage() == null) {
+                System.out.println("Successfully joined game.");
+                printBoards();
+                inGame();
+            } else {
+                System.out.println(result.getMessage());
+            }
+        } catch(NumberFormatException ex) {
+            invalidInput();
+        }
+
+    }
+
+    static void printBoards() {
+        ChessPiece[][] newBoard = new ChessGame().getBoard().getBoard();
+        GameBoardUI gameBoard = new GameBoardUI(newBoard);
+        System.out.println("White board: ");
+        gameBoard.printWhiteSideBoard();
+        System.out.println("\nBlack board: ");
+        gameBoard.printBlackSideBoard();
+    }
+
+    static void inGame() {
+        Scanner scan = new Scanner(System.in);
+        String input = "start";
+        while(!input.equalsIgnoreCase("quit")) {
+            System.out.println("When you are ready to leave the game, please enter 'quit'");
+            input = scan.nextLine();
+        }
+    }
 }

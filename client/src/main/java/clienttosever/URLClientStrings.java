@@ -1,12 +1,12 @@
-package Clienter2Sever;
+package clienttosever;
 
-public class URLStrings {
+public class URLClientStrings {
 
     String urlPath;
     String requestMethod;
     String authToken;
 
-    public URLStrings(String path, String method, String token) {
+    public URLClientStrings(String path, String method, String token) {
         urlPath = path;
         requestMethod = method;
         authToken = token;
@@ -17,7 +17,7 @@ public class URLStrings {
     }
 
     public String getRequestMethod() {
-         return requestMethod;
+        return requestMethod;
     }
 
     public String getAuthToken() {
