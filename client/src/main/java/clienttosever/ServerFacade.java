@@ -18,13 +18,6 @@ public class ServerFacade {
         RegisterRequest request = new RegisterRequest(username, password, email);
         URLClientStrings clientStrings = new URLClientStrings("/user", "POST", "");
         InputStreamReader reader = communicator.clientToServer(request, clientStrings);
-
-        // Debug statement to check if the reader is null
-        if (reader == null) {
-            System.err.println("Error: InputStreamReader is null in registerUser");
-            return new RegisterResult(false, "Error: Unable to communicate with the server.");
-        }
-
         return new Gson().fromJson(reader, RegisterResult.class);
     }
 
