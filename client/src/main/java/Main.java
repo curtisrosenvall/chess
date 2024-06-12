@@ -114,23 +114,23 @@ public class Main {
         }
     }
 
-//    static boolean loginUser() {
-//        Scanner scan = new Scanner(System.in);
-//        System.out.println("\nPlease enter your username: ");
-//        String username = scan.nextLine();
-//        System.out.println("Please enter your password: ");
-//        String password = scan.nextLine();
-//        LoginResult result = serverFacade.loginUser(username, password);
-//
-//        if(result.getAuthToken() == null) {
-//            System.out.println(result.getMessage());
-//            return false;
-//        } else {
-//            System.out.println("Successfully logged in.");
-//            authToken = result.getAuthToken();
-//            return true;
-//        }
-//    }
+    static boolean loginUser() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nPlease enter your username: ");
+        String username = scan.nextLine();
+        System.out.println("Please enter your password: ");
+        String password = scan.nextLine();
+        LoginResult result = serverFacade.loginUser(username, password);
+
+        if(result.getAuthToken() == null) {
+            System.out.println(result.getMessage());
+            return false;
+        } else {
+            System.out.println("Successfully logged in.");
+            authToken = result.getAuthToken();
+            return true;
+        }
+    }
 
     static boolean logoutUser() {
         LogoutResult result = serverFacade.logoutUser(authToken);
