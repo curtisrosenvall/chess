@@ -1,8 +1,12 @@
 package server;
 
+import com.google.gson.Gson;
 import dataaccess.*;
 import handler.*;
+import model.AuthData;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import spark.*;
+import websocket.commands.UserGameCommand;
 
 public class Server {
 
@@ -37,5 +41,15 @@ public class Server {
         Spark.awaitStop();
     }
 
-    
+    public AuthData getUsername(String authToken) {
+        try {
+            return database.getAuth(authToken);
+        } catch(Exception ex) {
+            System.out.println("Error: cant get auth");
+            return null;
+        }
+    }
+
+
+
 }
