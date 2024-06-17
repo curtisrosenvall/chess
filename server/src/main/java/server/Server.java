@@ -8,13 +8,16 @@ public class Server {
 
     Database database;
 
+    public Server() {
+        database = new Database();
+    }
+
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
 
-        //Create DAOs to pass through
-        database = new Database();
+        Spark.webSocket("/ws", Server.class);
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", (req, res) -> (new Register(database)).handle(req,res));
@@ -33,4 +36,6 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
+
+    
 }
