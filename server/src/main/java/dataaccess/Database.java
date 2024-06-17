@@ -2,8 +2,9 @@ package dataaccess;
 import model.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import org.eclipse.jetty.websocket.api.Session;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Database {
 
@@ -12,12 +13,15 @@ public class Database {
     UserDAO userDataBase;
     GameDAO gameDataBase;
 
+    HashMap<Integer,ArrayList<Session>> sessionMap;
+
     // Constructor initializes in-memory DAO implementations
     public Database() {
         createTables();
         authDataBase = new SQLAuthDAO();
         userDataBase = new SQLUserDAO();
         gameDataBase = new SQLGameDAO();
+        sessionMap = new HashMap<>();
     }
 
     private void createTables() {
@@ -63,6 +67,24 @@ public class Database {
             System.out.println("Error: " + ex.getMessage());
         }
 
+    }
+
+    public void addSession(Integer gameID, Session session) {
+        ArrayList<Session> sessionList = sessionMap.get(gameID);
+        if(sessionList == null)
+            sessionList = new ArrayList<>();
+        sessionList.add(session);
+        sessionMap.put(gameID, sessionList);
+    }
+
+    public ArrayList<Session> getSessionList(Integer gameID) {
+        return sessionMap.get(gameID);
+    }
+
+    public void removeSession(Integer gameID, Session session) {
+        ArrayList<Session> sessionList = sessionMap.get(gameID);
+        sessionList.remove(session);
+        sessionMap.put(gameID, sessionList);
     }
 
     // Clears all data from the DAOs
