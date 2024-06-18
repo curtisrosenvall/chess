@@ -22,36 +22,40 @@ public class ClientCommunicator {
         try {
             String urlString = "http://localhost:" + port + clientStrings.getUrlPath();
             URI uri = new URI(urlString);
-            HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-            connection.setRequestMethod(clientStrings.getRequestMethod());
-            connection.setDoOutput(true);
-            connection.addRequestProperty("Authorization", clientStrings.getAuthToken());
+            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+            http.setRequestMethod(clientStrings.getRequestMethod());
+            http.setDoOutput(true);
+            http.addRequestProperty("Authorization", clientStrings.getAuthToken());
 
             if(!clientStrings.getRequestMethod().equals("GET")) {
-                try (OutputStream requestBody = connection.getOutputStream()) {
+                try (OutputStream requestBody = http.getOutputStream()) {
+                    // Write request body to OutputStream ...
                     String json = new Gson().toJson(request);
                     requestBody.write(json.getBytes());
                 }
             }
 
-            connection.connect();
+            // Make the request
+            http.connect();
             InputStreamReader reader;
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                InputStream responseBody = connection.getInputStream();
+            if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                InputStream responseBody = http.getInputStream();
+                // Read response body from InputStream ...
                 reader = new InputStreamReader(responseBody);
             }
-            else {
-                InputStream responseBody = connection.getErrorStream();
+            else { // SERVER RETURNED AN HTTP ERROR
+                InputStream responseBody = http.getErrorStream();
+                // Read and process error response body from InputStream ...
                 reader = new InputStreamReader(responseBody);
             }
             return reader;
 
         } catch(URISyntaxException uriException) {
-            System.out.println("Something is wrong with the URL donnie");
-        } catch(java.net.ProtocolException protocolException) {
+            System.out.println("There is something wrong with my URL");
+        } catch(java.net.ProtocolException protocalException) {
             System.out.println("I can't set my method request");
         } catch(IOException ioException) {
-            System.out.println("Cannot connect to server");
+            System.out.println("Something went wrong while trying to connect");
         }
         return null;
     }

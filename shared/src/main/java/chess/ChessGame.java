@@ -1,5 +1,6 @@
 package chess;
 
+
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -10,10 +11,9 @@ import java.util.Iterator;
  * signature of the existing methods.
  */
 public class ChessGame {
-    private TeamColor colorTurn;  // Tracks the current team's turn.
-    private boolean checkCase;    // Flag to indicate if the game is currently checking for 'check' conditions.
-    private ChessBoard newGame;   // The chessboard associated with the current game.
-    private ChessMove lastMove;// Stores the last move made in the game.
+    private TeamColor colorTurn;
+    private boolean checkCase;
+    private ChessBoard newGame;
     private boolean gameOver;
 
     public ChessGame() {
@@ -58,19 +58,8 @@ public class ChessGame {
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
-
-
-    /**
-     * Calculates and retrieves all valid moves for a piece at the given position.
-     * This method also filters out moves that would put or leave one's king in check.
-     * @param startPosition The starting position of the piece for which moves are calculated.
-     * @return A collection of valid moves for the piece, or null if no piece is present at the starting position.
-     */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-
         Collection<ChessMove> possibleMoves;
-
-        newGame.setLastMove(lastMove);
 
         if (newGame.getPiece(startPosition) == null) {
             return null;
@@ -106,12 +95,6 @@ public class ChessGame {
      *
      * @param move chess move to preform
      * @throws InvalidMoveException if move is invalid
-     */
-
-    /**
-     * Performs a move on the chessboard and updates the game state accordingly.
-     * @param move The chess move to perform.
-     * @throws InvalidMoveException If the move is invalid.
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         if(isGameOver())
@@ -163,6 +146,7 @@ public class ChessGame {
             throw new InvalidMoveException("Invalid move, this move will put you in check");
         checkCase = false;
     }
+
     /**
      * Determines if the given team is in check
      *
@@ -171,8 +155,8 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         checkCase = true;
-        ChessBoard clonedBoard = getCopy();
-        AllPositions allPieces = new AllPositions(clonedBoard);
+        ChessBoard moveBoard = getCopy();
+        AllPositions allPieces = new AllPositions(moveBoard);
 
         if(teamColor == TeamColor.WHITE) {
             ChessPosition whiteKingPos = allPieces.getWhiteKingPos();
@@ -222,19 +206,9 @@ public class ChessGame {
         return anyValidMoves(teamColor);
     }
 
-    /**
-     * Determines if any valid moves are available for the specified team. This method is used to check conditions such as
-     * stalemate or checkmate by simulating potential moves for all pieces belonging to the team and checking if any of
-     * these moves would successfully remove the king from check without placing it back into check.
-     *
-     * @param teamColor The color of the team (WHITE or BLACK) for which to determine if any valid moves exist.
-     * @return false if there is at least one legal move available for the specified team that does not result in the team's
-     * king being in check after the move. Returns true if no such moves exist, indicating a potential stalemate or checkmate.
-     */
-
     public boolean anyValidMoves(TeamColor teamColor) {
-        ChessBoard clonedBoard = getCopy();
-        AllPositions allPieces = new AllPositions(clonedBoard);
+        ChessBoard moveBoard = getCopy();
+        AllPositions allPieces = new AllPositions(moveBoard);
 
         if(teamColor == TeamColor.WHITE) {
             Collection<ChessMove> whiteMoves = allPieces.getWhiteTeamMoves();
@@ -274,14 +248,6 @@ public class ChessGame {
         return true;
     }
 
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
-
     /**
      * Sets this game's chessboard with a given board
      *
@@ -300,16 +266,6 @@ public class ChessGame {
         return newGame;
     }
 
-    /**
-     * Creates and returns a deep copy of the current chess board. This method is essential for game state simulation
-     * where changes like potential moves are tested without affecting the actual game state. Cloning the board ensures
-     * that all manipulations during these tests do not alter the real game board.
-     *
-     * @return A deep copy of the current ChessBoard object.
-     * @throws RuntimeException if the ChessBoard class does not support cloning, encapsulating the underlying
-     * CloneNotSupportedException into a more general unchecked exception that indicates a configuration or coding error.
-     */
-
     public ChessBoard getCopy() {
         try {
             return newGame.clone();
@@ -320,6 +276,14 @@ public class ChessGame {
 
     public void isCheckCase() {
         checkCase = true;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 
     @Override
