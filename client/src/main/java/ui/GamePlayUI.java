@@ -1,7 +1,6 @@
 package ui;
 
 
-
 import chess.ChessGame;
 import chess.ChessMove;
 import chess.ChessPiece;
@@ -61,7 +60,7 @@ public class GamePlayUI extends Endpoint {
                         case ERROR -> {
                             ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
                             System.out.printf(EscapeSequences.SET_TEXT_COLOR_RED);
-                            System.out.println(errorMessage.getError());
+                            System.out.println(errorMessage.getErrorMessage());
                             System.out.printf(EscapeSequences.RESET_TEXT_COLOR);
                         }
                         case LOAD_GAME -> {

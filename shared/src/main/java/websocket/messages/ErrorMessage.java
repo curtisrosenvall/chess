@@ -9,7 +9,7 @@ public class ErrorMessage extends ServerMessage {
         errorMessage = message;
     }
 
-    public String getError() {
+    public String getErrorMessage() {
         return errorMessage;
     }
 }

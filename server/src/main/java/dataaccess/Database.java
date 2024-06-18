@@ -1,36 +1,43 @@
 package dataaccess;
+
+
+
 import model.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import org.eclipse.jetty.websocket.api.Session;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.eclipse.jetty.websocket.api.Session;
 
 public class Database {
 
-    // DAO objects for authentication, user, and game data access
     AuthDAO authDataBase;
     UserDAO userDataBase;
     GameDAO gameDataBase;
+    HashMap<Integer, ArrayList<Session>> sessionMap;
 
-    HashMap<Integer,ArrayList<Session>> sessionMap;
-
-    // Constructor initializes in-memory DAO implementations
     public Database() {
         createTables();
+
         authDataBase = new SQLAuthDAO();
         userDataBase = new SQLUserDAO();
         gameDataBase = new SQLGameDAO();
+
         sessionMap = new HashMap<>();
     }
 
-    private void createTables() {
+    public void createTables() {
+        //Create auth, user, and game table if not created already.
         try {
             DatabaseManager.createDatabase();
-        } catch (Exception e) {
-           System.out.println("Database creation failed");
+        } catch(Exception ex) {
+            System.out.println("You messed up Tristan");
         }
-        try(Connection connection = DatabaseManager.getConnection()) {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            /* Drop Database code
+            var dropDbStatement = conn.prepareStatement("DROP DATABASE IF EXISTS chess");
+            dropDbStatement.executeUpdate();
+             */
             String createUserTable = """
                     CREATE TABLE IF NOT EXISTS user (
                         username VARCHAR(255) NOT NULL,
@@ -39,7 +46,7 @@ public class Database {
                         json TEXT NOT NULL,
                         PRIMARY KEY (username)
                     )""";
-            PreparedStatement createUserStatement = connection.prepareStatement(createUserTable);
+            PreparedStatement createUserStatement = conn.prepareStatement(createUserTable);
             createUserStatement.executeUpdate();
 
             String createGameTable = """
@@ -51,7 +58,7 @@ public class Database {
                         game TEXT NOT NULL,
                         PRIMARY KEY (gameID)
                     )""";
-            PreparedStatement createGameStatement = connection.prepareStatement(createGameTable);
+            PreparedStatement createGameStatement = conn.prepareStatement(createGameTable);
             createGameStatement.executeUpdate();
 
             String createAuthTable = """
@@ -61,12 +68,117 @@ public class Database {
                         json TEXT NOT NULL,
                         PRIMARY KEY (authToken)
                     )""";
-            PreparedStatement createAuthStatement = connection.prepareStatement(createAuthTable);
+            PreparedStatement createAuthStatement = conn.prepareStatement(createAuthTable);
             createAuthStatement.executeUpdate();
         } catch(Exception ex) {
+            //I need to do something with this error, just not sure what to do.
             System.out.println("Error: " + ex.getMessage());
         }
+    }
 
+    public void clearAll() throws DataAccessException {
+        authDataBase.clear();
+        userDataBase.clear();
+        gameDataBase.clear();
+    }
+    public boolean isAllEmpty() {
+        return (authDataBase.size() == 0) && (userDataBase.size() == 0) && (gameDataBase.size() == 0);
+    }
+
+    //Create Methods
+    public void createUser(String name, String password, String email) throws DataAccessException {
+        if(isUserEmpty(name))
+            userDataBase.createUser(name, new UserData(name, password, email));
+        else
+            throw new DataAccessException("Error: already taken");
+    }
+    public void createGame(String name) throws DataAccessException {
+        if(isGameEmpty(name))
+            gameDataBase.createGame(name);
+        else
+            throw new DataAccessException("Game taken");
+    }
+    public void createAuth(String token, String name) throws DataAccessException {
+        if(isAuthEmpty(token))
+            authDataBase.createAuth(token, new AuthData(token, name));
+        else
+            throw new DataAccessException("Auth taken");
+    }
+
+    //Get Methods
+    public AuthData getAuth(String token) throws DataAccessException {
+        if(isAuthEmpty(token))
+            throw new DataAccessException("Not valid token");
+        else
+            return authDataBase.getAuth(token);
+    }
+    public UserData getUser(String name) throws DataAccessException {
+        if(isUserEmpty(name))
+            throw new DataAccessException("Not valid Username");
+        else
+            return userDataBase.getUser(name);
+    }
+    public GameData getGame(int gameID) throws DataAccessException {
+        if(isGameEmpty(gameID))
+            throw new DataAccessException("Not valid GameID");
+        else
+            return gameDataBase.getGame(gameID);
+    }
+    public GameData getGameName(String name) throws DataAccessException {
+        ArrayList<GameData> gameList = gameDataBase.listGames();
+        if(gameList.isEmpty())
+            throw new DataAccessException("Not valid Game Name");
+        for(GameData game : gameList) {
+            if(game.gameName().equals(name))
+                return game;
+        }
+        throw new DataAccessException("Not valid Game Name");
+    }
+    public boolean noGameName(String name) {
+        try {
+            getGameName(name);
+            return false;
+        } catch(DataAccessException ex) {
+            return true;
+        }
+    }
+    public ArrayList<GameData> getGameList() throws DataAccessException {
+        return gameDataBase.listGames();
+    }
+    public String getPlayerFromColor(GameData game, String color) {
+        if(color.equals("WHITE"))
+            return game.whiteUsername();
+        return game.blackUsername();
+    }
+
+    //is_Empty
+    public boolean isAuthEmpty(String token) throws DataAccessException {
+        return authDataBase.getAuth(token) == null;
+    }
+    public boolean isUserEmpty(String name) throws DataAccessException {
+        return userDataBase.getUser(name) == null;
+    }
+    public boolean isGameEmpty(int gameID) throws DataAccessException {
+        return gameDataBase.getGame(gameID) == null;
+    }
+    public boolean isGameEmpty(String name) {
+        try {
+            return getGameName(name) == null;
+        } catch(DataAccessException ex) {
+            return true;
+        }
+    }
+
+    //Delete Methods
+    public void deleteAuth(String token) throws DataAccessException {
+        if(isAuthEmpty(token))
+            throw new DataAccessException("Not valid token");
+        else
+            authDataBase.deleteAuth(token);
+    }
+
+    public void updateGame(GameData newGame) throws DataAccessException{
+        gameDataBase.updateGame(newGame.gameID(), newGame);
     }
 
     public void addSession(Integer gameID, Session session) {
@@ -85,136 +197,5 @@ public class Database {
         ArrayList<Session> sessionList = sessionMap.get(gameID);
         sessionList.remove(session);
         sessionMap.put(gameID, sessionList);
-    }
-
-    // Clears all data from the DAOs
-    public void clearAll() throws DataAccessException {
-        authDataBase.clear();
-        userDataBase.clear();
-        gameDataBase.clear();
-    }
-
-    // Checks if all DAOs are empty
-    public boolean isAllEmpty() {
-        return (authDataBase.size() == 0) && (userDataBase.size() == 0) && (gameDataBase.size() == 0);
-    }
-
-    // Create a new user if the username is not already taken
-    public void createUser(String name, String password, String email) throws DataAccessException {
-        if (isUserEmpty(name))
-            userDataBase.createUser(name, new UserData(name, password, email));
-        else
-            throw new DataAccessException("Error: already taken");
-    }
-
-    // Create a new game if the game name is not already taken
-    public void createGame(String name) throws DataAccessException {
-        if (isGameEmpty(name))
-            gameDataBase.createGame(name);
-        else
-            throw new DataAccessException("Game taken");
-    }
-
-    // Create a new authentication token if the token is not already taken
-    public void createAuth(String token, String name) throws DataAccessException {
-        if (isAuthEmpty(token))
-            authDataBase.createAuth(token, new AuthData(token, name));
-        else
-            throw new DataAccessException("Auth taken");
-    }
-
-    // Retrieve authentication data for a given token
-    public AuthData getAuth(String token) throws DataAccessException {
-        if (isAuthEmpty(token))
-            throw new DataAccessException("Not valid token");
-        else
-            return authDataBase.getAuth(token);
-    }
-
-    // Retrieve user data for a given username
-    public UserData getUser(String name) throws DataAccessException {
-        if (isUserEmpty(name))
-            throw new DataAccessException("Not valid Username");
-        else
-            return userDataBase.getUser(name);
-    }
-
-    // Retrieve game data for a given game ID
-    public GameData getGame(int gameID) throws DataAccessException {
-        if (isGameEmpty(gameID))
-            throw new DataAccessException("Not valid GameID");
-        else
-            return gameDataBase.getGame(gameID);
-    }
-
-    // Retrieve game data for a given game name
-    public GameData getGameName(String name) throws DataAccessException {
-        ArrayList<GameData> gameList = gameDataBase.listGames();
-        if (gameList.isEmpty())
-            throw new DataAccessException("Not valid Game Name");
-        for (GameData game : gameList) {
-            if (game.gameName().equals(name))
-                return game;
-        }
-        throw new DataAccessException("Not valid Game Name");
-    }
-
-    // Check if a game name is not in use
-    public boolean noGameName(String name) {
-        try {
-            getGameName(name);
-            return false;
-        } catch (DataAccessException ex) {
-            return true;
-        }
-    }
-
-    // Retrieve a list of all games
-    public ArrayList<GameData> getGameList() throws DataAccessException {
-        return gameDataBase.listGames();
-    }
-
-    // Retrieve the player username for a given color in a game
-    public String getPlayerFromColor(GameData game, String color) {
-        if (color.equals("WHITE"))
-            return game.whiteUsername();
-        return game.blackUsername();
-    }
-
-    // Check if a given authentication token exists
-    public boolean isAuthEmpty(String token) throws DataAccessException {
-        return authDataBase.getAuth(token) == null;
-    }
-
-    // Check if a given username exists
-    public boolean isUserEmpty(String name) throws DataAccessException {
-        return userDataBase.getUser(name) == null;
-    }
-
-    // Check if a given game ID exists
-    public boolean isGameEmpty(int gameID) throws DataAccessException {
-        return gameDataBase.getGame(gameID) == null;
-    }
-
-    // Check if a given game name exists
-    public boolean isGameEmpty(String name) {
-        try {
-            return getGameName(name) == null;
-        } catch (DataAccessException ex) {
-            return true;
-        }
-    }
-
-    // Delete authentication data for a given token
-    public void deleteAuth(String token) throws DataAccessException {
-        if (isAuthEmpty(token))
-            throw new DataAccessException("Not valid token");
-        else
-            authDataBase.deleteAuth(token);
-    }
-
-    // Update game data for a given game
-    public void updateGame(GameData newGame) throws DataAccessException {
-        gameDataBase.updateGame(newGame.gameID(), newGame);
     }
 }

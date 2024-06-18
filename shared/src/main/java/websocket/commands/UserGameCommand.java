@@ -32,14 +32,9 @@ public class UserGameCommand {
         return authToken;
     }
 
-    public Integer getGameID() {
-        return gameID;
-    }
-
     public CommandType getCommandType() {
         return this.commandType;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -56,5 +51,7 @@ public class UserGameCommand {
         return Objects.hash(getCommandType(), getAuthString());
     }
 
-
+    public Integer getGameID() {
+        return gameID;
+    }
 }
