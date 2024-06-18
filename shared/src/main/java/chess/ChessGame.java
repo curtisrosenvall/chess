@@ -13,6 +13,7 @@ public class ChessGame {
     private TeamColor colorTurn;  // Tracks the current team's turn.
     private boolean checkCase;    // Flag to indicate if the game is currently checking for 'check' conditions.
     private ChessBoard newGame;   // The chessboard associated with the current game.
+    private ChessMove lastMove;// Stores the last move made in the game.
     private boolean gameOver;
 
     public ChessGame() {
