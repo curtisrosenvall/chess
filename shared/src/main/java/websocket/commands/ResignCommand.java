@@ -2,16 +2,11 @@ package websocket.commands;
 
 public class ResignCommand extends UserGameCommand{
 
-    private Integer gameID;
 
     public ResignCommand(String authToken, Integer gameID) {
-        super(authToken);
+        super(authToken, gameID);
         this.commandType = CommandType.RESIGN;
-        this.gameID = gameID;
 
     }
 
-    public Integer getGameID() {
-        return gameID;
-    }
 }
