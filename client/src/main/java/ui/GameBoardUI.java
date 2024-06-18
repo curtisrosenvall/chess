@@ -82,12 +82,12 @@ public class GameBoardUI {
         System.out.print("   ");
     }
 
-    public void printWhiteSideBoard() {
+    public void printWhiteSideBoard(boolean showValidMoves) {
 
         printLettersWhite();
         System.out.println();
         for(int i = 8; i >= 1; i--) {
-            printRowWhite(i);
+            printRowWhite(i, showValidMoves);
             System.out.println();
         }
         printLettersWhite();
