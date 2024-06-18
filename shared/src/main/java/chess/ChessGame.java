@@ -13,13 +13,14 @@ public class ChessGame {
     private TeamColor colorTurn;  // Tracks the current team's turn.
     private boolean checkCase;    // Flag to indicate if the game is currently checking for 'check' conditions.
     private ChessBoard newGame;   // The chessboard associated with the current game.
-    private ChessMove lastMove;   // Stores the last move made in the game.
+    private boolean gameOver;
 
     public ChessGame() {
         colorTurn = TeamColor.WHITE;
         newGame = new ChessBoard();
         newGame.resetBoard();
         checkCase = false;
+        gameOver = false;
     }
 
     /**
@@ -112,51 +113,55 @@ public class ChessGame {
      * @throws InvalidMoveException If the move is invalid.
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if(isGameOver())
+            throw new InvalidMoveException("Game is over, no more moves can be made");
+
         if(move == null)
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Invalid move");
 
-
+        //First check to see if the move is valid
         ChessPosition checkPos = move.getEndPosition();
         if((checkPos.getRow() < 1) || (checkPos.getRow() > 8) || (checkPos.getColumn() < 1) || (checkPos.getColumn() > 8)) {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Invalid move (move is off the board)");
         }
+        //Get a copy of the piece at the starting position
+        ChessBoard moveBoard = getCopy();
+        ChessPiece piece = moveBoard.getPiece(move.getStartPosition());
 
-        ChessBoard clonedBoard = getCopy();
-        ChessPiece piece = clonedBoard.getPiece(move.getStartPosition());
+        if(moveBoard.getPiece(move.getStartPosition()) == null)
+            throw new InvalidMoveException("There is no piece at the starting position");
 
-        if(clonedBoard.getPiece(move.getStartPosition()) == null)
-            throw new InvalidMoveException();
-
-        if(!checkCase && (clonedBoard.getPiece(move.getStartPosition()).getTeamColor() != colorTurn))
-            throw new InvalidMoveException();
-
-
-        if(piece.pieceMoves(clonedBoard, move.getStartPosition()).contains(move)) {
-
-            clonedBoard.addPiece(move.getStartPosition(), null);
+        if(!checkCase && (moveBoard.getPiece(move.getStartPosition()).getTeamColor() != colorTurn))
+            throw new InvalidMoveException("It is not your turn");
 
 
+        if(piece.pieceMoves(moveBoard, move.getStartPosition()).contains(move)) {
+            //Set the starting position to null
+            moveBoard.addPiece(move.getStartPosition(), null);
+
+            //If the promotion is null, then set the new position to the copy of the piece
             if(move.getPromotionPiece() == null) {
-                clonedBoard.addPiece(move.getEndPosition(), piece);
+                moveBoard.addPiece(move.getEndPosition(), piece);
             }
-
+            //If the promotion isn't null, then set the new position to the promotion piece
             else {
-                clonedBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+                moveBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
             }
         } else {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Not a valid move for this piece");
         }
 
-        setBoard(clonedBoard);
-        if(!isInCheck(clonedBoard.getPiece(move.getEndPosition()).getTeamColor())) {
-            setBoard(clonedBoard);
+        setBoard(moveBoard);
+        if(!isInCheck(moveBoard.getPiece(move.getEndPosition()).getTeamColor())) {
+            setBoard(moveBoard);
             changeTeamTurn();
+            if(isInCheckmate(getTeamTurn())) {
+                gameOver = true;
+            }
         } else
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Invalid move, this move will put you in check");
         checkCase = false;
-        lastMove = move;
     }
-
     /**
      * Determines if the given team is in check
      *
@@ -266,6 +271,14 @@ public class ChessGame {
             }
         }
         return true;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 
     /**
