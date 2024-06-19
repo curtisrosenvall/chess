@@ -31,7 +31,7 @@ public class Database {
         try {
             DatabaseManager.createDatabase();
         } catch(Exception ex) {
-            System.out.println("You messed up Tristan");
+            System.out.println("You messed up Curtis");
         }
         try (Connection conn = DatabaseManager.getConnection()) {
             /* Drop Database code
