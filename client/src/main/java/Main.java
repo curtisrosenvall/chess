@@ -16,15 +16,15 @@ public class Main {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);
 
-        //int port =
         serverFacade = new ServerFacade(8080);
+        System.out.println("ServerFacade initialized with port 8080");
 
         Scanner scan = new Scanner(System.in);
         String input = "start";
         boolean loggedIn = false;
 
         while(!(input.equalsIgnoreCase("quit") || (input.equals("2") && !loggedIn))) {
-            System.out.println("\n-----------------------");
+            System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             if(input.equals("start")) {
                 chessClientStartUp();
             } else if(input.equals("help") || input.equals("1")) {
@@ -58,11 +58,10 @@ public class Main {
         }
     }
 
-
     static void chessClientStartUp() {
-        System.out.println("~ Hi! Welcome to Curt's Chess Server! ~");
-        System.out.println("Please select an option by typing the corresponding number or command:");
-        System.out.println("For help at any time, type 'Help' or '1'.");
+        System.out.println("~ Hi! Welcome to the Chess Server! ~");
+        System.out.println("Please input the number or name of what you would like to do.");
+        System.out.println("If you have any questions, please enter 1 or Help for assistance and explanations.");
     }
 
     static void listOptions(boolean loggedIn) {
@@ -81,18 +80,17 @@ public class Main {
     }
 
     static void helpExplainOptions(boolean loggedIn) {
-        System.out.println("\nTo view these instructions again, enter '1' or 'Help'.");
-
-        if (!loggedIn) {
-            System.out.println("2. Quit - Close the program.");
-            System.out.println("3. Register - Create a new user account by providing a username, password, and email.");
-            System.out.println("4. Login - Access your existing account by entering your username and password.");
+        System.out.println("\nEntering 1 or help will bring up this explanation again.");
+        if(!loggedIn) {
+            System.out.println("Entering 2 or quit will close down the program");
+            System.out.println("Entering 3 or register will allow you to create a new user, you just need to input a username, password, and email.");
+            System.out.println("Entering 4 or login will allow you to login an existing user, you just need to input your username and password.");
         } else {
-            System.out.println("2. Logout - Log out of your current session.");
-            System.out.println("3. Create Game - Start a new game by entering a game name.");
-            System.out.println("4. List Games - View a list of all available games.");
-            System.out.println("5. Play Game - Join a game to play by providing the game ID and your team color.");
-            System.out.println("6. Observe Game - Watch an ongoing game by entering the game ID.");
+            System.out.println("Entering 2 or logout will allow you to logout, no need to input anything.");
+            System.out.println("Entering 3 or create game will allow you to create a new game, you just need to input a game name.");
+            System.out.println("Entering 4 or list games will allow you to see all the created games.");
+            System.out.println("Entering 5 or play game will allow you to join a game to play, you just need to input the gameID and team color you want to play.");
+            System.out.println("Entering 6 or observe game will allow you to join a game to observe, you just need to input the gameID you want to watch.");
         }
     }
 
@@ -117,11 +115,10 @@ public class Main {
     }
 
     static void invalidInput() {
-        System.out.println("\nInvalid input detected.");
-        System.out.println("To select an option, please enter the corresponding number or the exact text of the option.");
-        System.out.println("  For example, to access the help screen, type '1' or 'Help'.");
-        System.out.println("To join or observe a game, please enter only the game ID number.");
-        System.out.println("  For example, to join the game with ID '1', simply type '1' without any additional characters or spaces.");
+        System.out.println("\nInvalid input. If you are trying to select an option, Please input the number or the exact words of the option.");
+        System.out.println("  For example: to access the help screen, please input '1' or 'help'.");
+        System.out.println("If you are trying to join or observe a game, please make sure you only input the number of that game.");
+        System.out.println("  For example: to join the game with ID of '1', please only enter '1', no spaces or anything but the number");
     }
 
     static boolean loginUser() {

@@ -19,44 +19,61 @@ public class ClientCommunicator {
     }
 
     public InputStreamReader clientToServer(ParentRequest request, URLStrings clientStrings) {
+        InputStreamReader reader = null;
+
         try {
+            // Construct the URL for the HTTP connection
             String urlString = "http://localhost:" + port + clientStrings.getUrlPath();
             URI uri = new URI(urlString);
+
+            // Open HTTP connection
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
             http.setRequestMethod(clientStrings.getRequestMethod());
             http.setDoOutput(true);
             http.addRequestProperty("Authorization", clientStrings.getAuthToken());
 
-            if(!clientStrings.getRequestMethod().equals("GET")) {
+            // Write request body if the request method is not GET
+            if (!clientStrings.getRequestMethod().equals("GET")) {
                 try (OutputStream requestBody = http.getOutputStream()) {
-
                     String json = new Gson().toJson(request);
                     requestBody.write(json.getBytes());
                 }
             }
 
-
+            // Connect to the server
             http.connect();
-            InputStreamReader reader;
-            if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                InputStream responseBody = http.getInputStream();
 
-                reader = new InputStreamReader(responseBody);
+            // Log the HTTP response code and headers for debugging
+            int responseCode = http.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
+            System.out.println("Response Message: " + http.getResponseMessage());
+
+            // Get response and create InputStreamReader based on response code
+            InputStream responseBody;
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                responseBody = http.getInputStream();
+            } else {
+                responseBody = http.getErrorStream();
+                System.out.println("Error Stream: " + responseBody);
             }
-            else {
-                InputStream responseBody = http.getErrorStream();
 
+            if (responseBody != null) {
                 reader = new InputStreamReader(responseBody);
+            } else {
+                System.out.println("Error: Response body is null.");
             }
-            return reader;
 
-        } catch(URISyntaxException uriException) {
-            System.out.println("There is something wrong with my URL");
-        } catch(java.net.ProtocolException protocolException) {
-            System.out.println("I can't set my method request");
-        } catch(IOException ioException) {
-            System.out.println("Something went wrong while trying to connect");
+        } catch (URISyntaxException uriException) {
+            System.out.println("Error: Invalid URL syntax.");
+            uriException.printStackTrace();
+        } catch (java.net.ProtocolException protocolException) {
+            System.out.println("Error: Protocol setting issue.");
+            protocolException.printStackTrace();
+        } catch (IOException ioException) {
+            System.out.println("Error: IO issue while trying to connect.");
+            ioException.printStackTrace();
         }
-        return null;
+
+        return reader;
     }
 }
