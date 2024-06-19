@@ -87,7 +87,6 @@ public class GamePlayUI extends Endpoint {
         String input;
         boolean stop = false;
 
-        //printBoards();
 
         if(!isObserver) {
             while (true) {

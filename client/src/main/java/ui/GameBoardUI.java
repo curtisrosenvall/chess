@@ -17,88 +17,6 @@ public class GameBoardUI {
         letters = new String[] {"\u2003A ", "\u2003B ", "\u2003C ", "\u2003D ", "\u2003E ", "\u2003F ", "\u2003G ", "\u2003H "};
     }
 
-    public void printWhiteSideBoard(boolean showValidMoves) {
-        printLettersWhite();
-        System.out.println();
-        for(int i = 8; i >= 1; i--) {
-            printRowWhite(i, showValidMoves);
-            System.out.println();
-        }
-        printLettersWhite();
-        System.out.println();
-    }
-
-    public void printBlackSideBoard(boolean showValidMoves) {
-        printLettersBlack();
-        System.out.println();
-        for(int i = 1; i <= 8; i++) {
-            printRowBlack(i, showValidMoves);
-            System.out.println();
-        }
-        printLettersBlack();
-        System.out.println();
-    }
-
-    public void setBorderSquare() {
-        System.out.printf(EscapeSequences.SET_TEXT_COLOR_BLACK + EscapeSequences.SET_BG_COLOR_WHITE);
-    }
-
-    public void setSquareToNormal() {
-        System.out.printf(EscapeSequences.RESET_TEXT_COLOR + EscapeSequences.RESET_BG_COLOR);
-    }
-
-    public void printWhitePieces() {
-        System.out.printf(EscapeSequences.SET_TEXT_COLOR_WHITE);
-    }
-
-    public void printBlackPieces() {
-        System.out.printf(EscapeSequences.SET_TEXT_COLOR_BLACK);
-    }
-
-    public void setBackGroundDark() {
-        System.out.printf(EscapeSequences.SET_BG_COLOR_DARK_GREY);
-    }
-
-    public void setBackGroundValidDark() {
-        System.out.printf(EscapeSequences.SET_BG_COLOR_DARK_GREEN);
-    }
-
-    public void setBackGroundLight() {
-        System.out.printf(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-    }
-
-    public void setBackGroundValidLight() {
-        System.out.printf(EscapeSequences.SET_BG_COLOR_GREEN);
-    }
-
-    public void setSelectedPieceBackGround() {
-        System.out.printf(EscapeSequences.SET_BG_COLOR_RED);
-    }
-
-    public void setBackGroundColor(int row, int col) {
-        if(((row + col) % 2) == 0)
-            setBackGroundDark();
-        else
-            setBackGroundLight();
-    }
-
-    public void setValidBackGroundColor(int row, int col) {
-        ArrayList<ChessPosition> endPositions = new ArrayList<>();
-        for(ChessMove move : validMoves) {
-            endPositions.add(move.getEndPosition());
-        }
-        if(selectedPiece.equals(new ChessPosition(row, col)))
-            setSelectedPieceBackGround();
-        else if(endPositions.contains(new ChessPosition(row, col))) {
-            if(((row + col) % 2) == 0)
-                setBackGroundValidDark();
-            else
-                setBackGroundValidLight();
-        } else {
-            setBackGroundColor(row, col);
-        }
-    }
-
     public void printEmptySpace() {
         System.out.print(EscapeSequences.EMPTY);
     }
@@ -181,6 +99,90 @@ public class GameBoardUI {
             setSquareToNormal();
         }
     }
+
+    public void printWhiteSideBoard(boolean showValidMoves) {
+        printLettersWhite();
+        System.out.println();
+        for(int i = 8; i >= 1; i--) {
+            printRowWhite(i, showValidMoves);
+            System.out.println();
+        }
+        printLettersWhite();
+        System.out.println();
+    }
+
+    public void printBlackSideBoard(boolean showValidMoves) {
+        printLettersBlack();
+        System.out.println();
+        for(int i = 1; i <= 8; i++) {
+            printRowBlack(i, showValidMoves);
+            System.out.println();
+        }
+        printLettersBlack();
+        System.out.println();
+    }
+
+    public void setBorderSquare() {
+        System.out.printf(EscapeSequences.SET_TEXT_COLOR_BLACK + EscapeSequences.SET_BG_COLOR_WHITE);
+    }
+
+    public void setSquareToNormal() {
+        System.out.printf(EscapeSequences.RESET_TEXT_COLOR + EscapeSequences.RESET_BG_COLOR);
+    }
+
+    public void printWhitePieces() {
+        System.out.printf(EscapeSequences.SET_TEXT_COLOR_WHITE);
+    }
+
+    public void printBlackPieces() {
+        System.out.printf(EscapeSequences.SET_TEXT_COLOR_BLACK);
+    }
+
+    public void setBackGroundDark() {
+        System.out.printf(EscapeSequences.SET_BG_COLOR_DARK_GREY);
+    }
+
+    public void setBackGroundValidDark() {
+        System.out.printf(EscapeSequences.SET_BG_COLOR_DARK_GREEN);
+    }
+
+    public void setBackGroundLight() {
+        System.out.printf(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
+    }
+
+    public void setBackGroundValidLight() {
+        System.out.printf(EscapeSequences.SET_BG_COLOR_GREEN);
+    }
+
+    public void setSelectedPieceBackGround() {
+        System.out.printf(EscapeSequences.SET_BG_COLOR_RED);
+    }
+
+    public void setBackGroundColor(int row, int col) {
+        if(((row + col) % 2) == 0)
+            setBackGroundDark();
+        else
+            setBackGroundLight();
+    }
+
+    public void setValidBackGroundColor(int row, int col) {
+        ArrayList<ChessPosition> endPositions = new ArrayList<>();
+        for(ChessMove move : validMoves) {
+            endPositions.add(move.getEndPosition());
+        }
+        if(selectedPiece.equals(new ChessPosition(row, col)))
+            setSelectedPieceBackGround();
+        else if(endPositions.contains(new ChessPosition(row, col))) {
+            if(((row + col) % 2) == 0)
+                setBackGroundValidDark();
+            else
+                setBackGroundValidLight();
+        } else {
+            setBackGroundColor(row, col);
+        }
+    }
+
+
 
     public void setValidMoves(Collection<ChessMove> validMoves) {
         this.validMoves = validMoves;

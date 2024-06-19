@@ -27,17 +27,14 @@ public class Database {
     }
 
     public void createTables() {
-        //Create auth, user, and game table if not created already.
+
         try {
             DatabaseManager.createDatabase();
         } catch(Exception ex) {
             System.out.println("You messed up Curtis");
         }
         try (Connection conn = DatabaseManager.getConnection()) {
-            /* Drop Database code
-            var dropDbStatement = conn.prepareStatement("DROP DATABASE IF EXISTS chess");
-            dropDbStatement.executeUpdate();
-             */
+
             String createUserTable = """
                     CREATE TABLE IF NOT EXISTS user (
                         username VARCHAR(255) NOT NULL,
@@ -71,9 +68,26 @@ public class Database {
             PreparedStatement createAuthStatement = conn.prepareStatement(createAuthTable);
             createAuthStatement.executeUpdate();
         } catch(Exception ex) {
-            //I need to do something with this error, just not sure what to do.
             System.out.println("Error: " + ex.getMessage());
         }
+    }
+
+    public void addSession(Integer gameID, Session session) {
+        ArrayList<Session> sessionList = sessionMap.get(gameID);
+        if(sessionList == null)
+            sessionList = new ArrayList<>();
+        sessionList.add(session);
+        sessionMap.put(gameID, sessionList);
+    }
+
+    public ArrayList<Session> getSessionList(Integer gameID) {
+        return sessionMap.get(gameID);
+    }
+
+    public void removeSession(Integer gameID, Session session) {
+        ArrayList<Session> sessionList = sessionMap.get(gameID);
+        sessionList.remove(session);
+        sessionMap.put(gameID, sessionList);
     }
 
     public void clearAll() throws DataAccessException {
@@ -105,7 +119,21 @@ public class Database {
             throw new DataAccessException("Auth taken");
     }
 
-    //Get Methods
+    //Delete
+    public void deleteAuth(String token) throws DataAccessException {
+        if(isAuthEmpty(token))
+            throw new DataAccessException("Not valid token");
+        else
+            authDataBase.deleteAuth(token);
+    }
+
+    public void updateGame(GameData newGame) throws DataAccessException{
+        gameDataBase.updateGame(newGame.gameID(), newGame);
+    }
+
+
+
+    //Get
     public AuthData getAuth(String token) throws DataAccessException {
         if(isAuthEmpty(token))
             throw new DataAccessException("Not valid token");
@@ -151,7 +179,7 @@ public class Database {
         return game.blackUsername();
     }
 
-    //is_Empty
+    //Empty
     public boolean isAuthEmpty(String token) throws DataAccessException {
         return authDataBase.getAuth(token) == null;
     }
@@ -169,33 +197,5 @@ public class Database {
         }
     }
 
-    //Delete Methods
-    public void deleteAuth(String token) throws DataAccessException {
-        if(isAuthEmpty(token))
-            throw new DataAccessException("Not valid token");
-        else
-            authDataBase.deleteAuth(token);
-    }
 
-    public void updateGame(GameData newGame) throws DataAccessException{
-        gameDataBase.updateGame(newGame.gameID(), newGame);
-    }
-
-    public void addSession(Integer gameID, Session session) {
-        ArrayList<Session> sessionList = sessionMap.get(gameID);
-        if(sessionList == null)
-            sessionList = new ArrayList<>();
-        sessionList.add(session);
-        sessionMap.put(gameID, sessionList);
-    }
-
-    public ArrayList<Session> getSessionList(Integer gameID) {
-        return sessionMap.get(gameID);
-    }
-
-    public void removeSession(Integer gameID, Session session) {
-        ArrayList<Session> sessionList = sessionMap.get(gameID);
-        sessionList.remove(session);
-        sessionMap.put(gameID, sessionList);
-    }
 }
