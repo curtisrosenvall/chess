@@ -63,21 +63,11 @@ public class Server {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws Exception {
         System.out.printf("Received: %s\n", message);
-        //session.getRemote().sendString("WebSocket response: " + message);
-
         try {
             UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
-
-            // Throws a custom UnauthorizedException. Yours may work differently.
             AuthData auth = database.getAuth(command.getAuthString());
             String username = auth.username();
-
-            //This implements a map that organizes all the sessions. GameID to an arraylist of all the authTokens
-            //Put this inside of the connect method as this is the only time info is added into the map
-            //saveSession(command.getGameID(), session);
-
             switch (command.getCommandType()) {
-                //Adds the authToken into the map of sessions.
                 case CONNECT -> {
                     ConnectCommand connectCommand = new Gson().fromJson(message, ConnectCommand.class);
                     connect(session, username, connectCommand);
@@ -90,7 +80,6 @@ public class Server {
                     LeaveGameCommand leaveCommand = new Gson().fromJson(message, LeaveGameCommand.class);
                     leaveGame(session, username, leaveCommand);
                 }
-                //Doesn't remove anyone, just sends a message
                 case RESIGN -> {
                     ResignCommand resignCommand = new Gson().fromJson(message, ResignCommand.class);
                     resign(session, username, resignCommand);
@@ -105,7 +94,6 @@ public class Server {
     public void connect(Session session, String username, ConnectCommand command) {
         database.addSession(command.getGameID(), session);
         String color;
-        //Add username to database
         try {
             GameData game = database.getGame(command.getGameID());
 
@@ -119,7 +107,6 @@ public class Server {
             sendMessage(session.getRemote(), new ErrorMessage("Error: " + ex.getMessage()));
             return;
         }
-        //Notify all other people
         try {
             notifySessions(database.getSessionList(command.getGameID()), session, new OnGameLoadMessage(database.getGame(command.getGameID())), "ROOT");
             notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " joined the game as " + color), "NOT_ROOT");
@@ -150,9 +137,8 @@ public class Server {
             game.game().makeMove(move);
             database.updateGame(game);
 
-            //LOAD_GAME Message
+
             notifySessions(database.getSessionList(command.getGameID()), session, new OnGameLoadMessage(game), "ALL");
-            //Notify a move has been made
             notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has made a move: " + stringMove), "NOT_ROOT");
             if(game.game().isInCheckmate(game.game().getTeamTurn())) {
                 notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has Checkmated " + ((color == ChessGame.TeamColor.WHITE) ? game.blackUsername() : game.whiteUsername())), "ALL");
@@ -182,8 +168,6 @@ public class Server {
         } catch(Exception ex) {
             System.out.println("NOT IN GAME!!!");
         }
-        //sendMessage
-
     }
 
     public void resign(Session session, String username, ResignCommand command) {
