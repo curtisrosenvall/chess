@@ -22,6 +22,8 @@ public class GamePlayUI extends Endpoint {
     private GameData gameData;
     private boolean loadedGame;
 
+
+    // Constructor to initialize the GamePlayUI object with game number, team color, and authentication token
     public GamePlayUI(Integer gameNum, String teamColor, String token) {
         gameID = gameNum;
         this.teamColor = teamColor;
@@ -29,15 +31,20 @@ public class GamePlayUI extends Endpoint {
         loadedGame = false;
     }
 
+    // Sends a message to the WebSocket server
     public void send(String msg) throws Exception {
         this.session.getBasicRemote().sendText(msg);
     }
 
+
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
+        // Called when a new WebSocket connection is opened
     }
 
 
+
+    // Attempts to connect to the WebSocket game server
     public boolean tryConnectToGame() {
         try {
             URI uri = new URI("ws://localhost:8080/ws");
@@ -81,13 +88,14 @@ public class GamePlayUI extends Endpoint {
         return true;
     }
 
+
+
+    // Manages the in-game options for players and observers
     public void  inGame(boolean isObserver) {
         System.out.println("\nSuccessfully joined game.");
         Scanner scan = new Scanner(System.in);
         String input;
         boolean stop = false;
-
-
         if(!isObserver) {
             while (true) {
                 input = scan.nextLine();
@@ -148,6 +156,8 @@ public class GamePlayUI extends Endpoint {
         }
     }
 
+
+    // Lists the available options for observers
     static void listObserveOptions() {
         System.out.println("\n 1. Help");
         System.out.println(" 2. Quit");
@@ -155,6 +165,9 @@ public class GamePlayUI extends Endpoint {
         System.out.println(" 4. Highlight legal moves");
     }
 
+
+
+    // Lists explanations for the observer options
     static void listObserveExplanations() {
         System.out.println("\nInput 1 or help to show this list again");
         System.out.println("Input 2 or quit to leave the game");
@@ -164,6 +177,7 @@ public class GamePlayUI extends Endpoint {
                 "  (This will highlight all possible moves from the starting position.)");
     }
 
+    // Lists the available options for players
     static void listGameOptions() {
         System.out.println("\n 1. Help");
         System.out.println(" 2. Redraw Chess Board");
@@ -173,6 +187,8 @@ public class GamePlayUI extends Endpoint {
         System.out.println(" 6. Highlight Legal Moves");
     }
 
+
+    // Lists explanations for the player options
     static void listGameExplanations() {
         System.out.println("\nInput 1 or help to show this list again");
         System.out.println("Input 2 or redraw chess board to redraw the chess board.\n" +
@@ -185,6 +201,9 @@ public class GamePlayUI extends Endpoint {
                 "  (This will highlight all possible moves from the starting position.)");
     }
 
+
+
+    // Prints the game board with the current game data
     public void printBoards() {
         GameBoardUI ui = new GameBoardUI(gameData.game().getBoard().getBoard());
         printInfo();
@@ -195,6 +214,7 @@ public class GamePlayUI extends Endpoint {
         }
     }
 
+    // Prints the valid moves for a selected piece
     public void printValidMoves() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Please input the position of the piece you would like to see the valid moves of");
@@ -228,11 +248,17 @@ public class GamePlayUI extends Endpoint {
         }
     }
 
+    // Prints the game information (game number, game name, players, and game condition)
+
     public void printInfo() {
         System.out.println("\nGame number: " + gameData.gameID() + ", Game name: " + gameData.gameName());
         System.out.println("White username: " + ((gameData.whiteUsername() == null) ? "<Empty>" : gameData.whiteUsername()) + ", Black username: " + ((gameData.blackUsername() == null) ? "<Empty>" : gameData.blackUsername()));
         System.out.println("Current game condition: " + ((gameData.game().isGameOver()) ? "Finished" : "Ongoing"));
     }
+
+
+
+    // Updates the game data based on the received message
 
     public void editGameData(String message) {
         String username;
@@ -262,9 +288,15 @@ public class GamePlayUI extends Endpoint {
         gameData = newGame;
     }
 
+
+    // Extracts the username from the message based on the cut-off amount
+
     public String getUsername(String message, int cutOffAmount) {
         return message.substring(0,message.length()-cutOffAmount);
     }
+
+
+    // Handles making a move in the game
 
     public void makeMove() {
         Scanner scan = new Scanner(System.in);
@@ -328,6 +360,8 @@ public class GamePlayUI extends Endpoint {
         }
     }
 
+
+    // Converts a character representing a column (a-h) to an integer
     public int charToInt(Character col) {
         switch (col) {
             case 'a' -> { return 1; }

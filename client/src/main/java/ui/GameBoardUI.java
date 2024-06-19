@@ -14,7 +14,7 @@ public class GameBoardUI {
 
     public GameBoardUI(ChessPiece[][] board) {
         this.board = board;
-        letters = new String[] {"\u2003A ", "\u2003B ", "\u2003C ", "\u2003D ", "\u2003E ", "\u2003F ", "\u2003G ", "\u2003H "};
+        letters = new String[] {"A ", "B ", "C ", "D ", "E ", "F ", "G ", "H "};
     }
 
     public void printEmptySpace() {
