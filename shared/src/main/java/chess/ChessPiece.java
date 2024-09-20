@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Represents a single chess piece
@@ -11,9 +12,9 @@ import java.util.Collection;
 public class ChessPiece {
 
     private final ChessGame.TeamColor pieceColor;
-    private final ChessPiece.PieceType type;
+    private final PieceType type;
 
-    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+    public ChessPiece(ChessGame.TeamColor pieceColor, PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
     }
@@ -53,7 +54,37 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition startPosition) {
+        ChessPiece piece = board.getPiece(startPosition);
+        if (piece == null) {
+            return Collections.emptyList();
+        }
+
+        MovesCalculator calculator;
+
+        switch (piece.getPieceType()) {
+            case BISHOP:
+               calculator = new CalculateBishopMoves(board, startPosition);
+                break;
+            case ROOK:
+              calculator = new CalculateRookMoves(board, startPosition);
+                break;
+            case QUEEN:
+                calculator = new CalculateQueenMoves(board, startPosition);
+                break;
+            case KING:
+                calculator = new CalculateKingMoves(board, startPosition);
+                break;
+            case PAWN:
+                calculator = new CalculatePawnMoves(board, startPosition);
+                break;
+            case KNIGHT:
+                calculator = new CalculateKnightMoves(board, startPosition);
+                break;
+            default:
+                return Collections.emptyList();
+        }
+
+        return calculator.getValidMoves();
     }
 }
