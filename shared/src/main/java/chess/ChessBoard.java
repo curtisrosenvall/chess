@@ -1,6 +1,5 @@
 package chess;
 
-import java.util.ArrayList;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
