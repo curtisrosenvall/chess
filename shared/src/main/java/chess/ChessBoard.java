@@ -24,7 +24,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        squares[position.getRow()][position.getColumn()] = piece;
+        squares[position.getRow() -1][position.getColumn() -1] = piece;
     }
 
     /**
@@ -35,7 +35,7 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        return squares[position.getRow()][position.getColumn()];
+        return squares[position.getRow() -1 ][position.getColumn() -1];
     }
 
     /**
@@ -43,32 +43,41 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        // Define the order of pieces on the back rank
-        ChessPiece.PieceType[] pieceBoardOrder = {
-                ChessPiece.PieceType.ROOK,
-                ChessPiece.PieceType.KNIGHT,
-                ChessPiece.PieceType.BISHOP,
-                ChessPiece.PieceType.QUEEN,
-                ChessPiece.PieceType.KING,
-                ChessPiece.PieceType.BISHOP,
-                ChessPiece.PieceType.KNIGHT,
-                ChessPiece.PieceType.ROOK
-        };
+        ChessGame.TeamColor whiteTeam = ChessGame.TeamColor.WHITE;
+        ChessGame.TeamColor blackTeam = ChessGame.TeamColor.BLACK;
 
-        // Place white pieces
-        for (int i = 0; i < 8; i++) {
-            // Place back rank pieces
-            addPiece(new ChessPosition(1, i + 1), new ChessPiece(ChessGame.TeamColor.WHITE, pieceBoardOrder[i]));
-            // Place pawns
-            addPiece(new ChessPosition(2, i + 1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+        ChessPiece.PieceType rook = ChessPiece.PieceType.ROOK;
+        ChessPiece.PieceType knight = ChessPiece.PieceType.KNIGHT;
+        ChessPiece.PieceType bishop = ChessPiece.PieceType.BISHOP;
+        ChessPiece.PieceType queen = ChessPiece.PieceType.QUEEN;
+        ChessPiece.PieceType king = ChessPiece.PieceType.KING;
+        ChessPiece.PieceType pawn = ChessPiece.PieceType.PAWN;
+
+
+        addPiece( new ChessPosition(1,1), new ChessPiece(whiteTeam, rook));
+        addPiece( new ChessPosition(1,2), new ChessPiece(whiteTeam, knight));
+        addPiece( new ChessPosition(1,3), new ChessPiece(whiteTeam, bishop ));
+        addPiece( new ChessPosition(1,4), new ChessPiece(whiteTeam, queen));
+        addPiece( new ChessPosition(1,5), new ChessPiece(whiteTeam, king));
+        addPiece( new ChessPosition(1,6), new ChessPiece(whiteTeam, bishop));
+        addPiece( new ChessPosition(1,7), new ChessPiece(whiteTeam, knight));
+        addPiece( new ChessPosition(1,8), new ChessPiece(whiteTeam, rook));
+
+        for(int i = 1; i <= 8; i++) {
+            addPiece( new ChessPosition(2,i), new ChessPiece(whiteTeam, pawn));
         }
 
-        // Place black pieces
-        for (int i = 0; i < 8; i++) {
-            // Place back rank pieces
-            addPiece(new ChessPosition(8, i + 1), new ChessPiece(ChessGame.TeamColor.BLACK, pieceBoardOrder[i]));
-            // Place pawns
-            addPiece(new ChessPosition(7, i + 1), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        addPiece( new ChessPosition(8,1), new ChessPiece(blackTeam, rook));
+        addPiece( new ChessPosition(8,2), new ChessPiece(blackTeam, knight));
+        addPiece( new ChessPosition(8,3), new ChessPiece(blackTeam, bishop));
+        addPiece( new ChessPosition(8,4), new ChessPiece(blackTeam, queen));
+        addPiece( new ChessPosition(8,5), new ChessPiece(blackTeam, king));
+        addPiece( new ChessPosition(8,6), new ChessPiece(blackTeam, bishop));
+        addPiece( new ChessPosition(8,7), new ChessPiece(blackTeam, knight));
+        addPiece( new ChessPosition(8,8), new ChessPiece(blackTeam, rook));
+
+        for(int i = 1; i <= 8; i++) {
+            addPiece( new ChessPosition(7,i), new ChessPiece(blackTeam, pawn));
         }
     }
 

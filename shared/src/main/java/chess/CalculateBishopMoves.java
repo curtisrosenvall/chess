@@ -2,62 +2,57 @@ package chess;
 
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class CalculateBishopMoves implements MovesCalculator {
+public class CalculateBishopMoves {
 
-    private Collection<ChessMove> validMoves;
+    Collection<ChessMove> validMovesCalculator;
 
     public CalculateBishopMoves(ChessBoard board, ChessPosition startPosition) {
-        validMoves = new ArrayList<>();
 
-        ChessPiece bishop = board.getPiece(startPosition);
-        if (bishop == null || bishop.getPieceType() != ChessPiece.PieceType.BISHOP) {
-            return; // No bishop at the start position
+        validMovesCalculator = new ArrayList<>();
+        ValidMovesCalculator validMove = new ValidMovesCalculator();
+
+        //Up and to the right
+        boolean validPosition = true;
+        int i = 1;
+        while(validPosition) {
+            ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() + i);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
+            i++;
         }
 
-        // Define the four diagonal directions
-        int[] rowDirections = {1, -1, -1, 1};
-        int[] colDirections = {1, 1, -1, -1};
+        //Down and to the right
+        validPosition = true;
+        i = 1;
+        while(validPosition) {
+            ChessPosition enPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() + i);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, enPosition);
+            i++;
+        }
 
-        for (int dir = 0; dir < 4; dir++) {
-            int rowOffset = rowDirections[dir];
-            int colOffset = colDirections[dir];
-            int steps = 1;
+        //Down and to the left
+        validPosition = true;
+        i = 1;
+        while(validPosition) {
+            ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() - i);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
+            i++;
+        }
 
-            while (true) {
-                int newRow = startPosition.getRow() + steps * rowOffset;
-                int newCol = startPosition.getColumn() + steps * colOffset;
-                ChessPosition endPosition = new ChessPosition(newRow, newCol);
-
-                if (!isInBoard(endPosition)) {
-                    break; // Move is off the board
-                }
-
-                ChessPiece targetPiece = board.getPiece(endPosition);
-                if (targetPiece == null) {
-                    // Empty square, add move and continue
-                    validMoves.add(new ChessMove(startPosition, endPosition, null));
-                } else if (targetPiece.getTeamColor() != bishop.getTeamColor()) {
-                    // Capture opponent's piece, add move and stop in this direction
-                    validMoves.add(new ChessMove(startPosition, endPosition, null));
-                    break;
-                } else {
-                    // Friendly piece blocks the path, stop in this direction
-                    break;
-                }
-                steps++;
-            }
+        //Up and to the left
+        validPosition = true;
+        i = 1;
+        while(validPosition) {
+            ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() - i);
+            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
+            i++;
         }
     }
 
-    @Override
-    public Collection<ChessMove> getValidMoves() {
-        return validMoves;
+    public Collection<ChessMove> getBishopMoves() {
+        return validMovesCalculator;
     }
 
-    private boolean isInBoard(ChessPosition position) {
-        int row = position.getRow();
-        int col = position.getColumn();
-        return row >= 1 && row <= 8 && col >= 1 && col <= 8;
-    }
+
 }

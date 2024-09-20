@@ -3,32 +3,57 @@ package chess;
 import java.util.Collection;
 import java.util.ArrayList;
 
-public class CalculateKingMoves implements MovesCalculator {
+public class CalculateKingMoves {
 
-    private Collection<ChessMove> validMoves;
+    Collection<ChessMove> validMovesCalculator;
 
     public CalculateKingMoves(ChessBoard board, ChessPosition startPosition) {
-        validMoves = new ArrayList<>();
-        ChessPiece king = board.getPiece(startPosition);
 
-        if (king == null || king.getPieceType() != ChessPiece.PieceType.KING) {
-            return; // No king at the start position
-        }
+        validMovesCalculator = new ArrayList<>();
+        ValidMovesCalculator validMove = new ValidMovesCalculator();
 
-        int[] rowOffsets = {-1, -1, -1, 0, 0, 1, 1, 1};
-        int[] colOffsets = {-1, 0, 1, -1, 1, -1, 0, 1};
+        //Up
+        ChessPosition endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn());
+        if(validMove.isInBoard(endPosition))
+            validMove.movePiece(validMovesCalculator, board, startPosition, endPosition);
 
-        for (int i = 0; i < rowOffsets.length; i++) {
-            ChessPosition endPosition = new ChessPosition(
-                    startPosition.getRow() + rowOffsets[i],
-                    startPosition.getColumn() + colOffsets[i]
-            );
-            ValidMovesCalculator.checkBoardLimitsAndMove(validMoves, board, startPosition, endPosition);
-        }
+        //Up and to the right
+        endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() + 1);
+        if(validMove.isInBoard(endPosition))
+            validMove.movePiece(validMovesCalculator, board, startPosition, endPosition);
+
+        //Right
+        endPosition = new ChessPosition(startPosition.getRow(), startPosition.getColumn() + 1);
+        if(validMove.isInBoard(endPosition))
+            validMove.movePiece(validMovesCalculator, board, startPosition, endPosition);
+
+        //Down and Right
+        endPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn() + 1);
+        if(validMove.isInBoard(endPosition))
+            validMove.movePiece(validMovesCalculator, board, startPosition, endPosition);
+
+        //Down
+        endPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());
+        if(validMove.isInBoard(endPosition))
+            validMove.movePiece(validMovesCalculator, board, startPosition, endPosition);
+
+        //Down and Left
+        endPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn() - 1);
+        if(validMove.isInBoard(endPosition))
+            validMove.movePiece(validMovesCalculator, board, startPosition, endPosition);
+
+        //Left
+        endPosition = new ChessPosition(startPosition.getRow(), startPosition.getColumn() - 1);
+        if(validMove.isInBoard(endPosition))
+            validMove.movePiece(validMovesCalculator, board, startPosition, endPosition);
+
+        //Up and Left
+        endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() - 1);
+        if(validMove.isInBoard(endPosition))
+            validMove.movePiece(validMovesCalculator, board, startPosition, endPosition);
     }
 
-    @Override
-    public Collection<ChessMove> getValidMoves() {
-        return validMoves;
+    public Collection<ChessMove> getKingMoves() {
+        return validMovesCalculator;
     }
 }

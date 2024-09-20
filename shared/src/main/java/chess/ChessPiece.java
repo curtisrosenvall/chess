@@ -58,37 +58,33 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition startPosition) {
+        Collection<ChessMove> validMovesCalculator;
+
         ChessPiece piece = board.getPiece(startPosition);
-        if (piece == null) {
-            return Collections.emptyList();
+
+
+        if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
+            CalculateBishopMoves bishop = new CalculateBishopMoves(board, startPosition);
+            validMovesCalculator = bishop.getBishopMoves();
+        } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
+            CalculateRookMoves rook = new CalculateRookMoves(board, startPosition);
+            validMovesCalculator = rook.getRookMoves();
+        } else if (piece.getPieceType() == ChessPiece.PieceType.QUEEN) {
+            CalculateQueenMoves queen = new CalculateQueenMoves(board, startPosition);
+            validMovesCalculator = queen.getQueenMoves();
+        } else if (piece.getPieceType() == PieceType.KING) {
+            CalculateKingMoves king = new CalculateKingMoves(board, startPosition);
+            validMovesCalculator = king.getKingMoves();
+        } else if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
+            CalculatePawnMoves pawn = new CalculatePawnMoves(board, startPosition);
+            validMovesCalculator = pawn.getPawnMoves();
+        } else if (piece.getPieceType() == PieceType.KNIGHT) {
+            CalculateKnightMoves knight = new CalculateKnightMoves(board, startPosition);
+            validMovesCalculator = knight.getKnightMoves();
+        } else {
+            validMovesCalculator = null;
         }
-
-        MovesCalculator calculator;
-
-        switch (piece.getPieceType()) {
-            case BISHOP:
-                calculator = new CalculateBishopMoves(board, startPosition);
-                break;
-            case ROOK:
-                calculator = new CalculateRookMoves(board, startPosition);
-                break;
-            case QUEEN:
-                calculator = new CalculateQueenMoves(board, startPosition);
-                break;
-            case KING:
-                calculator = new CalculateKingMoves(board, startPosition);
-                break;
-            case PAWN:
-                calculator = new CalculatePawnMoves(board, startPosition);
-                break;
-            case KNIGHT:
-                calculator = new CalculateKnightMoves(board, startPosition);
-                break;
-            default:
-                return Collections.emptyList();
-        }
-
-        return calculator.getValidMoves();
+        return validMovesCalculator;
 }
 
     @Override
