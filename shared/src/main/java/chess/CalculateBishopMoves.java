@@ -2,7 +2,6 @@ package chess;
 
 import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class CalculateBishopMoves {
 
@@ -13,46 +12,24 @@ public class CalculateBishopMoves {
         validMovesCalculator = new ArrayList<>();
         ValidMovesCalculator validMove = new ValidMovesCalculator();
 
-        //Up and to the right
-        boolean validPosition = true;
-        int i = 1;
-        while(validPosition) {
-            ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() + i);
-            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
-            i++;
-        }
+        // Define the four diagonal directions: Up-Right, Down-Right, Down-Left, Up-Left
+        int[][] directions = { {1, 1}, {-1, 1}, {-1, -1}, {1, -1} };
 
-        //Down and to the right
-        validPosition = true;
-        i = 1;
-        while(validPosition) {
-            ChessPosition enPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() + i);
-            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, enPosition);
-            i++;
-        }
-
-        //Down and to the left
-        validPosition = true;
-        i = 1;
-        while(validPosition) {
-            ChessPosition endPosition = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn() - i);
-            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
-            i++;
-        }
-
-        //Up and to the left
-        validPosition = true;
-        i = 1;
-        while(validPosition) {
-            ChessPosition endPosition = new ChessPosition(startPosition.getRow() + i, startPosition.getColumn() - i);
-            validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
-            i++;
+        for (int[] direction : directions) {
+            boolean validPosition = true;
+            int i = 1;
+            while(validPosition) {
+                ChessPosition endPosition = new ChessPosition(
+                        startPosition.getRow() + i * direction[0],
+                        startPosition.getColumn() + i * direction[1]
+                );
+                validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
+                i++;
+            }
         }
     }
 
     public Collection<ChessMove> getBishopMoves() {
         return validMovesCalculator;
     }
-
-
 }
