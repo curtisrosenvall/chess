@@ -3,7 +3,7 @@ package chess;
 import java.util.Collection;
 import java.util.ArrayList;
 
-public class CalculatePawnMoves extends MovesCalculator {
+public class CalculatePawnMoves implements MovesCalculator {
 
     private Collection<ChessMove> validMoves;
 
@@ -48,9 +48,6 @@ public class CalculatePawnMoves extends MovesCalculator {
         }
     }
 
-    public Collection<ChessMove> getPawnMoves() {
-        return validMoves;
-    }
 
     private void addMove(ChessPosition from, ChessPosition to) {
         int promotionRow = (from.getRow() == 7 && to.getRow() == 8) || (from.getRow() == 2 && to.getRow() == 1) ? to.getRow() : -1;

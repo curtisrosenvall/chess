@@ -2,6 +2,6 @@ package chess;
 
 import java.util.Collection;
 
-public class MovesCalculator {
+public interface MovesCalculator {
     Collection<ChessMove> getValidMoves();
 }
