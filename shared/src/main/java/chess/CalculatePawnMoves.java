@@ -3,9 +3,6 @@ package chess;
 import java.util.Collection;
 import java.util.ArrayList;
 
-/**
- * Calculates valid moves for a Pawn on a chessboard.
- */
 public class CalculatePawnMoves {
 
     Collection<ChessMove> validMovesCalculator;
@@ -16,9 +13,8 @@ public class CalculatePawnMoves {
         ValidMovesCalculator validMoves = new ValidMovesCalculator();
         ChessPiece pawn = board.getPiece(startPosition);
 
-        // Validate that there is a pawn at the start position
         if (pawn == null || pawn.getPieceType() != ChessPiece.PieceType.PAWN) {
-            return; // No pawn to move
+            return;
         }
 
         ChessGame.TeamColor pieceColor = pawn.getTeamColor();
@@ -47,11 +43,7 @@ public class CalculatePawnMoves {
         }
     }
 
-    /**
-     * Retrieves the collection of valid Pawn moves.
-     *
-     * @return A collection of valid ChessMove objects for the Pawn.
-     */
+
     public Collection<ChessMove> getPawnMoves() {
         return validMovesCalculator;
     }
@@ -85,7 +77,6 @@ public class CalculatePawnMoves {
                 validMovesCalculator.add(new ChessMove(currentPosition, newPosition, promotion));
             }
         } else {
-            // Regular move without promotion
             validMovesCalculator.add(new ChessMove(currentPosition, newPosition, null));
         }
     }

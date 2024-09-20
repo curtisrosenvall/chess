@@ -19,9 +19,6 @@ public class ChessPiece {
         this.pieceColor = pieceColor;
         this.type = type;
     }
-
-
-
     /**
      * The various different chess piece options
      */
@@ -58,34 +55,47 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition startPosition) {
-        Collection<ChessMove> validMovesCalculator;
+        Collection<ChessMove> validMovesCalculator = null;
 
         ChessPiece piece = board.getPiece(startPosition);
 
-
-        if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
-            CalculateBishopMoves bishop = new CalculateBishopMoves(board, startPosition);
-            validMovesCalculator = bishop.getBishopMoves();
-        } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
-            CalculateRookMoves rook = new CalculateRookMoves(board, startPosition);
-            validMovesCalculator = rook.getRookMoves();
-        } else if (piece.getPieceType() == ChessPiece.PieceType.QUEEN) {
-            CalculateQueenMoves queen = new CalculateQueenMoves(board, startPosition);
-            validMovesCalculator = queen.getQueenMoves();
-        } else if (piece.getPieceType() == PieceType.KING) {
-            CalculateKingMoves king = new CalculateKingMoves(board, startPosition);
-            validMovesCalculator = king.getKingMoves();
-        } else if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
-            CalculatePawnMoves pawn = new CalculatePawnMoves(board, startPosition);
-            validMovesCalculator = pawn.getPawnMoves();
-        } else if (piece.getPieceType() == PieceType.KNIGHT) {
-            CalculateKnightMoves knight = new CalculateKnightMoves(board, startPosition);
-            validMovesCalculator = knight.getKnightMoves();
-        } else {
-            validMovesCalculator = null;
+        if (piece == null) {
+            return null; // No piece at the start position
         }
+
+        switch (piece.getPieceType()) {
+            case BISHOP:
+                CalculateBishopMoves bishop = new CalculateBishopMoves(board, startPosition);
+                validMovesCalculator = bishop.getBishopMoves();
+                break;
+            case ROOK:
+                CalculateRookMoves rook = new CalculateRookMoves(board, startPosition);
+                validMovesCalculator = rook.getRookMoves();
+                break;
+            case QUEEN:
+                CalculateQueenMoves queen = new CalculateQueenMoves(board, startPosition);
+                validMovesCalculator = queen.getQueenMoves();
+                break;
+            case KING:
+                CalculateKingMoves king = new CalculateKingMoves(board, startPosition);
+                validMovesCalculator = king.getKingMoves();
+                break;
+            case PAWN:
+                CalculatePawnMoves pawn = new CalculatePawnMoves(board, startPosition);
+                validMovesCalculator = pawn.getPawnMoves();
+                break;
+            case KNIGHT:
+                CalculateKnightMoves knight = new CalculateKnightMoves(board, startPosition);
+                validMovesCalculator = knight.getKnightMoves();
+                break;
+            default:
+                // Unsupported piece type
+                validMovesCalculator = null;
+                break;
+        }
+
         return validMovesCalculator;
-}
+    }
 
     @Override
     public boolean equals(Object o) {

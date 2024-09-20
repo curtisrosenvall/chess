@@ -12,7 +12,6 @@ public class CalculateBishopMoves {
         validMovesCalculator = new ArrayList<>();
         ValidMovesCalculator validMove = new ValidMovesCalculator();
 
-        // Define the four diagonal directions: Up-Right, Down-Right, Down-Left, Up-Left
         int[][] directions = { {1, 1}, {-1, 1}, {-1, -1}, {1, -1} };
 
         for (int[] direction : directions) {
