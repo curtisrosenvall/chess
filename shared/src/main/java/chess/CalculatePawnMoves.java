@@ -3,6 +3,9 @@ package chess;
 import java.util.Collection;
 import java.util.ArrayList;
 
+/**
+ * Calculates valid moves for a Pawn on a chessboard.
+ */
 public class CalculatePawnMoves {
 
     Collection<ChessMove> validMovesCalculator;
@@ -11,77 +14,79 @@ public class CalculatePawnMoves {
 
         validMovesCalculator = new ArrayList<>();
         ValidMovesCalculator validMoves = new ValidMovesCalculator();
-        ChessGame.TeamColor pieceColor = board.getPiece(startPosition).getTeamColor();
-        boolean validPosition = true;
+        ChessPiece pawn = board.getPiece(startPosition);
 
-        //If White
-        if(pieceColor == ChessGame.TeamColor.WHITE) {
-            ChessPosition endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn());
-            if(validMoves.isInBoard(endPosition))
-                validPosition = pawnTest(board, startPosition, endPosition);
-            if((startPosition.getRow() == 2) && validPosition) {
-                endPosition = new ChessPosition(startPosition.getRow() + 2, startPosition.getColumn());
-                pawnTest(board, startPosition, endPosition);
-            }
-            endPosition  = new ChessPosition( startPosition.getRow() + 1, startPosition.getColumn() - 1);
-            if(validMoves.isInBoard(endPosition))
-                pawnCaptureTest(board, startPosition, endPosition);
-            endPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() + 1);
-            if(validMoves.isInBoard(endPosition))
-                pawnCaptureTest(board, startPosition, endPosition);
-
+        // Validate that there is a pawn at the start position
+        if (pawn == null || pawn.getPieceType() != ChessPiece.PieceType.PAWN) {
+            return; // No pawn to move
         }
-        //Else If Black
-        else if (pieceColor == ChessGame.TeamColor.BLACK) {
-            ChessPosition endPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());
-            if(validMoves.isInBoard(endPosition))
-                validPosition = pawnTest(board, startPosition, endPosition);
-            if((startPosition.getRow() == 7) && validPosition) {
-                endPosition = new ChessPosition(startPosition.getRow() - 2, startPosition.getColumn());
-                pawnTest(board, startPosition, endPosition);
+
+        ChessGame.TeamColor pieceColor = pawn.getTeamColor();
+        int direction = (pieceColor == ChessGame.TeamColor.WHITE) ? 1 : -1;
+        int startingRow = (pieceColor == ChessGame.TeamColor.WHITE) ? 2 : 7;
+        int promotionRow = (pieceColor == ChessGame.TeamColor.WHITE) ? 8 : 1;
+
+        // Forward one square
+        ChessPosition forwardOne = new ChessPosition(startPosition.getRow() + direction, startPosition.getColumn());
+        if (validMoves.isInBoard(forwardOne) && pawnTest(board, startPosition, forwardOne)) {
+
+            // Forward two squares from starting position
+            if (startPosition.getRow() == startingRow) {
+                ChessPosition forwardTwo = new ChessPosition(startPosition.getRow() + 2 * direction, startPosition.getColumn());
+                pawnTest(board, startPosition, forwardTwo);
             }
-            endPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn() - 1);
-            if(validMoves.isInBoard(endPosition))
-                pawnCaptureTest(board, startPosition, endPosition);
-            endPosition = new ChessPosition( startPosition.getRow() - 1, startPosition.getColumn() + 1);
-            if(validMoves.isInBoard(endPosition))
-                pawnCaptureTest(board, startPosition, endPosition);
-        } else {
-            validMovesCalculator = null;
+        }
+
+        // Captures: Diagonal left and right
+        int[] captureOffsets = { -1, 1 };
+        for (int dc : captureOffsets) {
+            ChessPosition capturePos = new ChessPosition(startPosition.getRow() + direction, startPosition.getColumn() + dc);
+            if (validMoves.isInBoard(capturePos)) {
+                pawnCaptureTest(board, startPosition, capturePos);
+            }
         }
     }
 
+    /**
+     * Retrieves the collection of valid Pawn moves.
+     *
+     * @return A collection of valid ChessMove objects for the Pawn.
+     */
     public Collection<ChessMove> getPawnMoves() {
         return validMovesCalculator;
     }
 
-    public boolean pawnTest(ChessBoard board, ChessPosition startPosition, ChessPosition endPosition) {
-        if((board.getPiece(endPosition) == null)) {
+    private boolean pawnTest(ChessBoard board, ChessPosition startPosition, ChessPosition endPosition) {
+        if (board.getPiece(endPosition) == null) {
             addNewMove(startPosition, endPosition);
             return true;
-        } else
-            return false;
-    }
-
-    public void pawnCaptureTest(ChessBoard board, ChessPosition startPosition, ChessPosition endPosition) {
-        if((board.getPiece(endPosition) != null) && (board.getPiece(endPosition).getTeamColor() != board.getPiece(startPosition).getTeamColor()))
-            addNewMove(startPosition, endPosition);
-    }
-
-    public void addNewMove(ChessPosition currentPosition, ChessPosition newPosition) {
-        if((newPosition.getRow() == 8) || (newPosition.getRow() == 1)) {
-            ChessMove newQueenMove = new ChessMove(currentPosition, newPosition, ChessPiece.PieceType.QUEEN);
-            validMovesCalculator.add(newQueenMove);
-            ChessMove newRookMove = new ChessMove(currentPosition, newPosition, ChessPiece.PieceType.ROOK);
-            validMovesCalculator.add(newRookMove);
-            ChessMove newBishopMove = new ChessMove(currentPosition, newPosition, ChessPiece.PieceType.BISHOP);
-            validMovesCalculator.add(newBishopMove);
-            ChessMove newKnightMove = new ChessMove(currentPosition, newPosition, ChessPiece.PieceType.KNIGHT);
-            validMovesCalculator.add(newKnightMove);
-        } else {
-            ChessMove newMove = new ChessMove(currentPosition, newPosition, null);
-            validMovesCalculator.add(newMove);
         }
+        return false;
+    }
 
+
+    private void pawnCaptureTest(ChessBoard board, ChessPosition startPosition, ChessPosition endPosition) {
+        ChessPiece targetPiece = board.getPiece(endPosition);
+        if (targetPiece != null && targetPiece.getTeamColor() != board.getPiece(startPosition).getTeamColor()) {
+            addNewMove(startPosition, endPosition);
+        }
+    }
+
+    private void addNewMove(ChessPosition currentPosition, ChessPosition newPosition) {
+        if (newPosition.getRow() == 8 || newPosition.getRow() == 1) {
+            // Handle promotion by adding all possible promotion pieces
+            ChessPiece.PieceType[] promotionPieces = {
+                    ChessPiece.PieceType.QUEEN,
+                    ChessPiece.PieceType.ROOK,
+                    ChessPiece.PieceType.BISHOP,
+                    ChessPiece.PieceType.KNIGHT
+            };
+            for (ChessPiece.PieceType promotion : promotionPieces) {
+                validMovesCalculator.add(new ChessMove(currentPosition, newPosition, promotion));
+            }
+        } else {
+            // Regular move without promotion
+            validMovesCalculator.add(new ChessMove(currentPosition, newPosition, null));
+        }
     }
 }
