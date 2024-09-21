@@ -1,5 +1,4 @@
 package chess;
-
 import java.util.Collection;
 import java.util.ArrayList;
 
@@ -43,7 +42,6 @@ public class CalculatePawnMoves {
         }
     }
 
-
     public Collection<ChessMove> getPawnMoves() {
         return validMovesCalculator;
     }
@@ -66,7 +64,6 @@ public class CalculatePawnMoves {
 
     private void addNewMove(ChessPosition currentPosition, ChessPosition newPosition) {
         if (newPosition.getRow() == 8 || newPosition.getRow() == 1) {
-            // Handle promotion by adding all possible promotion pieces
             ChessPiece.PieceType[] promotionPieces = {
                     ChessPiece.PieceType.QUEEN,
                     ChessPiece.PieceType.ROOK,
