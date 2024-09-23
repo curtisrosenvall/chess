@@ -11,18 +11,35 @@ public class CalculateBishopMoves {
 
         validMovesCalculator = new ArrayList<>();
         ValidMovesCalculator validMove = new ValidMovesCalculator();
+//        ChessPiece bishop = board.getPiece(startPosition);
+//
+//
+//        if (bishop == null || bishop.getPieceType() != ChessPiece.PieceType.BISHOP) {
+//            return;
+//        }
 
         int[][] directions = { {1, 1}, {-1, 1}, {-1, -1}, {1, -1} };
 
+
         for (int[] direction : directions) {
-            boolean validPosition = true;
+            int rowOffset = direction[0];
+            int colOffset = direction[1];
             int i = 1;
-            while(validPosition) {
+            while(true) {
                 ChessPosition endPosition = new ChessPosition(
-                        startPosition.getRow() + i * direction[0],
-                        startPosition.getColumn() + i * direction[1]
+                        startPosition.getRow() + i * rowOffset,
+                        startPosition.getColumn() + i * colOffset
                 );
-                validPosition = validMove.checkBoardLimits(validMovesCalculator, board, startPosition, endPosition);
+
+                if (!validMove.isInBoard(endPosition)) {
+                    break;
+                }
+
+                boolean canContinue = validMove.movePiece(validMovesCalculator, board, startPosition, endPosition);
+
+                if (!canContinue) {
+                    break;
+                }
                 i++;
             }
         }

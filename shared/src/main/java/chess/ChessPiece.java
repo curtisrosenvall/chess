@@ -89,7 +89,6 @@ public class ChessPiece {
                 validMovesCalculator = knight.getKnightMoves();
                 break;
             default:
-                // Unsupported piece type
                 validMovesCalculator = null;
                 break;
         }

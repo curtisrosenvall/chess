@@ -11,11 +11,11 @@ public class CalculateQueenMoves {
 
         validMovesCalculator = new ArrayList<>();
         ValidMovesCalculator validMove = new ValidMovesCalculator();
-        ChessPiece queen = board.getPiece(startPosition);
-
-        if (queen == null || queen.getPieceType() != ChessPiece.PieceType.QUEEN) {
-            return;
-        }
+//        ChessPiece queen = board.getPiece(startPosition);
+//
+//        if (queen == null || queen.getPieceType() != ChessPiece.PieceType.QUEEN) {
+//            return;
+//        }
 
         // Up, Up-Right, Right, Down-Right, Down, Down-Left, Left, Up-Left
         int[][] directions = {

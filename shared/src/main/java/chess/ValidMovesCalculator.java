@@ -11,10 +11,8 @@ import java.util.Collection;
 
 public class ValidMovesCalculator {
 
-    private final Collection<ChessMove> validMovesCalculator;
-
     public ValidMovesCalculator() {
-        validMovesCalculator = new ArrayList<>();
+        Collection<ChessMove> validMovesCalculator = new ArrayList<>();
     }
 
     public boolean checkBoardLimits(Collection<ChessMove> validMoves, ChessBoard board, ChessPosition startPosition, ChessPosition endPosition) {
