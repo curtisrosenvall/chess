@@ -3,30 +3,28 @@ import java.util.Collection;
 
 public class CalculateKingsMoves {
 
-    Collection<ChessMoves> validMovesCalculator;
+    Collection<ChessMove> validMovesCalculator;
 
-    public CalculateKingsMoves(ChessBoard board, ChessPosition startPosition) {
+    public CalculateKingsMoves(ChessBoard board, chessPosition startingPosition) {
+
         validMovesCalculator = new ArrayList<>();
-        ValidMovesCalculator validMoves = new ValidMovesCalculator();
+        ValidMovesCalculator validMove = new ValidMovesCalculator();
 
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-        int[][] moveOffsets {
-            {2,1},{1,2}, {-1,2}, {-2,1}, {-2,-1}, {-1,-2}, {1,-2}, {2,-1}
-        }
-
-        for(int[] moveOffset : moveOffsets) {
+        for (int[] direction : directions) {
             ChessPosition endPosition = new ChessPosition(
-                    startPosition.getRow() + offset[0]
-                    startPosition.getColumn() + offset[1]
+                    startingPosition.getRow() + direction[0],
+                    startingPosition.getColumn() + direction[1]
             );
 
-            if (validMove.isIngBoard(endPosition)) {
-
-                valdiMove.movePiece(validMovesCalculator, board,startPosition, endPosition)
+            if(validMove.isInBoard(endPosition)) {
+                validMove.movePiece(validMovesCalculator,board,startingPosition,endPosition);
             }
         }
     }
-    public Collection<ChessMove> getKnightMoves() {
-        return validMovesCalculator
+
+    public Collection<ChessMove> getKingMoves() {
+        return validMovesCalculator;
     }
 }

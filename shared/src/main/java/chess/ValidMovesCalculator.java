@@ -15,13 +15,6 @@ public class ValidMovesCalculator {
         Collection<ChessMove> validMovesCalculator = new ArrayList<>();
     }
 
-    public boolean checkBoardLimits(Collection<ChessMove> validMoves, ChessBoard board, ChessPosition startPosition, ChessPosition endPosition) {
-        if(isInBoard(endPosition))
-            return movePiece(validMoves, board, startPosition, endPosition);
-        else
-            return false;
-    }
-
 
     public boolean movePiece(Collection<ChessMove> validMoves, ChessBoard board, ChessPosition startPosition, ChessPosition endPosition) {
         if(board.getPiece(endPosition) == null) {

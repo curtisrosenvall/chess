@@ -12,14 +12,11 @@ public class CalculatePawnMoves {
         ValidMovesCalculator validMoves = new ValidMovesCalculator();
         ChessPiece pawn = board.getPiece(startPosition);
 
-        if (pawn == null || pawn.getPieceType() != ChessPiece.PieceType.PAWN) {
-            return;
-        }
 
         ChessGame.TeamColor pieceColor = pawn.getTeamColor();
         int direction = (pieceColor == ChessGame.TeamColor.WHITE) ? 1 : -1;
         int startingRow = (pieceColor == ChessGame.TeamColor.WHITE) ? 2 : 7;
-        int promotionRow = (pieceColor == ChessGame.TeamColor.WHITE) ? 8 : 1;
+//        int promotionRow = (pieceColor == ChessGame.TeamColor.WHITE) ? 8 : 1;
 
         // Forward one square
         ChessPosition forwardOne = new ChessPosition(startPosition.getRow() + direction, startPosition.getColumn());
@@ -35,7 +32,10 @@ public class CalculatePawnMoves {
         // Captures: Diagonal left and right
         int[] captureOffsets = { -1, 1 };
         for (int dc : captureOffsets) {
-            ChessPosition capturePos = new ChessPosition(startPosition.getRow() + direction, startPosition.getColumn() + dc);
+            ChessPosition capturePos = new ChessPosition(
+                    startPosition.getRow() + direction,
+                    startPosition.getColumn() + dc
+            );
             if (validMoves.isInBoard(capturePos)) {
                 pawnCaptureTest(board, startPosition, capturePos);
             }
