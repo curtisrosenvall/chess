@@ -59,9 +59,9 @@ public class ChessPiece {
 
         ChessPiece piece = board.getPiece(startPosition);
 
-        if (piece == null) {
-            return null; // No piece at the start position
-        }
+//        if (piece == null) {
+//            return null; // No piece at the start position
+//        }
 
         switch (piece.getPieceType()) {
             case BISHOP:
