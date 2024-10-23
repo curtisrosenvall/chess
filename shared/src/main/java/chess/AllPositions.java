@@ -3,14 +3,14 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class getAllPossibleMoves {
+public class AllPositions {
 
     private ChessPosition whiteKingPos;
     private ChessPosition blackKingPos;
     private final Collection<ChessMove> whiteTeamMoves;
     private final Collection<ChessMove> blackTeamMoves;
 
-    public getAllPossibleMoves(ChessBoard board) {
+    public AllPositions(ChessBoard board) {
         whiteTeamMoves = new ArrayList<>();
         blackTeamMoves = new ArrayList<>();
 
