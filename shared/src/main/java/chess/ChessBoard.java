@@ -132,7 +132,7 @@ public class ChessBoard implements Cloneable{
     }
 
     public ChessPiece[][] getBoard() {
-        return square;
+        return squares;
     }
 }
 
