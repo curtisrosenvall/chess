@@ -2,6 +2,7 @@ package chess;
 
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -12,15 +13,13 @@ import java.util.Iterator;
  */
 public class ChessGame {
     private TeamColor colorTurn;
-    private boolean checkCase;
-    private ChessBoard newGame;
+    private ChessBoard board;
     private boolean gameOver;
 
     public ChessGame() {
         colorTurn = TeamColor.WHITE;
-        newGame = new ChessBoard();
-        newGame.resetBoard();
-        checkCase = false;
+        board = new ChessBoard();
+        board.resetBoard();
         gameOver = false;
     }
 
@@ -36,11 +35,8 @@ public class ChessGame {
      */
     public void setTeamTurn(TeamColor team) { colorTurn = team; }
 
-    public void changeTeamTurn() {
-        if(this.colorTurn == TeamColor.WHITE)
-            setTeamTurn(TeamColor.BLACK);
-        else
-            setTeamTurn(TeamColor.WHITE);
+    private void changeTeamTurn() {
+        colorTurn = (colorTurn == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
     }
 
     /**
@@ -59,35 +55,29 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        Collection<ChessMove> possibleMoves;
-
-        if (newGame.getPiece(startPosition) == null) {
+        ChessPiece piece = board.getPiece(startPosition);
+        if (piece == null) {
             return null;
-        } else {
-            possibleMoves = newGame.getPiece(startPosition).pieceMoves(newGame,startPosition);
+        }
+        if (piece.getTeamColor() != colorTurn) {
+            return null;
         }
 
-        ChessGame.TeamColor pieceColor = newGame.getPiece(startPosition).getTeamColor();
+        Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = new HashSet<>();
 
-        Iterator<ChessMove> i = possibleMoves.iterator();
-        while(i.hasNext()) {
-            ChessMove move = i.next();
-            ChessGame testMove = new ChessGame();
-            ChessBoard testBoard = this.getCopy();
-            testMove.isCheckCase();
-            testMove.setBoard(testBoard);
-            testMove.setTeamTurn(colorTurn);
+        for (ChessMove move : possibleMoves) {
+            ChessGame testGame = this.cloneGame();
             try {
-                testMove.makeMove(move);
-            } catch(InvalidMoveException e) {
-                i.remove();
-                continue;
-            }
-            if(testMove.isInCheck(pieceColor)) {
-                i.remove();
+                testGame.makeMove(move);
+                if (!testGame.isInCheck(colorTurn)) {
+                    validMoves.add(move);
+                }
+            } catch (InvalidMoveException e) {
+                // Skip invalid moves
             }
         }
-        return possibleMoves;
+        return validMoves;
     }
 
     /**
