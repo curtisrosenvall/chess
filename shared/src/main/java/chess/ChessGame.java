@@ -62,6 +62,19 @@ public class ChessGame {
         }
         Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
         Collection<ChessMove> validMoves = new HashSet<>();
+
+        for (ChessMove move : possibleMoves) {
+            ChessGame testGame = this.cloneGame();
+            try {
+                testGame.makeMove(move);
+                if (!testGame.isInCheck(colorTurn)) {
+                    validMoves.add(move);
+                }
+            } catch (InvalidMoveException e) {
+                // Skip invalid moves
+            }
+        }
+        return validMoves;
     }
 
     /**
@@ -71,7 +84,39 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        if (gameOver) {
+            throw new InvalidMoveException("Game is over, no more moves can be made");
+        }
+        if (move == null) {
+            throw new InvalidMoveException("Invalid move");
+        }
+
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        if (piece == null || piece.getTeamColor() != colorTurn) {
+            throw new InvalidMoveException("Invalid piece selection");
+        }
+
+        Collection<ChessMove> possibleMoves = piece.pieceMoves(board, move.getStartPosition());
+        if (!possibleMoves.contains(move)) {
+            throw new InvalidMoveException("Not a valid move for this piece");
+        }
+
+        // Simulate the move
+        ChessBoard tempBoard = board.clone();
+        tempBoard.movePiece(move);
+
+        if (isInCheck(tempBoard, colorTurn)) {
+            throw new InvalidMoveException("Move would put or leave king in check");
+        }
+
+        // Make the move
+        board.movePiece(move);
+
+        // Check for checkmate or stalemate
+        switchTurn();
+        if (isInCheckmate(colorTurn)) {
+            gameOver = true;
+        }
     }
 
     /**
@@ -81,7 +126,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+
     }
 
     /**
