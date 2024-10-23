@@ -21,6 +21,10 @@ public class Database {
     }
 
 
+    public boolean isAllEmpty() {
+        return (authDatabase.size() == 0) && (userDatabase.size() == 0) && (gameDatabase.size() == 0);
+    }
+
 
     public boolean isUserEmpty(String name) throws DataAccessException {
         return userDatabase.getUser(name) == null;
