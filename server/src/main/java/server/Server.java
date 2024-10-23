@@ -1,6 +1,6 @@
 package server;
 import dataaccess.*;
-import handlers.Register;
+import handlers.*;
 import spark.*;
 
 public class Server {
@@ -15,6 +15,7 @@ public class Server {
         database = new Database();
 
         // Register your endpoints and handle exceptions here.
+        Spark.delete("/db", (req, res) -> (new Clear(database)).handle(req, res));
         Spark.post("/user", (req, res) -> (new Register(database)).handle(req,res));
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
