@@ -10,8 +10,9 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
+public class ChessBoard implements Cloneable{
     private ChessPiece[][] squares = new ChessPiece[8][8];
+    private ChessMove lastMove;
 
     public ChessBoard() {
 //        nothing for now
@@ -89,6 +90,49 @@ public class ChessBoard {
         return "ChessBoard{" +
                 "squares=" + Arrays.toString(squares) +
                 '}';
+    }
+
+    /**
+     * Creates and returns a deep copy of this ChessBoard.
+     * @return A new ChessBoard object with the same piece arrangement as this one.
+     * @throws CloneNotSupportedException if the ChessPiece objects in the board do not support cloning.
+     */
+
+    @Override
+    protected ChessBoard clone() throws CloneNotSupportedException {
+        ChessBoard clone = (ChessBoard) super.clone();
+        ChessPiece[][] clonedBoard = new ChessPiece[8][8];
+        for(int i = 1; i < 9; i++) {
+            for(int j = 1; j < 9; j++) {
+                if(getPiece(new ChessPosition(i,j)) != null) {
+                    clonedBoard[i-1][j-1] = (ChessPiece) getPiece(new ChessPosition(i,j)).clone();
+                }
+            }
+        }
+        clone.squares = clonedBoard;
+        return clone;
+    }
+
+    /**
+     * Retrieves the last move made on this chessboard.
+     * @return The most recent ChessMove made.
+     */
+
+    public ChessMove getLastMove() {
+        return lastMove;
+    }
+
+    /**
+     * Sets the last move made on this chessboard.
+     * @param lastMove The move to record as the last move.
+     */
+
+    public void setLastMove(ChessMove lastMove) {
+        this.lastMove = lastMove;
+    }
+
+    public ChessPiece[][] getBoard() {
+        return square;
     }
 }
 
