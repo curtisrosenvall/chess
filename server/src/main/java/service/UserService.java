@@ -37,19 +37,35 @@ public class UserService {
     public String newAuthToken() {
         return UUID.randomUUID().toString();
     }
-    public UserData getUser(String name) {
+    public LoginRes loginUser(LoginReq request) {
+        String name = request.getUsername();
+        String password = request.getPassword();
+        LoginRes result;
         try {
-            return database.getUser(name);
+            UserData user = database.getUser(name);
+            if(user.password().equals(password)) {
+                String newToken = newAuthToken();
+                database.createAuth(newToken, name);
+                result = new LoginRes(true, null, name, newToken);
+            }
+            else
+                throw new DataAccessException("Invalid Password");
         } catch(DataAccessException ex) {
-            System.out.println("Caught DataAccessException, no user to return");
-            return null;
+            result = new LoginRes(false, ex.getMessage(), null, null);
         }
+        return result;
     }
-    public void deleteUser(String name) {
+    public LogoutRes logoutUser(LogoutReq request) {
+        LogoutRes result;
         try {
-            database.deleteUser(name);
+            String authToken = request.getAuthToken();
+            database.getAuth(authToken);
+            database.deleteAuth(authToken);
+            result = new LogoutRes(true, null);
         } catch(DataAccessException ex) {
-            System.out.println("Caught DataAccessException, no user to delete");
+            result = new LogoutRes(false, "Error: " + ex.getMessage());
         }
+        return result;
     }
+
 }
