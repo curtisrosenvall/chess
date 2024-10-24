@@ -4,7 +4,7 @@ public class ParentRes {
     private Boolean success;
     private final String message;
 
-    public  ParentRes(Boolean success, String message) {
+    public ParentRes(Boolean success, String message) {
         this.message = message;
         this.success = success;
     }

@@ -3,7 +3,7 @@ package handlers;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import request.*;
-import result.ParentRes;
+import result.*;
 import spark.Request;
 import spark.Response;
 
@@ -14,9 +14,9 @@ public class MethodHandlers {
     }
 
     public Object getBody(Request request, String requestType) throws DataAccessException {
-        if(requestType.equals("RegisterRequest"))
+        if(requestType.equals("RegisterReq"))
             return new Gson().fromJson(request.body(), RegisterReq.class);
-        else if(requestType.equals("LoginRequest"))
+        else if(requestType.equals("LoginReq"))
             return new Gson().fromJson(request.body(), LoginReq.class);
         else if(requestType.equals("JoinGameRequest"))
             return new Gson().fromJson(request.body(), JoinGameReq.class);

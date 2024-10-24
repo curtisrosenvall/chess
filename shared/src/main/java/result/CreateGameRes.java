@@ -2,14 +2,14 @@ package result;
 
 public class CreateGameRes extends ParentRes{
 
-    private final Integer id;
+    private final Integer gameID;
 
-    public CreateGameRes(Boolean success, String message, Integer id) {
+    public CreateGameRes(Boolean success, String message, Integer gameID) {
         super(success, message);
-        this.id = id;
+        this.gameID = gameID;
     }
 
     public Integer getGameId() {
-        return id;
+        return gameID;
     }
 }

@@ -3,7 +3,7 @@ package request;
 public class CreateGameRequest  extends ParentReq{
 
     private String authToken;
-    private String gameName;
+    private final String gameName;
 
     public CreateGameRequest(String authToken, String gameName) {
         super();

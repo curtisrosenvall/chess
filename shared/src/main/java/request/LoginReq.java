@@ -2,8 +2,8 @@ package request;
 
 public class LoginReq extends ParentReq {
 
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
 
     public LoginReq(String username, String password) {
         super();

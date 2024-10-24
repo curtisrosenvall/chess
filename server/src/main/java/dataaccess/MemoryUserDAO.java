@@ -1,10 +1,10 @@
 package dataaccess;
 
 import models.UserData;
-
 import java.util.HashMap;
 
 public class MemoryUserDAO implements UserDAO {
+
     HashMap<String, UserData> map;
 
     public MemoryUserDAO() {

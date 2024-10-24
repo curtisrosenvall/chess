@@ -1,11 +1,12 @@
 package dataaccess;
 
-import models.GameData;
 import chess.ChessGame;
+import models.GameData;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MemoryGameDAO implements GameDAO{
+
     HashMap<Integer, GameData> map;
     int numberOfGames;
 

@@ -2,8 +2,8 @@ package handlers;
 
 import dataaccess.DataAccessException;
 import dataaccess.Database;
-import request.RegisterReq;
-import result.RegisterRes;
+import request.*;
+import result.*;
 import service.UserService;
 import spark.Request;
 import spark.Response;
@@ -23,7 +23,7 @@ public class Register implements Route {
     public Object handle(Request request, Response response) {
         RegisterReq registerRequest;
         try {
-            registerRequest = (RegisterReq) methodHandlers.getBody(request, "RegisterRequest");
+            registerRequest = (RegisterReq) methodHandlers.getBody(request, "RegisterReq");
             methodHandlers.isNullString(registerRequest.getUsername());
             methodHandlers.isNullString(registerRequest.getPassword());
             methodHandlers.isNullString(registerRequest.getEmail());
