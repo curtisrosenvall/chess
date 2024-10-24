@@ -24,7 +24,7 @@ class ClearGameServiceTest extends ParentTest {
     @Test
     public void clearAllWithUser() {
         try {
-            db.createUser("Test", "1234", "test@gmail.com");
+            db.createUser("Test", "1234", "test@curtis.com");
             result = clear.deleteAll();
             assertTrue(result.isSuccess(), result.getMessage());
         } catch (DataAccessException ex) {
