@@ -19,7 +19,7 @@ public class MethodHandlers {
         else if(requestType.equals("LoginRequest"))
             return new Gson().fromJson(request.body(), LoginReq.class);
         else if(requestType.equals("JoinGameRequest"))
-            return new Gson().fromJson(request.body(), JoinGamesRequest.class);
+            return new Gson().fromJson(request.body(), JoinGameReq.class);
         else if(requestType.equals("CreateGameRequest"))
             return new Gson().fromJson(request.body(), CreateGameRequest.class);
         else  //Clear, Logout, ListGames don't have bodies
