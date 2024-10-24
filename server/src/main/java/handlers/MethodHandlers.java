@@ -9,21 +9,19 @@ import spark.Response;
 
 public class MethodHandlers {
 
-    public MethodHandlers() {
-
-    }
-
     public Object getBody(Request request, String requestType) throws DataAccessException {
-        if(requestType.equals("RegisterReq"))
-            return new Gson().fromJson(request.body(), RegisterReq.class);
-        else if(requestType.equals("LoginReq"))
-            return new Gson().fromJson(request.body(), LoginReq.class);
-        else if(requestType.equals("JoinGameRequest"))
-            return new Gson().fromJson(request.body(), JoinGameReq.class);
-        else if(requestType.equals("CreateGameRequest"))
-            return new Gson().fromJson(request.body(), CreateGameRequest.class);
-        else  //Clear, Logout, ListGames don't have bodies
-            throw new DataAccessException("Bad Request");
+        switch (requestType) {
+            case "RegisterReq":
+                return new Gson().fromJson(request.body(), RegisterReq.class);
+            case "LoginReq":
+                return new Gson().fromJson(request.body(), LoginReq.class);
+            case "JoinGameRequest":
+                return new Gson().fromJson(request.body(), JoinGameReq.class);
+            case "CreateGameRequest":
+                return new Gson().fromJson(request.body(), CreateGameRequest.class);
+            default:
+                throw new DataAccessException("Bad Request");
+        }
     }
 
     public String getAuthorization(Request request) {
@@ -38,13 +36,13 @@ public class MethodHandlers {
     }
 
     public boolean isNullString(String variable) throws DataAccessException {
-        if(variable == null)
+        if (variable == null)
             throw new DataAccessException("Error: bad request");
         return true;
     }
 
     public boolean isNullInteger(Integer num) throws DataAccessException {
-        if(num == null)
+        if (num == null)
             throw new DataAccessException("Error: bad request");
         return true;
     }

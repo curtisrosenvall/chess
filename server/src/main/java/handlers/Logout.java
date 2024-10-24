@@ -1,15 +1,11 @@
 package handlers;
-import dataaccess.DataAccessException;
-import dataaccess.Database;
+import dataaccess.*;
 import request.*;
 import result.*;
 import service.UserService;
-import spark.Request;
-import spark.Response;
-import spark.Route;
+import spark.*;
 
 public class Logout implements Route {
-
     Database database;
     MethodHandlers methodHandlers;
 
@@ -20,25 +16,18 @@ public class Logout implements Route {
 
     @Override
     public Object handle(Request request, Response response) {
-        LogoutReq logoutRequest;
-        String token;
         try {
-            token = methodHandlers.getAuthorization(request);
+            String token = methodHandlers.getAuthorization(request);
             methodHandlers.isNullString(token);
-            logoutRequest = new LogoutReq(token);
-        } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response,400, new LogoutRes(null, "Error: bad request"));
-        }
-        try {
+            LogoutReq logoutRequest = new LogoutReq(token);
             database.getAuth(token);
-            UserService logout = new UserService(database);
-            LogoutRes logoutResult = logout.logoutUser(logoutRequest);
-            if(logoutResult.isSuccess())
-                return methodHandlers.getResponse(response, 200, logoutResult);
-            else
-                return methodHandlers.getResponse(response, 500, logoutResult);
-        } catch(DataAccessException ex) {
-            return methodHandlers.getResponse(response, 401, new LoginRes(null, "Error: unauthorized", null, null));
+            LogoutRes logoutResult = new UserService(database).logoutUser(logoutRequest);
+            int statusCode = logoutResult.isSuccess() ? 200 : 500;
+            return methodHandlers.getResponse(response, statusCode, logoutResult);
+        } catch (DataAccessException ex) {
+            return methodHandlers.getResponse(response, 401, new LogoutRes(null, "Error: unauthorized"));
+        } catch (Exception ex) {
+            return methodHandlers.getResponse(response, 400, new LogoutRes(null, "Error: bad request"));
         }
     }
 }
