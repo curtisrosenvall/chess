@@ -22,19 +22,16 @@ public class AllPiecePositions {
                 if (piece != null) {
                     ChessGame.TeamColor teamColor = piece.getTeamColor();
                     ChessPiece.PieceType pieceType = piece.getPieceType();
-                    Collection<ChessMove> moves = piece.pieceMoves(board, position);
 
                     if (pieceType == ChessPiece.PieceType.KING) {
-                        // Set the king's position based on its team color
                         if (teamColor == ChessGame.TeamColor.WHITE) {
                             whiteKingPos = position;
                         } else {
                             blackKingPos = position;
                         }
                     }
-
+                    Collection<ChessMove> moves = piece.pieceMoves(board, position);
                     if (moves != null) {
-                        // Add moves to the appropriate team's move list
                         if (teamColor == ChessGame.TeamColor.WHITE) {
                             whiteTeamMoves.addAll(moves);
                         } else {
