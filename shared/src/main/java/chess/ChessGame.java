@@ -101,26 +101,30 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        if (isGameOver())
+        if (isGameOver()) {
             throw new InvalidMoveException("Game is over, no more moves can be made");
-        if (move == null)
+        }
+        if (move == null) {
             throw new InvalidMoveException("Invalid move");
-
+        }
         ChessPosition endPos = move.getEndPosition();
-        if (endPos.getRow() < 1 || endPos.getRow() > 8 || endPos.getColumn() < 1 || endPos.getColumn() > 8)
+        if (endPos.getRow() < 1 || endPos.getRow() > 8 || endPos.getColumn() < 1 || endPos.getColumn() > 8) {
             throw new InvalidMoveException("Invalid move (move is off the board)");
-
+        }
         ChessBoard moveBoard = getCopy();
         ChessPosition startPos = move.getStartPosition();
         ChessPiece piece = moveBoard.getPiece(startPos);
 
-        if (piece == null)
+        if (piece == null) {
             throw new InvalidMoveException("There is no piece at the starting position");
-        if (!checkCase && piece.getTeamColor() != colorTurn)
+        }
+        if (!checkCase && piece.getTeamColor() != colorTurn) {
             throw new InvalidMoveException("It is not your turn");
-
-        if (!piece.pieceMoves(moveBoard, startPos).contains(move))
+        }
+        if (!piece.pieceMoves(moveBoard, startPos).contains(move)) {
             throw new InvalidMoveException("Not a valid move for this piece");
+
+        }
 
         // Perform the move
         moveBoard.addPiece(startPos, null);
@@ -130,13 +134,14 @@ public class ChessGame {
 
         setBoard(moveBoard);
 
-        if (isInCheck(piece.getTeamColor()))
+        if (isInCheck(piece.getTeamColor())) {
             throw new InvalidMoveException("Invalid move, this move will put you in check");
+        }
 
         changeTeamTurn();
-        if (isInCheckmate(getTeamTurn()))
+        if (isInCheckmate(getTeamTurn())) {
             gameOver = true;
-
+        }
         checkCase = false;
     }
 
@@ -173,9 +178,9 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if(!isInCheck(teamColor))
+        if(!isInCheck(teamColor)) {
             return false;
-
+        }
         return anyValidMoves(teamColor);
     }
 
@@ -187,9 +192,9 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        if(isInCheck(teamColor))
+        if(isInCheck(teamColor)) {
             return false;
-
+        }
         return anyValidMoves(teamColor);
     }
 

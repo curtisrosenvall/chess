@@ -42,8 +42,9 @@ public class UserService {
                 dataBase.createAuth(newToken, name);
                 result = new LoginRes(true, null, name, newToken);
             }
-            else
+            else {
                 throw new DataAccessException("Invalid Password");
+            }
         } catch(DataAccessException ex) {
             result = new LoginRes(false, ex.getMessage(), null, null);
         }

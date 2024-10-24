@@ -25,51 +25,58 @@ public class Database {
     }
 
     public void createUser(String name, String password, String email) throws DataAccessException {
-        if (isUserEmpty(name))
+        if (isUserEmpty(name)) {
             userDataBase.createUser(name, new UserData(name, password, email));
+        }
         else
             throw new DataAccessException("Error: Username already taken");
     }
 
     public void createGame(String name) throws DataAccessException {
-        if (isGameEmpty(name))
+        if (isGameEmpty(name)) {
             gameDataBase.createGame(name);
+        }
         else
             throw new DataAccessException("Error: Game name already taken");
     }
 
     public void createAuth(String token, String name) throws DataAccessException {
-        if (isAuthEmpty(token))
+        if (isAuthEmpty(token)) {
             authDataBase.createAuth(token, new AuthData(token, name));
+        }
         else
             throw new DataAccessException("Error: Auth token already taken");
     }
 
     public AuthData getAuth(String token) throws DataAccessException {
         AuthData authData = authDataBase.getAuth(token);
-        if (authData == null)
+        if (authData == null) {
             throw new DataAccessException("Error: Invalid token");
+        }
         return authData;
     }
 
     public UserData getUser(String name) throws DataAccessException {
         UserData userData = userDataBase.getUser(name);
-        if (userData == null)
+        if (userData == null) {
             throw new DataAccessException("Error: Invalid username");
+        }
         return userData;
     }
 
     public GameData getGame(int gameID) throws DataAccessException {
         GameData gameData = gameDataBase.getGame(gameID);
-        if (gameData == null)
+        if (gameData == null) {
             throw new DataAccessException("Error: Invalid game ID");
+        }
         return gameData;
     }
 
     public GameData getGameName(String name) throws DataAccessException {
         for (GameData game : gameDataBase.listGames())
-            if (game.gameName().equals(name))
+            if (game.gameName().equals(name)) {
                 return game;
+            }
         throw new DataAccessException("Error: Invalid game name");
     }
 
@@ -109,8 +116,7 @@ public class Database {
     }
 
     public void deleteAuth(String token) throws DataAccessException {
-        if (isAuthEmpty(token))
-            throw new DataAccessException("Error: Invalid token");
+        if (isAuthEmpty(token)) {throw new DataAccessException("Error: Invalid token");}
         authDataBase.deleteAuth(token);
     }
 

@@ -11,12 +11,6 @@ public class CalculateBishopMoves {
 
         validMovesCalculator = new ArrayList<>();
         ValidMovesCalculator validMove = new ValidMovesCalculator();
-//        ChessPiece bishop = board.getPiece(startPosition);
-//
-//
-//        if (bishop == null || bishop.getPieceType() != ChessPiece.PieceType.BISHOP) {
-//            return;
-//        }
 
         int[][] directions = { {1, 1}, {-1, 1}, {-1, -1}, {1, -1} };
 

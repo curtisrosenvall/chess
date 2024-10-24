@@ -59,9 +59,6 @@ public class ChessPiece implements Cloneable{
 
         ChessPiece piece = board.getPiece(startPosition);
 
-//        if (piece == null) {
-//            return null; // No piece at the start position
-//        }
 
         switch (piece.getPieceType()) {
             case BISHOP:
@@ -98,8 +95,8 @@ public class ChessPiece implements Cloneable{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {return true;}
+        if (o == null || getClass() != o.getClass()) {return false;}
         ChessPiece that = (ChessPiece) o;
         return pieceColor == that.pieceColor && type == that.type;
     }

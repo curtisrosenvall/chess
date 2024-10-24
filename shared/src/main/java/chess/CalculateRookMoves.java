@@ -11,12 +11,7 @@ public class CalculateRookMoves {
 
         validMovesCalculator = new ArrayList<>();
         ValidMovesCalculator validMove = new ValidMovesCalculator();
-//        ChessPiece rook = board.getPiece(startPosition);
-//
-//
-//        if (rook == null || rook.getPieceType() != ChessPiece.PieceType.ROOK) {
-//            return; // No rook to move
-//        }
+
 
         int[][] directions = {
                 {1, 0},   // Up
