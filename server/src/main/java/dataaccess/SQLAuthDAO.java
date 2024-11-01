@@ -1,5 +1,6 @@
 package dataaccess;
 
+import com.google.gson.Gson;
 import models.*;
 
 import java.sql.Connection;
@@ -19,8 +20,17 @@ public class SQLAuthDAO implements AuthDAO {
     }
 
     @Override
-    public void createAuth(String name, AuthData data){
-        return;
+    public void createAuth(String token, AuthData data) throws DataAccessException{
+        try(Connection conn = DatabaseManager.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO auth (authToken, username, json) VALUES (?,?,?)");
+            statement.setString(1,token);
+            statement.setString(2, data.username());
+            String json = new Gson().toJson(data);
+            statement.setObject(3, json);
+            statement.executeUpdate();
+        } catch(SQLException ex) {
+            throw new DataAccessException("Error " + ex.getMessage());
+        }
     }
 
 
@@ -31,7 +41,7 @@ public class SQLAuthDAO implements AuthDAO {
 
     @Override
     public AuthData getAuth(String token) {
-        return null;
+//        
     }
 
     @Override
