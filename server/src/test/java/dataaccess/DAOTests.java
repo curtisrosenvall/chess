@@ -64,5 +64,45 @@ public class DAOTests {
         }
     }
 
-   
+    @Test
+    public void testJoinGameWhite() {
+        try {
+            createGameHelper();
+            GameData game = db.getGame(1);
+            GameData updatedGame = new GameData(
+                    1,
+                    "White Player",
+                    game.blackUsername(),
+                    game.gameName(),
+                    game.game()
+            );
+            db.updateGame(updatedGame);
+            GameData newGame = db.getGame(1);
+            Assertions.assertNotEquals(newGame.whiteUsername(), game.whiteUsername());
+        } catch (Exception e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testJoinGameBlack() {
+        try {
+            createGameHelper();
+            GameData game = db.getGame(1);
+            GameData updatedGame = new GameData(
+                    1,
+                    game.whiteUsername(),
+                    "Black Player",
+                    game.gameName(),
+                    game.game()
+            );
+            db.updateGame(updatedGame);
+            GameData newGame = db.getGame(1);
+            Assertions.assertNotEquals(newGame.blackUsername(), game.blackUsername());
+        } catch (Exception e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    
 }
