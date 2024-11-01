@@ -4,7 +4,9 @@ import dataaccess.*;
 import models.*;
 import request.*;
 import result.*;
+
 import java.util.ArrayList;
+
 public class GameService {
 
     Database database;
@@ -67,7 +69,4 @@ public class GameService {
         }
         return result;
     }
-
-
-
 }

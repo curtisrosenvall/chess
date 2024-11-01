@@ -12,16 +12,16 @@ public class SQLAuthDAO implements AuthDAO {
 
     @Override
     public void clear() throws DataAccessException {
-        try(Connection conn = DatabaseManager.getConnection()) {
+        try (Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("TRUNCATE auth");
             statement.executeUpdate();
-        } catch(SQLException exception) {
-            throw new DataAccessException("Error: " + exception.getMessage());
+        } catch(SQLException ex) {
+            throw new DataAccessException("Error: " + ex.getMessage());
         }
     }
 
     @Override
-    public void createAuth(String token, AuthData data) throws DataAccessException{
+    public void createAuth(String token, AuthData data) throws DataAccessException {
         try(Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("INSERT INTO auth (authToken, username, json) VALUES (?,?,?)");
             statement.setString(1,token);
@@ -30,13 +30,12 @@ public class SQLAuthDAO implements AuthDAO {
             statement.setObject(3, json);
             statement.executeUpdate();
         } catch(SQLException ex) {
-            throw new DataAccessException("Error " + ex.getMessage());
+            throw new DataAccessException("Error: " + ex.getMessage());
         }
     }
 
-
     @Override
-    public void deleteAuth(String token) throws DataAccessException{
+    public void deleteAuth(String token) throws DataAccessException {
         try(Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("DELETE FROM auth WHERE authToken=?");
             statement.setString(1, token);
@@ -48,22 +47,22 @@ public class SQLAuthDAO implements AuthDAO {
 
     @Override
     public AuthData getAuth(String token) throws DataAccessException {
-        try(Connection conn = DatabaseManager.getConnection()){
+        try(Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("SELECT json FROM auth WHERE authToken=?");
-            statement.setString(1,token);
+            statement.setString(1, token);
             ResultSet queryResult = statement.executeQuery();
             if(queryResult.next()) {
                 String json = queryResult.getString("json");
-                return new Gson().fromJson(json,AuthData.class);
+                return new Gson().fromJson(json, AuthData.class);
             }
-        } catch (SQLException ex){
-            throw new DataAccessException("Error " + ex.getMessage());
+        } catch(SQLException ex) {
+            throw new DataAccessException("Error: " + ex.getMessage());
         }
         return null;
     }
 
     @Override
-    public int size(){
+    public int size() {
         try(Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) FROM auth");
             ResultSet queryResult = statement.executeQuery();

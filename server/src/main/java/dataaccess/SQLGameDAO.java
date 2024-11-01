@@ -2,20 +2,22 @@ package dataaccess;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
-import models.*;
-import java.sql.*;
+import models.GameData;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SQLGameDAO implements GameDAO {
 
-
     @Override
     public void clear() throws DataAccessException {
-        try(Connection conn = DatabaseManager.getConnection()) {
+        try (Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("TRUNCATE game");
             statement.executeUpdate();
-        } catch(SQLException exception) {
-            throw new DataAccessException("Error: " + exception.getMessage());
+        } catch(SQLException ex) {
+            throw new DataAccessException("Error: " + ex.getMessage());
         }
     }
 
@@ -31,6 +33,7 @@ public class SQLGameDAO implements GameDAO {
             throw new DataAccessException("Error: " + ex.getMessage());
         }
     }
+
     @Override
     public GameData getGame(int id) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()){
@@ -88,7 +91,7 @@ public class SQLGameDAO implements GameDAO {
     }
 
     @Override
-    public int size(){
+    public int size() {
         try(Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) FROM game");
             ResultSet queryResult = statement.executeQuery();
