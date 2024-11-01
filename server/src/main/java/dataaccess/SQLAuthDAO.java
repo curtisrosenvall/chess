@@ -36,8 +36,14 @@ public class SQLAuthDAO implements AuthDAO {
 
 
     @Override
-    public void deleteAuth(String token){
-
+    public void deleteAuth(String token) throws DataAccessException{
+        try(Connection conn = DatabaseManager.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement("DELETE FROM auth WHERE authToken=?");
+            statement.setString(1, token);
+            statement.executeUpdate();
+        } catch(SQLException ex) {
+            throw new DataAccessException("Error: " + ex.getMessage());
+        }
     }
 
     @Override
@@ -58,6 +64,15 @@ public class SQLAuthDAO implements AuthDAO {
 
     @Override
     public int size(){
-        return 1;
+        try(Connection conn = DatabaseManager.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) FROM auth");
+            ResultSet queryResult = statement.executeQuery();
+            if(queryResult.next()) {
+                return queryResult.getInt(1);
+            }
+        } catch(SQLException | DataAccessException ex) {
+            return -1;
+        }
+        return -1;
     }
 }
