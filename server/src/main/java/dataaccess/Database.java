@@ -2,6 +2,7 @@ package dataaccess;
 
 import models.*;
 
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,15 +20,38 @@ public class Database {
         gameDataBase = new SQLGameDAO();
     }
 
+//    clear
+
     public void clearAll() throws DataAccessException {
         authDataBase.clear();
         userDataBase.clear();
         gameDataBase.clear();
     }
 
+//    Booleans
+
     public boolean isAllEmpty() {
         return authDataBase.size() == 0 && userDataBase.size() == 0 && gameDataBase.size() == 0;
     }
+
+    public boolean isAuthEmpty(String token) throws DataAccessException {
+        return authDataBase.getAuth(token) == null;
+    }
+
+    public boolean isUserEmpty(String name) throws DataAccessException {
+        return userDataBase.getUser(name) == null;
+    }
+
+    public boolean isGameEmpty(String name) {
+        try {
+            getGameName(name);
+            return false;
+        } catch (DataAccessException e) {
+            return true;
+        }
+    }
+
+//    Create Functions
 
     public void createUser(String name, String password, String email) throws DataAccessException {
         if (isUserEmpty(name)) {
@@ -52,6 +76,9 @@ public class Database {
         else
             throw new DataAccessException("Error: Auth token already taken");
     }
+
+
+//    Getters
 
     public AuthData getAuth(String token) throws DataAccessException {
         AuthData authData = authDataBase.getAuth(token);
@@ -102,23 +129,11 @@ public class Database {
         return "WHITE".equals(color) ? game.whiteUsername() : game.blackUsername();
     }
 
-    public boolean isAuthEmpty(String token) throws DataAccessException {
-        return authDataBase.getAuth(token) == null;
-    }
-
-    public boolean isUserEmpty(String name) throws DataAccessException {
-        return userDataBase.getUser(name) == null;
-    }
 
 
-    public boolean isGameEmpty(String name) {
-        try {
-            getGameName(name);
-            return false;
-        } catch (DataAccessException e) {
-            return true;
-        }
-    }
+
+
+//    Update and Delete
 
     public void deleteAuth(String token) throws DataAccessException {
         if (isAuthEmpty(token)) {throw new DataAccessException("Error: Invalid token");}
@@ -130,6 +145,8 @@ public class Database {
     }
 
 
+
+//    Database Tables
 
     private void createTables() {
         try {
@@ -180,4 +197,5 @@ public class Database {
             System.out.println("Error: " + ex.getMessage());
         }
     }
+
 }
