@@ -1,41 +1,64 @@
 package handlers;
+
 import dataaccess.DataAccessException;
-import dataaccess.Database;
+import dataaccess.*;
 import models.UserData;
 import request.*;
 import result.*;
 import service.UserService;
-import spark.*;
+import spark.Request;
+import spark.Response;
+import spark.Route;
 
 public class Login implements Route {
-    private Database database;
-    private MethodHandlers methodHandlers;
+
+    Database database;
+    MethodHandlers methodHandlers;
 
     public Login(Database database) {
         this.database = database;
-        this.methodHandlers = new MethodHandlers();
+        methodHandlers = new MethodHandlers();
     }
+
     @Override
     public Object handle(Request request, Response response) {
+        LoginReq loginRequest;
         try {
-            LoginReq loginRequest = (LoginReq) methodHandlers.getBody(request, "LoginReq");
+            loginRequest = (LoginReq) methodHandlers.getBody(request, "LoginRequest");
             methodHandlers.isNullString(loginRequest.getUsername());
             methodHandlers.isNullString(loginRequest.getPassword());
+        } catch (DataAccessException ex) {
 
-            UserData user = database.getUser(loginRequest.getUsername());
+            return methodHandlers.getResponse(
+                    response,
+                    401,
+                    new LoginRes(null, "Error: bad request", null, null)
+            );
+        }
+
+        try {
+            database.getUser(loginRequest.getUsername());
             UserService loginService = new UserService(database);
             LoginRes loginResult = loginService.loginUser(loginRequest);
 
-            if (user.password().equals(loginRequest.getPassword())) {
-                int statusCode = loginResult.isSuccess() ? 200 : 500;
-                return methodHandlers.getResponse(response, statusCode, loginResult);
+
+            if (loginResult.isSuccess()) {
+                return methodHandlers.getResponse(response, 200, loginResult);
+            } else if (loginResult.getMessage().contains("Unauthorized")) {
+                return methodHandlers.getResponse(
+                        response,
+                        401,
+                        new LoginRes(null, "Error: unauthorized", null, null)
+                );
             } else {
-                throw new DataAccessException("Error: unauthorized");
+                return methodHandlers.getResponse(response, 500, loginResult);
             }
         } catch (DataAccessException ex) {
-            return methodHandlers.getResponse(response, 401, new LoginRes(null, "Error: unauthorized", null, null));
-        } catch (Exception ex) {
-            return methodHandlers.getResponse(response, 401, new LoginRes(null, "Error: bad request", null, null));
+            return methodHandlers.getResponse(
+                    response,
+                    401,
+                    new LoginRes(null, "Error: unauthorized", null, null)
+            );
         }
     }
 }

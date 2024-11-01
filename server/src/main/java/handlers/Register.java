@@ -23,7 +23,7 @@ public class Register implements Route {
     public Object handle(Request request, Response response) {
         RegisterReq registerRequest;
         try {
-            registerRequest = (RegisterReq) methodHandlers.getBody(request, "RegisterReq");
+            registerRequest = (RegisterReq) methodHandlers.getBody(request, "RegisterRequest");
             methodHandlers.isNullString(registerRequest.getUsername());
             methodHandlers.isNullString(registerRequest.getPassword());
             methodHandlers.isNullString(registerRequest.getEmail());
