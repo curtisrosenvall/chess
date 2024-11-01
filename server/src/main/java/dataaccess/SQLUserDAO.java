@@ -18,9 +18,9 @@ public class SQLUserDAO implements UserDAO {
 
             statement.executeUpdate();
 
-        } catch (SQLException ex) {
+        } catch (SQLException exception) {
 
-            throw new DataAccessException("Error: " + ex.getMessage());
+            throw new DataAccessException(exception.getMessage());
         }
     }
 
@@ -39,8 +39,8 @@ public class SQLUserDAO implements UserDAO {
 
             statement.executeUpdate();
 
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error: " + ex.getMessage());
+        } catch (SQLException exception) {
+            throw new DataAccessException( exception.getMessage());
         }
     }
 
@@ -61,8 +61,8 @@ public class SQLUserDAO implements UserDAO {
                 }
             }
 
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error: " + ex.getMessage());
+        } catch (SQLException exception) {
+            throw new DataAccessException(exception.getMessage());
         }
         return null;
     }

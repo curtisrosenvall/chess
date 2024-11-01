@@ -19,56 +19,6 @@ public class Database {
         gameDataBase = new SQLGameDAO();
     }
 
-    private void createTables() {
-        try {
-            DatabaseManager.createDatabase();
-        } catch (Exception ex) {
-            System.out.println("Cannot create database");
-        }
-
-        // Define the SQL statements for creating tables
-        String createUserTable = """
-        CREATE TABLE IF NOT EXISTS user (
-            username VARCHAR(255) NOT NULL,
-            password VARCHAR(255) NOT NULL,
-            email VARCHAR(255) NOT NULL,
-            json TEXT NOT NULL,
-            PRIMARY KEY (username)
-        )""";
-
-        String createAuthTable = """
-        CREATE TABLE IF NOT EXISTS auth (
-            authToken VARCHAR(255) NOT NULL,
-            username VARCHAR(255) NOT NULL,
-            json TEXT NOT NULL,
-            PRIMARY KEY (authToken)
-        )""";
-
-        String createGameTable = """
-        CREATE TABLE IF NOT EXISTS game (
-            gameID INT NOT NULL AUTO_INCREMENT,
-            whiteUsername VARCHAR(255) DEFAULT NULL,
-            blackUsername VARCHAR(255) DEFAULT NULL,
-            gameName VARCHAR(255) NOT NULL,
-            game TEXT NOT NULL,
-            PRIMARY KEY (gameID)
-        )""";
-
-
-        List<String> tableStatements = Arrays.asList(createUserTable, createAuthTable, createGameTable);
-
-
-        try (Connection conn = DatabaseManager.getConnection()) {
-            for (String sql : tableStatements) {
-                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                    stmt.executeUpdate();
-                }
-            }
-        } catch (Exception ex) {
-            System.out.println("Error: " + ex.getMessage());
-        }
-    }
-
     public void clearAll() throws DataAccessException {
         authDataBase.clear();
         userDataBase.clear();
@@ -177,5 +127,57 @@ public class Database {
 
     public void updateGame(GameData newGame) throws DataAccessException {
         gameDataBase.updateGame(newGame.gameID(), newGame);
+    }
+
+
+
+    private void createTables() {
+        try {
+            DatabaseManager.createDatabase();
+        } catch (Exception ex) {
+            System.out.println("Cannot create database");
+        }
+
+        // Define the SQL statements for creating tables
+        String createUserTable = """
+        CREATE TABLE IF NOT EXISTS user (
+            username VARCHAR(255) NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            json TEXT NOT NULL,
+            PRIMARY KEY (username)
+        )""";
+
+        String createAuthTable = """
+        CREATE TABLE IF NOT EXISTS auth (
+            authToken VARCHAR(255) NOT NULL,
+            username VARCHAR(255) NOT NULL,
+            json TEXT NOT NULL,
+            PRIMARY KEY (authToken)
+        )""";
+
+        String createGameTable = """
+        CREATE TABLE IF NOT EXISTS game (
+            gameID INT NOT NULL AUTO_INCREMENT,
+            whiteUsername VARCHAR(255) DEFAULT NULL,
+            blackUsername VARCHAR(255) DEFAULT NULL,
+            gameName VARCHAR(255) NOT NULL,
+            game TEXT NOT NULL,
+            PRIMARY KEY (gameID)
+        )""";
+
+
+        List<String> tableStatements = Arrays.asList(createUserTable, createAuthTable, createGameTable);
+
+
+        try (Connection conn = DatabaseManager.getConnection()) {
+            for (String sql : tableStatements) {
+                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                    stmt.executeUpdate();
+                }
+            }
+        } catch (Exception ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
     }
 }

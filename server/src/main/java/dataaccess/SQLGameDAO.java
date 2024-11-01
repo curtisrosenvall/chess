@@ -13,31 +13,34 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public void clear() throws DataAccessException {
+        String sql = "TRUNCATE game";
         try (Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("TRUNCATE game");
+            PreparedStatement statement = conn.prepareStatement(sql);
             statement.executeUpdate();
-        } catch(SQLException ex) {
-            throw new DataAccessException("Error: " + ex.getMessage());
+        } catch(SQLException exception) {
+            throw new DataAccessException(exception.getMessage());
         }
     }
 
     @Override
     public void createGame(String name) throws DataAccessException {
+        String sql = "INSERT INTO game (gameName, game) VALUES (?,?)";
         try(Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO game (gameName, game) VALUES (?,?)");
+            PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1,name);
             String gameJson = new Gson().toJson(new ChessGame());
             statement.setString(2,gameJson);
             statement.executeUpdate();
-        } catch(SQLException ex) {
-            throw new DataAccessException("Error: " + ex.getMessage());
+        } catch(SQLException exception) {
+            throw new DataAccessException(exception.getMessage());
         }
     }
 
     @Override
     public GameData getGame(int id) throws DataAccessException {
+        String sql = "SELECT whiteUsername, blackUsername, gameName, game FROM game WHERE gameID=?";
         try (Connection conn = DatabaseManager.getConnection()){
-            PreparedStatement statement = conn.prepareStatement("SELECT whiteUsername, blackUsername, gameName, game FROM game WHERE gameID=?");
+            PreparedStatement statement = conn.prepareStatement(sql);
             statement.setInt(1, id);
             ResultSet queryResult = statement.executeQuery();
             if(queryResult.next()) {
@@ -48,17 +51,18 @@ public class SQLGameDAO implements GameDAO {
                 ChessGame game = new Gson().fromJson(json, ChessGame.class);
                 return new GameData(id, whiteUsername, blackUsername, gameName, game);
             }
-        } catch(SQLException ex) {
-            throw new DataAccessException("Error: " + ex.getMessage());
+        } catch(SQLException exception) {
+            throw new DataAccessException( exception.getMessage());
         }
         return null;
     }
 
     @Override
     public ArrayList<GameData> listGames() throws DataAccessException {
+        String sql = "SELECT gameID, whiteUsername, blackUsername, gameName FROM game";
         ArrayList<GameData> gameList = new ArrayList<>();
         try (Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("SELECT gameID, whiteUsername, blackUsername, gameName FROM game");
+            PreparedStatement ps = conn.prepareStatement(sql);
             try (ResultSet allGames = ps.executeQuery()) {
                 while (allGames.next()) {
                     int gameID = allGames.getInt("gameID");
@@ -69,15 +73,16 @@ public class SQLGameDAO implements GameDAO {
                 }
                 return gameList;
             }
-        } catch (SQLException ex) {
-            throw new DataAccessException("Error: " + ex.getMessage());
+        } catch (SQLException exception) {
+            throw new DataAccessException(exception.getMessage());
         }
     }
 
     @Override
     public void updateGame(int id, GameData game) throws DataAccessException {
+        String sql ="UPDATE game SET whiteUsername=?, blackUsername=?, gameName=?, game=? WHERE gameID=?";
         try(Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement("UPDATE game SET whiteUsername=?, blackUsername=?, gameName=?, game=? WHERE gameID=?");
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1,game.whiteUsername());
             preparedStatement.setString(2,game.blackUsername());
             preparedStatement.setString(3, game.gameName());
@@ -85,15 +90,16 @@ public class SQLGameDAO implements GameDAO {
             preparedStatement.setString(4,json);
             preparedStatement.setInt(5,id);
             preparedStatement.executeUpdate();
-        } catch(SQLException ex) {
-            throw new DataAccessException("Error: " + ex.getMessage());
+        } catch(SQLException exception) {
+            throw new DataAccessException(exception.getMessage());
         }
     }
 
     @Override
     public int size() {
+        String sql = "SELECT COUNT(*) FROM game";
         try(Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) FROM game");
+            PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet queryResult = statement.executeQuery();
             if(queryResult.next()) {
                 return queryResult.getInt(1);
