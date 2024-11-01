@@ -36,7 +36,8 @@ public class Register implements Route {
             return methodHandlers.getResponse(response, 200, registerResult);
         } else if(registerResult.getMessage().contains("already taken")) {
             return methodHandlers.getResponse(response, 403, registerResult);
-        } else
+        } else {
             return methodHandlers.getResponse(response, 500, registerResult);
+        }
     }
 }

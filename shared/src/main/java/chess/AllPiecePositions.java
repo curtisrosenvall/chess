@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.IntStream;
 
 public class AllPiecePositions {
 
@@ -14,8 +15,8 @@ public class AllPiecePositions {
         whiteTeamMoves = new ArrayList<>();
         blackTeamMoves = new ArrayList<>();
 
-        for (int i = 1; i <= 8; i++) {
-            for (int j = 1; j <= 8; j++) {
+        IntStream.rangeClosed(1, 8).forEach(i -> {
+            IntStream.rangeClosed(1, 8).forEach(j -> {
                 ChessPosition position = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(position);
 
@@ -30,6 +31,7 @@ public class AllPiecePositions {
                             blackKingPos = position;
                         }
                     }
+
                     Collection<ChessMove> moves = piece.pieceMoves(board, position);
                     if (moves != null) {
                         if (teamColor == ChessGame.TeamColor.WHITE) {
@@ -39,8 +41,8 @@ public class AllPiecePositions {
                         }
                     }
                 }
-            }
-        }
+            });
+        });
     }
 
 

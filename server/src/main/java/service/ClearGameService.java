@@ -15,10 +15,11 @@ public class ClearGameService {
         ClearRes result;
         try {
             database.clearAll();
-            if(database.isAllEmpty())
-                result = new ClearRes(true, null);
-            else
+            if(database.isAllEmpty()) {
+                result = new ClearRes(true, null);}
+            else {
                 throw new DataAccessException("Didn't clear the database");
+            }
         } catch(DataAccessException ex) {
             result = new ClearRes(false, "Error: " + ex.getMessage());
         }

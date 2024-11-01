@@ -57,24 +57,29 @@ public class Database {
         if (isUserEmpty(name)) {
             userDataBase.createUser(name, new UserData(name, password, email));
         }
-        else
+        else {
             throw new DataAccessException("Error: Username already taken");
+        }
+
     }
 
     public void createGame(String name) throws DataAccessException {
         if (isGameEmpty(name)) {
             gameDataBase.createGame(name);
         }
-        else
+        else {
             throw new DataAccessException("Error: Game name already taken");
+        }
+
     }
 
     public void createAuth(String token, String name) throws DataAccessException {
         if (isAuthEmpty(token)) {
             authDataBase.createAuth(token, new AuthData(token, name));
         }
-        else
+        else {
             throw new DataAccessException("Error: Auth token already taken");
+        }
     }
 
 
@@ -105,10 +110,12 @@ public class Database {
     }
 
     public GameData getGameName(String name) throws DataAccessException {
-        for (GameData game : gameDataBase.listGames())
+        for (GameData game : gameDataBase.listGames()){
             if (game.gameName().equals(name)) {
                 return game;
             }
+
+        }
         throw new DataAccessException("Error: Invalid game name");
     }
 

@@ -15,16 +15,21 @@ public class MethodHandlers {
     }
 
     public Object getBody(Request request, String requestType) throws DataAccessException {
-        if(requestType.equals("RegisterRequest"))
+        if(requestType.equals("RegisterRequest")) {
             return new Gson().fromJson(request.body(), RegisterReq.class);
-        else if(requestType.equals("LoginRequest"))
+        }
+        else if(requestType.equals("LoginRequest")) {
             return new Gson().fromJson(request.body(), LoginReq.class);
-        else if(requestType.equals("JoinGameRequest"))
+        }
+        else if(requestType.equals("JoinGameRequest")) {
             return new Gson().fromJson(request.body(), JoinGameReq.class);
-        else if(requestType.equals("CreateGameRequest"))
+        }
+        else if(requestType.equals("CreateGameRequest")) {
             return new Gson().fromJson(request.body(), CreateGameRequest.class);
-        else  //Clear, Logout, ListGames don't have bodies
+        }
+        else  {
             throw new DataAccessException("Bad Request");
+        }
     }
 
     public String getAuthorization(Request request) {
@@ -39,14 +44,16 @@ public class MethodHandlers {
     }
 
     public boolean isNullString(String variable) throws DataAccessException {
-        if(variable == null)
+        if(variable == null) {
             throw new DataAccessException("Error: bad request");
+        }
         return true;
     }
 
     public boolean isNullInteger(Integer num) throws DataAccessException {
-        if(num == null)
+        if(num == null) {
             throw new DataAccessException("Error: bad request");
+        }
         return true;
     }
 }

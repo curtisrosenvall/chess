@@ -239,4 +239,48 @@ public class DAOTests {
             Assertions.assertTrue(ex.getMessage().contains("Invalid game name"));
         }
     }
+
+    @Test
+    public void testUpdateNonExistingGame() {
+        try {
+
+            GameData game = db.getGame(999);
+
+            GameData nonExistingGame = new GameData(
+                    999,
+                    "Player1",
+                    "Player2",
+                    "NonExistingGame",
+                    game.game()
+            );
+            db.updateGame(nonExistingGame);
+            Assertions.fail("Expected exception for updating a non-existing game");
+        } catch (Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Invalid game ID"));
+        }
+    }
+
+    @Test
+    public void testUpdateGameSuccess() {
+        try {
+            createGameHelper();
+            GameData game = db.getGame(1);
+
+            GameData updatedGame = new GameData(
+                    game.gameID(),
+                    "NewWhitePlayer",
+                    "NewBlackPlayer",
+                    "UpdatedGameName",
+                    game.game()
+            );
+            db.updateGame(updatedGame);
+
+            GameData newGame = db.getGame(1);
+            Assertions.assertEquals("NewWhitePlayer", newGame.whiteUsername());
+            Assertions.assertEquals("NewBlackPlayer", newGame.blackUsername());
+            Assertions.assertEquals("UpdatedGameName", newGame.gameName());
+        } catch (Exception e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
 }

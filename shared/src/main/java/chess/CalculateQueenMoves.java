@@ -24,14 +24,14 @@ public class CalculateQueenMoves {
         };
 
         for (int[] direction : directions) {
-            int rowOffset = direction[0];
-            int colOffset = direction[1];
+            int QueenRowOffset = direction[0];
+            int QueenColOffset = direction[1];
             int step = 1;
 
             while (true) {
                 ChessPosition endPosition = new ChessPosition(
-                        startPosition.getRow() + step * rowOffset,
-                        startPosition.getColumn() + step * colOffset
+                        startPosition.getRow() + step * QueenRowOffset,
+                        startPosition.getColumn() + step * QueenColOffset
                 );
 
 

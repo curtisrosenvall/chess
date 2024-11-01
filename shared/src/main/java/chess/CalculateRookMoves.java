@@ -21,14 +21,14 @@ public class CalculateRookMoves {
         };
 
         for (int[] direction : directions) {
-            int rowOffset = direction[0];
-            int colOffset = direction[1];
+            int RookRowOffset = direction[0];
+            int RookColOffset = direction[1];
             int step = 1;
 
             while (true) {
                 ChessPosition endPosition = new ChessPosition(
-                        startPosition.getRow() + step * rowOffset,
-                        startPosition.getColumn() + step * colOffset
+                        startPosition.getRow() + step * RookRowOffset,
+                        startPosition.getColumn() + step * RookColOffset
                 );
                 if (!validMove.isInBoard(endPosition)) {
                     break; // Move is off the board

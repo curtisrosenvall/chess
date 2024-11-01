@@ -33,10 +33,12 @@ public class Logout implements Route {
             database.getAuth(token);
             UserService logout = new UserService(database);
             LogoutRes logoutResult = logout.logoutUser(logoutRequest);
-            if(logoutResult.isSuccess())
+            if(logoutResult.isSuccess()) {
                 return methodHandlers.getResponse(response, 200, logoutResult);
-            else
+            }
+            else {
                 return methodHandlers.getResponse(response, 500, logoutResult);
+            }
         } catch(DataAccessException ex) {
             return methodHandlers.getResponse(response, 401, new LogoutRes(null, "Error: unauthorized"));
         }
