@@ -104,5 +104,54 @@ public class DAOTests {
         }
     }
 
-    
+    @Test
+    public void testDeleteAuth() {
+        try {
+            createAuthHelper();
+            db.deleteAuth("1234");
+            Assertions.assertEquals(0, db.authDataBase.size());
+        } catch (Exception e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testListGames() {
+        try {
+            db.createGame("firstGame");
+            db.createGame("secondGame");
+            Assertions.assertEquals(2, db.gameDataBase.size());
+            ArrayList<GameData> games = db.getGameList();
+            Assertions.assertNotNull(games);
+            Assertions.assertEquals(2, games.size());
+        } catch (Exception ex) {
+            Assertions.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testListOneGameSuccess() {
+        try {
+            createGameHelper();
+            ArrayList<GameData> games = db.getGameList();
+            Assertions.assertNotNull(games);
+            Assertions.assertEquals(1, games.size());
+        } catch (Exception ex) {
+            Assertions.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testClearAll() {
+        try {
+            createAuthHelper();
+            createGameHelper();
+            createUserHelper();
+            db.clearAll();
+            Assertions.assertTrue(db.isAllEmpty());
+        } catch (Exception ex) {
+            Assertions.fail(ex.getMessage());
+        }
+    }
+
 }
