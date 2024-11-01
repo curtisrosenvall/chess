@@ -20,30 +20,29 @@ public class AllPiecePositions {
                 ChessPosition position = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(position);
 
-                if (piece == null) {
-                    continue;
+                if (piece != null) {
+                    processPiece(piece, position, board);
                 }
-
-                ChessGame.TeamColor teamColor = piece.getTeamColor();
-                ChessPiece.PieceType pieceType = piece.getPieceType();
-
-                if (pieceType == ChessPiece.PieceType.KING) {
-                    if (teamColor == ChessGame.TeamColor.WHITE) {
-                        whiteKingPos = position;
-                    } else {
-                        blackKingPos = position;
-                    }
-                }
-                Collection<ChessMove> moves = piece.pieceMoves(board, position);
-                if (moves == null) {
-                    continue;
-                }
-
-                List<ChessMove> targetMoves = (teamColor == ChessGame.TeamColor.WHITE)
-                        ? whiteTeamMoves
-                        : blackTeamMoves;
-                targetMoves.addAll(moves);
             }
+        }
+    }
+
+    private void processPiece(ChessPiece piece, ChessPosition position, ChessBoard board) {
+        ChessGame.TeamColor teamColor = piece.getTeamColor();
+        ChessPiece.PieceType pieceType = piece.getPieceType();
+
+        if (pieceType == ChessPiece.PieceType.KING && teamColor == ChessGame.TeamColor.WHITE) {
+            whiteKingPos = position;
+        } else if (pieceType == ChessPiece.PieceType.KING && teamColor == ChessGame.TeamColor.BLACK) {
+            blackKingPos = position;
+        }
+
+        Collection<ChessMove> moves = piece.pieceMoves(board, position);
+        if (moves != null) {
+            List<ChessMove> targetMoves = (teamColor == ChessGame.TeamColor.WHITE)
+                    ? whiteTeamMoves
+                    : blackTeamMoves;
+            targetMoves.addAll(moves);
         }
     }
 
