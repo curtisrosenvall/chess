@@ -12,7 +12,7 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        //Create DAOs to pass through
+
         database = new Database();
 
         // Register your endpoints and handle exceptions here.

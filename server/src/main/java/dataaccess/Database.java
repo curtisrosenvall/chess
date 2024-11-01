@@ -10,8 +10,8 @@ public class Database {
 
     public Database() {
         authDataBase = new MemoryAuthDAO();
-        userDataBase = new MemoryUserDAO();
-        gameDataBase = new MemoryGameDAO();
+        userDataBase = new SQLUserDAO();
+        gameDataBase = new SQLGameDAO();
     }
 
     public void clearAll() throws DataAccessException {
