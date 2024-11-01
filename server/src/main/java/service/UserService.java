@@ -2,8 +2,8 @@ package service;
 
 import dataaccess.*;
 import models.*;
-import request.*;
 import org.mindrot.jbcrypt.BCrypt;
+import request.*;
 import result.*;
 
 import java.util.UUID;
@@ -14,11 +14,6 @@ public class UserService {
 
     public UserService(Database dataBase) {
         this.dataBase = dataBase;
-    }
-
-    public String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-
     }
 
     public RegisterRes createUser(RegisterReq request) {
@@ -39,7 +34,6 @@ public class UserService {
 
     public LoginRes loginUser(LoginReq request) {
         String name = request.getUsername();
-        String password = request.getPassword();
         LoginRes result;
         try {
             UserData user = dataBase.getUser(name);
@@ -48,9 +42,8 @@ public class UserService {
                 dataBase.createAuth(newToken, name);
                 result = new LoginRes(true, null, name, newToken);
             }
-            else {
-                throw new DataAccessException("Invalid Password");
-            }
+            else
+                throw new DataAccessException("Test Unauthorized");
         } catch(DataAccessException ex) {
             result = new LoginRes(false, ex.getMessage(), null, null);
         }
@@ -73,6 +66,8 @@ public class UserService {
     public String newAuthToken() {
         return UUID.randomUUID().toString();
     }
+    public String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
 
-
+    }
 }

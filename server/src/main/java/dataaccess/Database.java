@@ -45,8 +45,21 @@ public class Database {
             PreparedStatement createAuthStatement = conn.prepareStatement(createAuthTable);
             createAuthStatement.executeUpdate();
 
+            String createGameTable = """
+                    CREATE TABLE IF NOT EXISTS game (
+                        gameID INT NOT NULL AUTO_INCREMENT,
+                        whiteUsername VARCHAR(255) DEFAULT NULL,
+                        blackUsername VARCHAR(255) DEFAULT NULL,
+                        gameName VARCHAR(255) NOT NULL,
+                        game TEXT NOT NULL,
+                        PRIMARY KEY (gameID)
+                    )""";
+            PreparedStatement createGameStatement = conn.prepareStatement(createGameTable);
+            createGameStatement.executeUpdate();
+
+
         } catch(Exception ex) {
-            System.out.println("Error");
+            System.out.println("Error" + ex.getMessage());
         }
     }
 
