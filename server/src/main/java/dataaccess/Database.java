@@ -1,17 +1,43 @@
 package dataaccess;
 
 import models.*;
+
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Database {
-    private AuthDAO authDataBase;
-    private UserDAO userDataBase;
-    private GameDAO gameDataBase;
+     AuthDAO authDataBase;
+     UserDAO userDataBase;
+     GameDAO gameDataBase;
 
     public Database() {
+        createTables();
         authDataBase = new SQLAuthDAO();
         userDataBase = new SQLUserDAO();
         gameDataBase = new SQLGameDAO();
+    }
+
+    private void createTables() {
+        try {
+            DatabaseManager.createDatabase();
+        } catch (Exception ex) {
+            System.out.println("Cannot create database");
+        }
+        try(Connection conn = DatabaseManager.getConnection()) {
+            String createUserTable = """
+                            CREATE TABLE IF NOT EXISTS user (
+                            username VARCHAR(255) NOT NULL,
+                            password VARCHAR(255) NOT NULL,
+                            email VARCHAR(255) NOT NULL,
+                            json TEXT NOT NULL,
+                            PRIMARY KEY (username)
+                    )""";
+            PreparedStatement createUserStatement = conn.prepareStatement(createUserTable);
+            createUserStatement.executeUpdate();
+
+        } catch(Exception ex) {
+            System.out.println("Error");
+        }
     }
 
     public void clearAll() throws DataAccessException {
