@@ -9,7 +9,7 @@ public class Database {
     private GameDAO gameDataBase;
 
     public Database() {
-        authDataBase = new MemoryAuthDAO();
+        authDataBase = new SQLAuthDAO();
         userDataBase = new SQLUserDAO();
         gameDataBase = new SQLGameDAO();
     }
