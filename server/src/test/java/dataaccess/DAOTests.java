@@ -154,4 +154,89 @@ public class DAOTests {
         }
     }
 
+    // Negative Tests
+
+    @Test
+    public void testCreateExistingUser() {
+        try {
+            createUserHelper();
+            db.createUser("name", "1234", "email");
+            Assertions.fail("Expected exception for creating an existing user");
+        } catch (Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Username already taken"));
+        }
+    }
+
+    @Test
+    public void testGetNonExistingUser() {
+        try {
+            db.getUser("nonexistent");
+            Assertions.fail("Expected exception for retrieving a non-existing user");
+        } catch (Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Invalid username"));
+        }
+    }
+
+    @Test
+    public void testCreateExistingAuth() {
+        try {
+            createAuthHelper();
+            db.createAuth("1234", "test");
+            Assertions.fail("Expected exception for creating an existing auth token");
+        } catch (Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Auth token already taken"));
+        }
+    }
+
+    @Test
+    public void testListNoGames() {
+        try {
+            ArrayList<GameData> games = db.getGameList();
+            Assertions.assertNotNull(games);
+            Assertions.assertEquals(0, games.size());
+        } catch (Exception e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testCreateExistingGame() {
+        try {
+            createGameHelper();
+            db.createGame("testGame");
+            Assertions.fail("Expected exception for creating an existing game");
+        } catch (Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Game name already taken"));
+        }
+    }
+
+    @Test
+    public void testDeleteNonExistingAuth() {
+        try {
+            db.deleteAuth("1234");
+            Assertions.fail("Expected exception for deleting a non-existing auth token");
+        } catch (Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Invalid token"));
+        }
+    }
+
+    @Test
+    public void testGetNonExistingAuth() {
+        try {
+            db.getAuth("1234");
+            Assertions.fail("Expected exception for retrieving a non-existing auth token");
+        } catch (Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Invalid token"));
+        }
+    }
+
+    @Test
+    public void testGetNonExistingGame() {
+        try {
+            db.getGameName("nonexistentGame");
+            Assertions.fail("Expected exception for retrieving a non-existing game");
+        } catch (Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Invalid game name"));
+        }
+    }
 }
