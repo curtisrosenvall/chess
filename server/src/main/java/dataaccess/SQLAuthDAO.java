@@ -11,7 +11,7 @@ public class SQLAuthDAO implements AuthDAO {
     @Override
     public void clear() throws DataAccessException {
         try(Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("TRUNCATE token");
+            PreparedStatement statement = conn.prepareStatement("TRUNCATE auth");
             statement.executeUpdate();
         } catch(SQLException exception) {
             throw new DataAccessException("Error: " + exception.getMessage());

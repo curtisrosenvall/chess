@@ -35,6 +35,16 @@ public class Database {
             PreparedStatement createUserStatement = conn.prepareStatement(createUserTable);
             createUserStatement.executeUpdate();
 
+            String createAuthTable = """
+                    CREATE TABLE IF NOT EXISTS auth (
+                        authToken VARCHAR(255) NOT NULL,
+                        username VARCHAR(255) NOT NULL,
+                        json TEXT NOT NULL,
+                        PRIMARY KEY (authToken)
+                    )""";
+            PreparedStatement createAuthStatement = conn.prepareStatement(createAuthTable);
+            createAuthStatement.executeUpdate();
+
         } catch(Exception ex) {
             System.out.println("Error");
         }
