@@ -2,47 +2,49 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.IntStream;
+import java.util.List;
 
 public class AllPiecePositions {
 
     private ChessPosition whiteKingPos;
     private ChessPosition blackKingPos;
-    private final Collection<ChessMove> whiteTeamMoves;
-    private final Collection<ChessMove> blackTeamMoves;
+    private List<ChessMove> whiteTeamMoves;
+    private List<ChessMove> blackTeamMoves;
 
     public AllPiecePositions(ChessBoard board) {
         whiteTeamMoves = new ArrayList<>();
         blackTeamMoves = new ArrayList<>();
 
-        IntStream.rangeClosed(1, 8).forEach(i -> {
-            IntStream.rangeClosed(1, 8).forEach(j -> {
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
                 ChessPosition position = new ChessPosition(i, j);
                 ChessPiece piece = board.getPiece(position);
 
-                if (piece != null) {
-                    ChessGame.TeamColor teamColor = piece.getTeamColor();
-                    ChessPiece.PieceType pieceType = piece.getPieceType();
+                if (piece == null) {
+                    continue;
+                }
 
-                    if (pieceType == ChessPiece.PieceType.KING) {
-                        if (teamColor == ChessGame.TeamColor.WHITE) {
-                            whiteKingPos = position;
-                        } else {
-                            blackKingPos = position;
-                        }
-                    }
+                ChessGame.TeamColor teamColor = piece.getTeamColor();
+                ChessPiece.PieceType pieceType = piece.getPieceType();
 
-                    Collection<ChessMove> moves = piece.pieceMoves(board, position);
-                    if (moves != null) {
-                        if (teamColor == ChessGame.TeamColor.WHITE) {
-                            whiteTeamMoves.addAll(moves);
-                        } else {
-                            blackTeamMoves.addAll(moves);
-                        }
+                if (pieceType == ChessPiece.PieceType.KING) {
+                    if (teamColor == ChessGame.TeamColor.WHITE) {
+                        whiteKingPos = position;
+                    } else {
+                        blackKingPos = position;
                     }
                 }
-            });
-        });
+                Collection<ChessMove> moves = piece.pieceMoves(board, position);
+                if (moves == null) {
+                    continue;
+                }
+
+                List<ChessMove> targetMoves = (teamColor == ChessGame.TeamColor.WHITE)
+                        ? whiteTeamMoves
+                        : blackTeamMoves;
+                targetMoves.addAll(moves);
+            }
+        }
     }
 
 
