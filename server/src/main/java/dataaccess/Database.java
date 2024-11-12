@@ -1,8 +1,5 @@
 package dataaccess;
-
 import models.*;
-
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,7 +111,6 @@ public class Database {
             if (game.gameName().equals(name)) {
                 return game;
             }
-
         }
         throw new DataAccessException("Error: Invalid game name");
     }

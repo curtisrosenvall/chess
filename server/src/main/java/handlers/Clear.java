@@ -9,15 +9,12 @@ import spark.Response;
 import spark.Route;
 
 public class Clear implements Route {
-
-    private Database database;
-    private MethodHandlers methodHandlers;
-
+    private final Database database;
+    private final MethodHandlers methodHandlers;
     public Clear(Database database) {
         this.database = database;
         this.methodHandlers = new MethodHandlers();
     }
-
     @Override
     public Object handle(Request request, Response response) {
         ClearGameService clearService = new ClearGameService(database);
