@@ -48,7 +48,7 @@ public class PregameUI {
                     break;
 
                 case "login":
-                    displayHelp(out);
+                    handleLogin(out)
                     break;
 
                 case "register":
@@ -71,5 +71,13 @@ public class PregameUI {
 
     private void write(PrintStream out, String message, String explanation) {
 
+    }
+
+    private void handleLogin(String username, String password) {
+
+    }
+
+    private handleLogout(String authToken){
+        
     }
 }
