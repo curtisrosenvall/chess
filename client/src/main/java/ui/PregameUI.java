@@ -17,8 +17,8 @@ public class PregameUI {
 
 
     public void playChess() {
-        var piece = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN);
-        System.out.println("240 Chess Client: " + piece);
+//        var piece = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN);
+//        System.out.println("240 Chess Client: " + piece);
         serverFacade = new ServerFacade(8080);
         Scanner scan = new Scanner(System.in);
 
@@ -26,7 +26,7 @@ public class PregameUI {
 
 
         while(!(input.equalsIgnoreCase("quit") || input.equals("2"))) {
-            System.out.println("[LOGGED_OUT >>>]");
+//
             if(input.equals("start")) {
                 chessStart();
             } else if(input.equals("help") || input.equals("1")) {
@@ -55,13 +55,12 @@ public class PregameUI {
                 }
             }
 //            listOptions(loggedIn);
-            System.out.println("\nPlease input your selection: ");
+            System.out.println("[LOGGED_OUT >>>] Please input your selection: ");
             input = scan.nextLine();
         }
     }
 
     static void chessStart() {
-        System.out.println("[LOGGED_OUT >>>]");
         System.out.println("~ Whats up! Welcome to Curt's Chess Game Server :)");
         System.out.println("Please enter the number or name of the option you would like to choose.");
         System.out.println("If you have any questions, please enter '1' or type 'Help' for assistance and explanations.");
