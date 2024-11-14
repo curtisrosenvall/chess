@@ -15,10 +15,10 @@ import static ui.EscapeSequences.*;
 
 public class PregameUI {
 
-    private ServerFacade facade;
+    private final ServerFacade serverFacade;
 
     public PregameUI() {
-        facade = new ServerFacade(8080);
+        serverFacade = new ServerFacade(8080);
     }
 
     public void playChess() {
@@ -88,7 +88,7 @@ public class PregameUI {
         out.println("  Password: " + password);
 
         try {
-            String authToken = facade.login(username, password);
+            String authToken = serverFacade.loginUser(username, password);
             postLoginUI(out, authToken);
         } catch (Exception exception) {
             out.println(exception.getMessage());
@@ -111,7 +111,8 @@ public class PregameUI {
         out.println("  Email: " + email);
 
         try {
-            String authToken = facade.register(username, password, email);
+            String authToken = String.valueOf(serverFacade.registerUser(username, password, email));
+//            this might not work
             postLoginUI(out, authToken);
         } catch (Exception exception) {
             out.println(exception.getMessage());
@@ -178,7 +179,7 @@ public class PregameUI {
 
     private void handleLogout(PrintStream out, String authToken) {
         try {
-            facade.logout(authToken);
+            serverFacade.logoutUser(authToken);
             out.println("Successfully logged out.");
         } catch (Exception exception) {
             out.println(exception.getMessage());
@@ -194,7 +195,7 @@ public class PregameUI {
         String gameName = tokens[1];
 
         try {
-            facade.createGame(authToken, gameName);
+            serverFacade.createGame(authToken, gameName);
             out.println("Game \"" + gameName + "\" created successfully.");
         } catch (Exception exception) {
             out.println(exception.getMessage());
@@ -204,7 +205,7 @@ public class PregameUI {
     private void handleListGames(PrintStream out, String authToken) {
         out.print(SET_TEXT_COLOR_WHITE);
         try {
-            ArrayList<GameData> games = facade.listGames(authToken);
+            ArrayList<GameData> games = serverFacade.listGames(authToken).getGames();
             for (GameData game : games) {
                 out.println("  " + game);
             }
@@ -225,14 +226,14 @@ public class PregameUI {
 
             if (teamColor.equals("WHITE") || teamColor.equals("BLACK")) {
                 ChessGame.TeamColor playerColor = ChessGame.TeamColor.valueOf(teamColor);
-                facade.joinGame(authToken, playerColor, gameID);
-
+                serverFacade.joinGame(gameID, String.valueOf(playerColor), authToken);
+//                needs work
                 ChessBoard myBoard = new ChessBoard();
                 myBoard.resetBoard();
                 out.println();
-                BoardUI.printBoard(out, true, myBoard);
+//                BoardUI.printBoard(out, true, myBoard);
                 out.println();
-                BoardUI.printBoard(out, false, myBoard);
+//                BoardUI.printBoard(out, false, myBoard);
             } else {
                 out.println("Invalid team color. Please choose WHITE or BLACK.");
             }
