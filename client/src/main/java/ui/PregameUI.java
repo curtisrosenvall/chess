@@ -26,9 +26,7 @@ public class PregameUI {
 
         boolean loggedIn = false;
 
-
         while(!(input.equalsIgnoreCase("quit") || input.equals("2"))) {
-//
             if(input.equals("start")) {
                 chessStart();
             } else if(input.equals("help") || input.equals("1")) {
@@ -39,7 +37,7 @@ public class PregameUI {
                 } else if(input.equalsIgnoreCase("login") || input.equals("4")) {
                     loggedIn = loginUser();
                 } else {
-//                    invalidInput();
+                    invalidInput();
                 }
             } else { //loggedIn = true
                 if(input.equalsIgnoreCase("logout") || input.equals("3")) {
@@ -56,12 +54,8 @@ public class PregameUI {
                     invalidInput();
                 }
             }
-            System.out.println(
-                    EscapeSequences.SET_TEXT_COLOR_GREEN +
-                            "\nfor [GAME_OPTIONS] press [1] " +
-                            EscapeSequences.RESET_TEXT_COLOR);
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "\nfor [GAME_OPTIONS] press [1] " + EscapeSequences.RESET_TEXT_COLOR);
             System.out.println(EscapeSequences.SET_TEXT_COLOR_WHITE +"\nPlease input your selection: " + EscapeSequences.RESET_TEXT_COLOR);
-
             input = scan.nextLine();
         }
     }
@@ -73,28 +67,17 @@ public class PregameUI {
     }
 
     static void helpExplainOptions(boolean loggedIn) {
-
         if(!loggedIn) {
-            System.out.println("\nto "+EscapeSequences.SET_TEXT_BOLD +
-                    EscapeSequences.SET_TEXT_COLOR_BLUE +"[REGISTER_USER] press [3] " + EscapeSequences.RESET_TEXT_BOLD_FAINT +
-                            EscapeSequences.RESET_TEXT_COLOR  + " or enter 'register'. " +
-                    "You will then be prompted to provide a username, password, and email address."
-                    );
-            System.out.println("to" +EscapeSequences.SET_TEXT_BOLD +
-                    EscapeSequences.SET_TEXT_COLOR_YELLOW +
-                     " [LOGIN] press [4] "+ EscapeSequences.RESET_TEXT_BOLD_FAINT +
-                    EscapeSequences.RESET_TEXT_COLOR +" or enter 'login'. Simply input your username and password when prompted."
-
-            );
+            System.out.println("\nTo "+EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_BLUE +"[REGISTER_USER] press [3] " + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR  + " or enter 'register'. " + "You will then be prompted to provide a username, password, and email address.");
+            System.out.println("To" +EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_YELLOW + " [LOGIN] press [4] "+ EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR +" or enter 'login'. Simply input your username and password when prompted.");
         } else {
             System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "[LOGGED_IN >>>]" + EscapeSequences.RESET_TEXT_COLOR);
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_RED + " [LOGOUT]" + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_YELLOW + " [CREATE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '4' or enter 'create game'. You will need to input a game name.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_BLUE + " [LIST_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '5' or enter 'list games'.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_ORANGE + " [JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '6' or enter 'join game'. You will need to input the game ID and your team color.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_WHITE + " [OBSERVER_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '7' or enter 'observe game'. You will need to input the game ID you want to watch.");
+            System.out.println("To" + EscapeSequences.SET_TEXT_COLOR_RED + " [LOGOUT]" + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
+            System.out.println("To" + EscapeSequences.SET_TEXT_COLOR_YELLOW + " [CREATE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '4' or enter 'create game'. You will need to input a game name.");
+            System.out.println("To" + EscapeSequences.SET_TEXT_COLOR_BLUE + " [LIST_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '5' or enter 'list games'.");
+            System.out.println("To" + EscapeSequences.SET_TEXT_COLOR_ORANGE + " [JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '6' or enter 'join game'. You will need to input the game ID and your team color.");
+            System.out.println("To" + EscapeSequences.SET_TEXT_COLOR_WHITE + " [OBSERVER_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '7' or enter 'observe game'. You will need to input the game ID you want to watch.");
         }
-//        System.out.println("\npress [1] to see options again" );
         System.out.println("\npress [2] to quit the game");
     }
 
@@ -120,7 +103,8 @@ public class PregameUI {
         LogoutRes result = serverFacade.logoutUser(authToken);
         if(result.getMessage() == null) {
             System.out.println("Successfully logged out.");
-            System.out.println("\n[LOGGED_OUT >>> ]");
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_RED+ "\n[LOGGED_OUT >>> ]"+ EscapeSequences.RESET_TEXT_COLOR
+            );
             authToken = null;
             return false;
         } else {
@@ -200,6 +184,26 @@ public class PregameUI {
         }
     }
 
+    static void observeGame() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nPlease enter the gameID of the game you would like to observe: ");
+        String gameID = scan.nextLine();
+        try {
+            int gameNum = Integer.parseInt(gameID);
+            JoinGameRes result = serverFacade.joinGame(gameNum, "SPECTATOR", authToken);
+            if(result.getMessage() == null) {
+                System.out.println("Successfully joined game.");
+                printBoards();
+                playerInGame();
+            } else {
+                System.out.println(result.getMessage());
+            }
+        } catch(NumberFormatException ex) {
+            invalidInput();
+        }
+
+    }
+
     static void playerInGame() {
         Scanner scan = new Scanner(System.in);
         String input = "start";
@@ -225,15 +229,4 @@ public class PregameUI {
         System.out.println("  - To join or observe a game, input the game number only.");
         System.out.println("    Example: To join the game with ID '1', enter '1' without any spaces or additional characters.");
     }
-
-
-
-
-
-
-
-
-
-
-
 }
