@@ -56,7 +56,12 @@ public class PregameUI {
                     invalidInput();
                 }
             }
-            System.out.println("\nPlease input your selection: ");
+            System.out.println(
+                    EscapeSequences.SET_TEXT_COLOR_GREEN +
+                            "\nfor [GAME_OPTIONS] press [1] " +
+                            EscapeSequences.RESET_TEXT_COLOR);
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_WHITE +"\nPlease input your selection: " + EscapeSequences.RESET_TEXT_COLOR);
+
             input = scan.nextLine();
         }
     }
@@ -64,38 +69,33 @@ public class PregameUI {
 
 
     static void chessStart() {
-        System.out.println("\n** [WELCOME!] to Curt's Chess Game Server **");
-        System.out.println(
-                        EscapeSequences.SET_TEXT_COLOR_GREEN +
-                        "\nfor [GAME_OPTIONS] press [1] " +
-                        EscapeSequences.RESET_TEXT_COLOR
-        );
+        System.out.println(EscapeSequences.SET_TEXT_BOLD +"\n** [WELCOME!] to Curt's Chess Game Server **" + EscapeSequences.RESET_TEXT_BOLD_FAINT);
     }
 
     static void helpExplainOptions(boolean loggedIn) {
 
         if(!loggedIn) {
-            System.out.println(EscapeSequences.SET_TEXT_BOLD +
-                    EscapeSequences.SET_TEXT_COLOR_BLUE + "\nto [REGISTER_USER] press [3] or enter 'register'. " +
+            System.out.println("\nto "+EscapeSequences.SET_TEXT_BOLD +
+                    EscapeSequences.SET_TEXT_COLOR_BLUE +"[REGISTER_USER] press [3] " + EscapeSequences.RESET_TEXT_BOLD_FAINT +
+                            EscapeSequences.RESET_TEXT_COLOR  + " or enter 'register'. " +
                     "You will then be prompted to provide a username, password, and email address."
-                    + EscapeSequences.RESET_TEXT_BOLD_FAINT +
-                    EscapeSequences.RESET_TEXT_COLOR);
-            System.out.println(EscapeSequences.SET_TEXT_BOLD +
+                    );
+            System.out.println("to" +EscapeSequences.SET_TEXT_BOLD +
                     EscapeSequences.SET_TEXT_COLOR_YELLOW +
-                    "to [LOGIN] press [4] or enter 'login'. Simply input your username and password when prompted."
-                    + EscapeSequences.RESET_TEXT_BOLD_FAINT +
-                    EscapeSequences.RESET_TEXT_COLOR
+                     " [LOGIN] press [4] "+ EscapeSequences.RESET_TEXT_BOLD_FAINT +
+                    EscapeSequences.RESET_TEXT_COLOR +" or enter 'login'. Simply input your username and password when prompted."
+
             );
         } else {
-            System.out.println("[LOGGED_IN >>>]");
-            System.out.println("To [LOGOUT], press '3' or enter 'logout'.");
-            System.out.println("To [CREATE_GAME] press '4' or enter 'create game'. You will need to input a game name.");
-            System.out.println("To [LIST_GAME], press '5' or enter 'list games'.");
-            System.out.println("To [PLAY_GAME], press '6' or enter 'play game'. You will need to input the game ID and your team color.");
-            System.out.println("To [OBSERVER_GAME], press '7' or enter 'observe game'. You will need to input the game ID you want to watch.");
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "[LOGGED_IN >>>]" + EscapeSequences.RESET_TEXT_COLOR);
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_RED + " [LOGOUT]" + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_YELLOW + " [CREATE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '4' or enter 'create game'. You will need to input a game name.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_BLUE + " [LIST_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '5' or enter 'list games'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_ORANGE + " [JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '6' or enter 'join game'. You will need to input the game ID and your team color.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_WHITE + " [OBSERVER_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '7' or enter 'observe game'. You will need to input the game ID you want to watch.");
         }
-        System.out.println("\npress [1] to see options again");
-        System.out.println("press [2] to quit the game");
+//        System.out.println("\npress [1] to see options again" );
+        System.out.println("\npress [2] to quit the game");
     }
 
     static boolean loginUser() {
@@ -111,7 +111,6 @@ public class PregameUI {
             return false;
         } else {
             System.out.println("Successfully logged in.");
-            System.out.println("\n[LOGGED_IN >>> ]");
             authToken = result.getAuthToken();
             return true;
         }

@@ -35,7 +35,7 @@ public class ServerFacade {
     }
 
     public LogoutRes logoutUser(String authToken){
-        System.out.println("Logging out user with authToken: " + authToken);
+        System.out.println("[LOGGING_OUT]: " + authToken);
         LogoutReq request = new LogoutReq(authToken);
         Url clientUrl = new Url("/session", "DELETE", authToken);
         InputStreamReader reader = clientReader.clientToServer(request, clientUrl);

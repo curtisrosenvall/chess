@@ -22,17 +22,14 @@ public class ClientInputReader {
         InputStreamReader reader = null;
 
         try {
-            // Construct the URL for the HTTP connection
             String urlString = "http://localhost:" + port + clientUrl.getUrlPath();
             URI uri = new URI(urlString);
 
-            // Open HTTP connection
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
             http.setRequestMethod(clientUrl.getRequestMethod());
             http.setDoOutput(true);
             http.addRequestProperty("Authorization", clientUrl.getAuthToken());
 
-            // Write request body if the request method is not GET
             if (!clientUrl.getRequestMethod().equals("GET")) {
                 try (OutputStream requestBody = http.getOutputStream()) {
                     String json = new Gson().toJson(request);
@@ -43,18 +40,14 @@ public class ClientInputReader {
             // Connect to the server
             http.connect();
 
-            // Log the HTTP response code and headers for debugging
             int responseCode = http.getResponseCode();
-            System.out.println("Response Code: " + responseCode);
-            System.out.println("Response Message: " + http.getResponseMessage());
 
-            // Get response and create InputStreamReader based on response code
             InputStream responseBody;
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 responseBody = http.getInputStream();
             } else {
                 responseBody = http.getErrorStream();
-                System.out.println("Error Stream: " + responseBody);
+//                System.out.println("Error Stream: " + responseBody);
             }
 
             if (responseBody != null) {
