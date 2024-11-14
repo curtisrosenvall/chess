@@ -1,11 +1,11 @@
 package request;
 
-public class CreateGameRequest  extends ParentReq{
+public class CreateGameReq  extends ParentReq{
 
     private String authToken;
     private final String gameName;
 
-    public CreateGameRequest(String authToken, String gameName) {
+    public CreateGameReq(String authToken, String gameName) {
         super();
         this.authToken = authToken;
         this.gameName = gameName;

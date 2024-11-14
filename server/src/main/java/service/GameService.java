@@ -14,7 +14,7 @@ public class GameService {
         this.database = database;
     }
 
-    public CreateGameRes createGame(CreateGameRequest request) {
+    public CreateGameRes createGame(CreateGameReq request) {
         String authToken = request.getAuthToken();
         String gameName = request.getGameName();
         CreateGameRes result;

@@ -23,26 +23,26 @@ public class GameServiceTest extends ParentTest {
 
     @Test
     public void createNewGame() {
-        CreateGameRes gameResult = gameService.createGame(new CreateGameRequest(authToken, "Test"));
+        CreateGameRes gameResult = gameService.createGame(new CreateGameReq(authToken, "Test"));
         assertTrue(gameResult.isSuccess(), gameResult.getMessage());
     }
 
     @Test
     public void createExistingGame() {
         createNewGame();
-        CreateGameRes gameResult = gameService.createGame(new CreateGameRequest(authToken, "Test"));
+        CreateGameRes gameResult = gameService.createGame(new CreateGameReq(authToken, "Test"));
         assertFalse(gameResult.isSuccess(), gameResult.getMessage());
     }
 
     @Test
     public void createGameInvalidAuth() {
-        CreateGameRes gameResult = gameService.createGame(new CreateGameRequest("1234", "Test"));
+        CreateGameRes gameResult = gameService.createGame(new CreateGameReq("1234", "Test"));
         assertFalse(gameResult.isSuccess(), gameResult.getMessage());
     }
 
     @Test
     public void createGameAndJoinWhite() {
-        createResult = gameService.createGame(new CreateGameRequest(authToken, "NEWGAME!"));
+        createResult = gameService.createGame(new CreateGameReq(authToken, "NEWGAME!"));
         assertTrue(createResult.isSuccess(), createResult.getMessage());
 
         joinResult = gameService.joinGame(
@@ -53,7 +53,7 @@ public class GameServiceTest extends ParentTest {
 
     @Test
     public void createGameAndJoinBlack() {
-        createResult = gameService.createGame(new CreateGameRequest(authToken, "another game!"));
+        createResult = gameService.createGame(new CreateGameReq(authToken, "another game!"));
         assertTrue(createResult.isSuccess(), createResult.getMessage());
 
         joinResult = gameService.joinGame(
@@ -70,7 +70,7 @@ public class GameServiceTest extends ParentTest {
 
     @Test
     public void invalidAuth() {
-        createResult = gameService.createGame(new CreateGameRequest(authToken, "Test"));
+        createResult = gameService.createGame(new CreateGameReq(authToken, "Test"));
         assertTrue(createResult.isSuccess(), createResult.getMessage());
 
         joinResult = gameService.joinGame(
@@ -81,7 +81,7 @@ public class GameServiceTest extends ParentTest {
 
     @Test
     public void colorAlreadyTaken() {
-        createResult = gameService.createGame(new CreateGameRequest(authToken, "Fun Game"));
+        createResult = gameService.createGame(new CreateGameReq(authToken, "Fun Game"));
         assertTrue(createResult.isSuccess(), createResult.getMessage());
 
         joinResult = gameService.joinGame(
@@ -104,7 +104,7 @@ public class GameServiceTest extends ParentTest {
     @Test
     public void createGameAddBothPlayers() {
         createResult = gameService.createGame(
-                new CreateGameRequest(authToken, "Full Game, Let's PLAY")
+                new CreateGameReq(authToken, "Full Game, Let's PLAY")
         );
         assertTrue(createResult.isSuccess(), createResult.getMessage());
 

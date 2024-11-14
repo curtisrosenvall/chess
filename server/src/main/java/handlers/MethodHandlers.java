@@ -25,7 +25,7 @@ public class MethodHandlers {
             return new Gson().fromJson(request.body(), JoinGameReq.class);
         }
         else if(requestType.equals("CreateGameRequest")) {
-            return new Gson().fromJson(request.body(), CreateGameRequest.class);
+            return new Gson().fromJson(request.body(), CreateGameReq.class);
         }
         else  {
             throw new DataAccessException("Bad Request");

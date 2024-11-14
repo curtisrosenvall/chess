@@ -43,7 +43,7 @@ public class PregameUI {
                 if(input.equalsIgnoreCase("logout") || input.equals("3")) {
                     loggedIn = logoutUser();
                 } else if(input.equalsIgnoreCase("create game") || input.equals("4")) {
-//                    createGame();
+                    createGame();
                 } else if(input.equalsIgnoreCase("list games") || input.equals("5")) {
 //                    listGames();
                 } else if(input.equalsIgnoreCase("play game") || input.equals("6")) {
@@ -131,6 +131,18 @@ public class PregameUI {
             System.out.println("Successfully registered.");
             authToken = result.getAuthToken();
             return true;
+        }
+    }
+
+    static void createGame() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nPlease enter the [game name] you would like to create: ");
+        String gameName = scan.nextLine();
+        CreateGameRes result = serverFacade.createGame(gameName, authToken);
+        if(result.getGameId() == null) {
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Successfully created \"" + gameName + "\", can be found with [gameID] " + result.getGameId());
         }
     }
 

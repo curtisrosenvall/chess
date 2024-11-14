@@ -2,7 +2,7 @@ package handlers;
 
 import dataaccess.DataAccessException;
 import dataaccess.Database;
-import request.CreateGameRequest;
+import request.CreateGameReq;
 import result.CreateGameRes;
 import service.GameService;
 import spark.Request;
@@ -21,10 +21,10 @@ public class CreateGame implements Route {
 
     @Override
     public Object handle(Request request, Response response) {
-        CreateGameRequest createRequest;
+        CreateGameReq createRequest;
         String token;
         try {
-            createRequest = (CreateGameRequest) methodHandlers.getBody(request, "CreateGameRequest");
+            createRequest = (CreateGameReq) methodHandlers.getBody(request, "CreateGameRequest");
             methodHandlers.isNullString(createRequest.getGameName());
             token = methodHandlers.getAuthorization(request);
         } catch (DataAccessException ex) {

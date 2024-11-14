@@ -1,5 +1,6 @@
 package facade;
 import com.google.gson.Gson;
+import request.CreateGameReq;
 import request.LoginReq;
 import request.LogoutReq;
 import request.RegisterReq;
@@ -47,9 +48,15 @@ public class ServerFacade {
         return new Gson().fromJson(reader, LogoutRes.class);
     }
 
-    public CreateGameRes createGame(String gameName, String AuthToken){
-//        createGame
-        return null;
+    public CreateGameRes createGame(String gameName, String authToken){
+        System.out.println("Creating game: " + gameName);
+        CreateGameReq request = new CreateGameReq(authToken, gameName);
+        Url clientUrl = new Url("/game", "POST", authToken);
+        InputStreamReader reader = clientReader.clientToServer(request, clientUrl);
+        if (reader == null) {
+            System.out.println("Failed to create game: " + gameName);
+        }
+        return new Gson().fromJson(reader, CreateGameRes.class);
     }
 
     public ListGamesRes listGames(String authToken){
