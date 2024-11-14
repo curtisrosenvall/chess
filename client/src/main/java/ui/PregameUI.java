@@ -88,7 +88,7 @@ public class PregameUI {
         out.println("  Password: " + password);
 
         try {
-            String authToken = serverFacade.loginUser(username, password);
+//            String authToken = serverFacade.loginUser(username, password);
             postLoginUI(out, authToken);
         } catch (Exception exception) {
             out.println(exception.getMessage());
