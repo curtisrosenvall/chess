@@ -1,9 +1,6 @@
 package facade;
 import com.google.gson.Gson;
-import request.CreateGameReq;
-import request.LoginReq;
-import request.LogoutReq;
-import request.RegisterReq;
+import request.*;
 import result.*;
 
 import java.io.InputStreamReader;
@@ -51,7 +48,7 @@ public class ServerFacade {
 //    once loggedIN
 
     public CreateGameRes createGame(String gameName, String authToken){
-        System.out.println("Creating game: " + gameName);
+        System.out.println("[CREATING_GAME...]: " + gameName);
         CreateGameReq request = new CreateGameReq(authToken, gameName);
         Url clientUrl = new Url("/game", "POST", authToken);
         InputStreamReader reader = clientReader.clientToServer(request, clientUrl);
@@ -62,17 +59,15 @@ public class ServerFacade {
     }
 
     public ListGamesRes listGames(String authToken){
-//        listGames
-        return null;
-    };
+        System.out.println("[LISTING_GAMES..]" + " for authToken: " + authToken);
+        ListGamesReq request = new ListGamesReq(authToken);
+        Url clientUrl = new Url("/game", "GET", authToken);
+        InputStreamReader reader = clientReader.clientToServer(request, clientUrl);
+        if (reader == null) {
+            System.out.println("Failed to list games for authToken: " + authToken);
 
-    public JoinGameRes joinGame(Integer gameID, String playerColor, String authToken){
-//        joinGame
-        return null;
-    };
-
-    public ClearRes clear(){
-//        clear
-        return null;
+        }
+        return new Gson().fromJson(reader, ListGamesRes.class);
     }
+
 }

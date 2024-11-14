@@ -2,6 +2,7 @@ package ui;
 import chess.ChessGame;
 import chess.ChessPiece;
 import facade.ServerFacade;
+import models.GameData;
 import result.*;
 
 import java.util.Scanner;
@@ -45,7 +46,7 @@ public class PregameUI {
                 } else if(input.equalsIgnoreCase("create game") || input.equals("4")) {
                     createGame();
                 } else if(input.equalsIgnoreCase("list games") || input.equals("5")) {
-//                    listGames();
+                    listGames();
                 } else if(input.equalsIgnoreCase("play game") || input.equals("6")) {
 //                    joinGame();
                 } else if(input.equalsIgnoreCase("observe game") || input.equals("7")) {
@@ -144,6 +145,22 @@ public class PregameUI {
             System.out.println("Successfully created \"" + gameName + "\", can be found with [gameID] " + result.getGameId());
         }
     }
+
+    static void listGames() {
+        ListGamesRes result = serverFacade.listGames(authToken);
+        if(result.getGames() == null) {
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("List of games: ");
+            for(GameData game : result.getGames()) {
+                System.out.println(game.gameID() + ". Game Name: " + game.gameName());
+                System.out.println("  White Username: " + ((game.whiteUsername() == null) ? "<Available>" : game.whiteUsername()));
+                System.out.println("  Black Username: " + ((game.blackUsername() == null) ? "<Available>" : game.blackUsername()) + "\n");
+            }
+        }
+    }
+
+
 
 
 
