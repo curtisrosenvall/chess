@@ -16,7 +16,7 @@ public class ServerFacade {
     }
 
     public RegisterRes registerUser(String username, String password, String email){
-        System.out.println("[REGISTERING_USER]: "+ username);
+        System.out.println("[REGISTERING_USER]"+ "="  + username);
         RegisterReq request = new RegisterReq(username,password,email);
         Url clientUrl = new Url("/user", "POST", "");
         InputStreamReader reader = clientReader.clientToServer(request,clientUrl);
@@ -27,7 +27,7 @@ public class ServerFacade {
     }
 
     public LoginRes loginUser(String username, String password){
-        System.out.println("[LOGGING_IN]: " + username);
+        System.out.println("[LOGGING_IN....]: " + username);
         LoginReq request = new LoginReq(username,password);
         Url clientUrl = new Url("/session","POST","");
         InputStreamReader reader = clientReader.clientToServer(request,clientUrl);
@@ -47,6 +47,8 @@ public class ServerFacade {
         }
         return new Gson().fromJson(reader, LogoutRes.class);
     }
+
+//    once loggedIN
 
     public CreateGameRes createGame(String gameName, String authToken){
         System.out.println("Creating game: " + gameName);

@@ -1,8 +1,9 @@
 package facade;
 import com.google.gson.Gson;
-import request.*;
+import request.ParentReq;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -11,55 +12,66 @@ import java.net.URISyntaxException;
 
 public class ClientInputReader {
 
-    private int port;
-    private Gson gson;
+    int port;
 
     public ClientInputReader(int port) {
         this.port = port;
-        this.gson = new Gson();
     }
 
     public InputStreamReader clientToServer(ParentReq request, Url clientUrl) {
-        HttpURLConnection connection = null;
         InputStreamReader reader = null;
+
         try {
+            // Construct the URL for the HTTP connection
             String urlString = "http://localhost:" + port + clientUrl.getUrlPath();
             URI uri = new URI(urlString);
 
-            connection = (HttpURLConnection) uri.toURL().openConnection();
-            connection.setRequestMethod(clientUrl.getRequestMethod());
-            connection.setDoOutput(true);
+            // Open HTTP connection
+            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+            http.setRequestMethod(clientUrl.getRequestMethod());
+            http.setDoOutput(true);
+            http.addRequestProperty("Authorization", clientUrl.getAuthToken());
 
-
-            String authToken = clientUrl.getAuthToken();
-            if (authToken != null && !authToken.isEmpty()) {
-                connection.addRequestProperty("Authorization", authToken);
-            }
-
-            if (!"GET".equalsIgnoreCase(clientUrl.getRequestMethod())) {
-                String json = gson.toJson(request);
-                try (OutputStream outputStream = connection.getOutputStream()) {
-                    outputStream.write(json.getBytes());
+            // Write request body if the request method is not GET
+            if (!clientUrl.getRequestMethod().equals("GET")) {
+                try (OutputStream requestBody = http.getOutputStream()) {
+                    String json = new Gson().toJson(request);
+                    requestBody.write(json.getBytes());
                 }
             }
 
-            connection.connect();
-            int responseCode = connection.getResponseCode();
+            // Connect to the server
+            http.connect();
 
+            // Log the HTTP response code and headers for debugging
+            int responseCode = http.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
+            System.out.println("Response Message: " + http.getResponseMessage());
+
+            // Get response and create InputStreamReader based on response code
+            InputStream responseBody;
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                reader = new InputStreamReader(connection.getInputStream());
+                responseBody = http.getInputStream();
             } else {
-                reader = new InputStreamReader(connection.getErrorStream());
+                responseBody = http.getErrorStream();
+                System.out.println("Error Stream: " + responseBody);
             }
 
-        } catch (URISyntaxException e) {
-            System.out.println("Invalid URL: " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("Communication error: " + e.getMessage());
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
+            if (responseBody != null) {
+                reader = new InputStreamReader(responseBody);
+            } else {
+                System.out.println("Error: Response body is null.");
             }
+
+        } catch (URISyntaxException uriException) {
+            System.out.println("Error: Invalid URL syntax.");
+            uriException.printStackTrace();
+        } catch (java.net.ProtocolException protocolException) {
+            System.out.println("Error: Protocol setting issue.");
+            protocolException.printStackTrace();
+        } catch (IOException ioException) {
+            System.out.println("Error: IO issue while trying to connect.");
+            ioException.printStackTrace();
         }
 
         return reader;

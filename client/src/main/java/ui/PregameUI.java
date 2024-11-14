@@ -127,7 +127,7 @@ public class PregameUI {
             System.out.println(result.getMessage());
             return false;
         } else {
-            System.out.println("Successfully registered.");
+            System.out.println("[REGISTERED_SUCCESS]" + username);
             authToken = result.getAuthToken();
             return true;
         }
