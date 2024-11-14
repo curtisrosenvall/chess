@@ -70,4 +70,20 @@ public class ServerFacade {
         return new Gson().fromJson(reader, ListGamesRes.class);
     }
 
+    public JoinGameRes joinGame(Integer gameID, String playerColor, String authToken){
+        System.out.println("[JOINING_GAME...]: " + gameID + " as " + playerColor);
+        JoinGameReq request = new JoinGameReq(authToken, playerColor, gameID);
+        Url clientUrl = new Url("/game", "PUT", authToken);
+        InputStreamReader reader = clientReader.clientToServer(request, clientUrl);
+        if (reader == null) {
+            System.out.println("Failed to join game: " + gameID);
+            return new JoinGameRes(null, "Failed to connect to server.");
+        }
+        return new Gson().fromJson(reader, JoinGameRes.class);
+    }
+
+    public ClearRes clear(){
+//        clear
+        return null;
+    }
 }
