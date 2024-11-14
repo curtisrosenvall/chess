@@ -83,7 +83,9 @@ public class ServerFacade {
     }
 
     public ClearRes clear(){
-//        clear
-        return null;
+        ClearReq request = new ClearReq();
+        Url clientUrl = new Url("/db", "DELETE", "");
+        InputStreamReader reader = clientReader.clientToServer(request, clientUrl);
+        return new Gson().fromJson(reader, ClearRes.class);
     }
 }

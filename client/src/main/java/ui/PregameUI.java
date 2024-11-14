@@ -9,112 +9,104 @@ import java.util.Scanner;
 
 public class PregameUI {
 
-    static ServerFacade serverFacade;
-    static String authToken;
-    String input = "start";
-    boolean loggedIn = false;
+    private ServerFacade serverFacade;
+    private String authToken;
+    private Scanner scan;
 
-    public PregameUI(){
+    public PregameUI() {
+        serverFacade = new ServerFacade(8080);
+        scan = new Scanner(System.in);
     }
-
 
     public void playChess() {
-//        var piece = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN);
-//        System.out.println("240 Chess Client: " + piece);
-        serverFacade = new ServerFacade(8080);
-        Scanner scan = new Scanner(System.in);
-
         boolean loggedIn = false;
+        String input = "start";
 
-        while(!(input.equalsIgnoreCase("quit") || input.equals("2"))) {
-            if(input.equals("start")) {
+        while (true) {
+            if (input.equalsIgnoreCase("quit") || input.equals("2")) {
+                break;
+            }
+
+            if (input.equalsIgnoreCase("start")) {
                 chessStart();
-            } else if(input.equals("help") || input.equals("1")) {
+//                helpExplainOptions(loggedIn);
+            }
+
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "\nFor [GAME_OPTIONS] press [1] " + EscapeSequences.RESET_TEXT_COLOR);
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_WHITE + "\nPlease input your selection: " + EscapeSequences.RESET_TEXT_COLOR);
+            input = scan.nextLine().trim();
+
+            if (input.equalsIgnoreCase("quit") || input.equals("2")) {
+                break;
+            } else if (input.equalsIgnoreCase("help") || input.equals("1")) {
                 helpExplainOptions(loggedIn);
-            } else if(!loggedIn) {
-                if(input.equalsIgnoreCase("register") || input.equals("3")) {
-                    loggedIn = registerUser();
-                } else if(input.equalsIgnoreCase("login") || input.equals("4")) {
-                    loggedIn = loginUser();
-                } else {
-                    invalidInput();
+            } else if (!loggedIn) {
+                switch (input.toLowerCase()) {
+                    case "register":
+                    case "3":
+                        loggedIn = registerUser();
+                        break;
+                    case "login":
+                    case "4":
+                        loggedIn = loginUser();
+                        break;
+                    default:
+                        invalidInput();
+                        break;
                 }
-            } else { //loggedIn = true
-                if(input.equalsIgnoreCase("logout") || input.equals("3")) {
-                    loggedIn = logoutUser();
-                } else if(input.equalsIgnoreCase("create game") || input.equals("4")) {
-                    createGame();
-                } else if(input.equalsIgnoreCase("list games") || input.equals("5")) {
-                    listGames();
-                } else if(input.equalsIgnoreCase("play game") || input.equals("6")) {
-                    joinGame();
-                } else if(input.equalsIgnoreCase("observe game") || input.equals("7")) {
-//                    observeGame();
-                } else {
-                    invalidInput();
+            } else {
+                // User is logged in
+                switch (input.toLowerCase()) {
+                    case "logout":
+                    case "3":
+                        loggedIn = logoutUser();
+                        break;
+                    case "create game":
+                    case "4":
+                        createGame();
+                        break;
+                    case "list games":
+                    case "5":
+                        listGames();
+                        break;
+                    case "play game":
+                    case "6":
+                        joinGame();
+                        break;
+                    case "observe game":
+                    case "7":
+                        observeGame();
+                        break;
+                    default:
+                        invalidInput();
+                        break;
                 }
             }
-            System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "\nfor [GAME_OPTIONS] press [1] " + EscapeSequences.RESET_TEXT_COLOR);
-            System.out.println(EscapeSequences.SET_TEXT_COLOR_WHITE +"\nPlease input your selection: " + EscapeSequences.RESET_TEXT_COLOR);
-            input = scan.nextLine();
         }
     }
 
-
-
-    static void chessStart() {
-        System.out.println(EscapeSequences.SET_TEXT_BOLD +"\n** [WELCOME!] to Curt's Chess Game Server **" + EscapeSequences.RESET_TEXT_BOLD_FAINT);
+    private void chessStart() {
+        System.out.println(EscapeSequences.SET_TEXT_BOLD + "\n** [WELCOME!] to Curt's Chess Game Server **" + EscapeSequences.RESET_TEXT_BOLD_FAINT);
     }
 
-    static void helpExplainOptions(boolean loggedIn) {
-        if(!loggedIn) {
-            System.out.println("\nTo "+EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_BLUE +"[REGISTER_USER] press [3] " + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR  + " or enter 'register'. " + "You will then be prompted to provide a username, password, and email address.");
-            System.out.println("To" +EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_YELLOW + " [LOGIN] press [4] "+ EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR +" or enter 'login'. Simply input your username and password when prompted.");
+    private void helpExplainOptions(boolean loggedIn) {
+        if (!loggedIn) {
+            System.out.println("\nTo " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_BLUE + "[REGISTER_USER] press [3]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'register'.");
+            System.out.println("You will then be prompted to provide a username, password, and email address.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_YELLOW + "[LOGIN] press [4]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'login'.");
+            System.out.println("Simply input your username and password when prompted.");
         } else {
             System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "[LOGGED_IN >>>]" + EscapeSequences.RESET_TEXT_COLOR);
-            System.out.println("To" + EscapeSequences.SET_TEXT_COLOR_RED + " [LOGOUT]" + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
-            System.out.println("To" + EscapeSequences.SET_TEXT_COLOR_YELLOW + " [CREATE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '4' or enter 'create game'. You will need to input a game name.");
-            System.out.println("To" + EscapeSequences.SET_TEXT_COLOR_BLUE + " [LIST_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '5' or enter 'list games'.");
-            System.out.println("To" + EscapeSequences.SET_TEXT_COLOR_ORANGE + " [JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '6' or enter 'join game'. You will need to input the game ID and your team color.");
-            System.out.println("To" + EscapeSequences.SET_TEXT_COLOR_WHITE + " [OBSERVER_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '7' or enter 'observe game'. You will need to input the game ID you want to watch.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_RED + "[LOGOUT]" + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "[CREATE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '4' or enter 'create game'. You will need to input a game name.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_BLUE + "[LIST_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '5' or enter 'list games'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_ORANGE + "[JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '6' or enter 'join game'. You will need to input the game ID and your team color.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_WHITE + "[OBSERVER_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '7' or enter 'observe game'. You will need to input the game ID you want to watch.");
         }
-        System.out.println("\npress [2] to quit the game");
+        System.out.println("\nPress [2] to quit the game.");
     }
 
-    static boolean loginUser() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("\nPlease enter your [USERNAME]: ");
-        String username = scan.nextLine();
-        System.out.println("Please enter your [PASSWORD]: ");
-        String password = scan.nextLine();
-        LoginRes result = serverFacade.loginUser(username, password);
-
-        if(result.getAuthToken() == null) {
-            System.out.println(result.getMessage());
-            return false;
-        } else {
-            System.out.println("Successfully logged in.");
-            authToken = result.getAuthToken();
-            return true;
-        }
-    }
-
-    static boolean logoutUser() {
-        LogoutRes result = serverFacade.logoutUser(authToken);
-        if(result.getMessage() == null) {
-            System.out.println("Successfully logged out.");
-            System.out.println(EscapeSequences.SET_TEXT_COLOR_RED+ "\n[LOGGED_OUT >>> ]"+ EscapeSequences.RESET_TEXT_COLOR
-            );
-            authToken = null;
-            return false;
-        } else {
-            System.out.println(result.getMessage());
-            return true;
-        }
-    }
-
-    static boolean registerUser(){
-        Scanner scan = new Scanner(System.in);
+    private boolean registerUser() {
         System.out.println("\nPlease enter your [USERNAME]: ");
         String username = scan.nextLine();
         System.out.println("Please enter your [PASSWORD]: ");
@@ -123,55 +115,83 @@ public class PregameUI {
         String email = scan.nextLine();
         RegisterRes result = serverFacade.registerUser(username, password, email);
 
-        if(result.getAuthToken() == null) {
+        if (result.getAuthToken() == null) {
             System.out.println(result.getMessage());
             return false;
         } else {
-            System.out.println("[REGISTERED_SUCCESS]" + username);
+            System.out.println("[REGISTERED_SUCCESS] " + username);
             authToken = result.getAuthToken();
             return true;
         }
     }
 
-    static void createGame() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("\nPlease enter the [game name] you would like to create: ");
-        String gameName = scan.nextLine();
-        CreateGameRes result = serverFacade.createGame(gameName, authToken);
-        if(result.getGameId() == null) {
+    private boolean loginUser() {
+        System.out.println("\nPlease enter your [USERNAME]: ");
+        String username = scan.nextLine();
+        System.out.println("Please enter your [PASSWORD]: ");
+        String password = scan.nextLine();
+        LoginRes result = serverFacade.loginUser(username, password);
+
+        if (result.getAuthToken() == null) {
             System.out.println(result.getMessage());
+            return false;
         } else {
-            System.out.println("Successfully created \"" + gameName + "\", can be found with [gameID] " + result.getGameId());
+            System.out.println("[LOGGED_IN]" + " " +  "as" + " " + username);
+            authToken = result.getAuthToken();
+            return true;
         }
     }
 
-    static void listGames() {
+    private boolean logoutUser() {
+        LogoutRes result = serverFacade.logoutUser(authToken);
+        if (result.getMessage() == null) {
+            System.out.println("Successfully logged out.");
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + "\n[LOGGED_OUT >>> ]" + EscapeSequences.RESET_TEXT_COLOR);
+            authToken = null;
+            return false;
+        } else {
+            System.out.println(result.getMessage());
+            return true;
+        }
+    }
+
+    private void createGame() {
+        System.out.println("\nPlease enter the [GAME NAME] you would like to create: ");
+        String gameName = scan.nextLine();
+        CreateGameRes result = serverFacade.createGame(gameName, authToken);
+        if (result.getGameId() == null) {
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Successfully created \"" + gameName + "\", can be found with [GAME_ID] " + result.getGameId());
+        }
+    }
+
+    private void listGames() {
         ListGamesRes result = serverFacade.listGames(authToken);
-        if(result.getGames() == null) {
+        if (result.getGames() == null) {
             System.out.println(result.getMessage());
         } else {
             System.out.println("List of games: ");
-            for(GameData game : result.getGames()) {
-                System.out.println("[GAME_ID]= "+ game.gameID() + " [GAME_NAME]: " + game.gameName());
-                System.out.println("  White Username: " + ((game.whiteUsername() == null) ? "<Available>" : game.whiteUsername()));
-                System.out.println("  Black Username: " + ((game.blackUsername() == null) ? "<Available>" : game.blackUsername()) + "\n");
+            for (GameData game : result.getGames()) {
+                System.out.println("[GAME_ID]= " + game.gameID() + " [GAME_NAME]: " + game.gameName());
+                System.out.println("  White Username: " + ((game.whiteUsername() == null) ? "[Available]" : game.whiteUsername()));
+                System.out.println("  Black Username: " + ((game.blackUsername() == null) ? "[Available]" : game.blackUsername()) + "\n");
             }
         }
     }
 
-    static void joinGame() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("\nPlease enter the gameID of the game you would like to join: ");
+    private void joinGame() {
+        System.out.println("\nPlease enter the [GAME_ID] of the game you would like to join: ");
         String gameID = scan.nextLine();
-        System.out.println("Please enter which color you would like to play as (WHITE or BLACK)");
+        System.out.println("Please enter which color you would like to play as (WHITE or BLACK): ");
         String playerColor = scan.nextLine();
         try {
             int gameNum = Integer.parseInt(gameID);
-            if(!(playerColor.equalsIgnoreCase("WHITE") || playerColor.equalsIgnoreCase("BLACK")))
+            if (!playerColor.equalsIgnoreCase("WHITE") && !playerColor.equalsIgnoreCase("BLACK")) {
                 invalidInput();
-            else {
-                JoinGameRes result = serverFacade.joinGame(gameNum, playerColor, authToken);
-                if(result.getMessage() == null) {
+            } else {
+                JoinGameRes result = serverFacade.joinGame(gameNum, playerColor.toUpperCase(), authToken);
+                if (result.getMessage() == null) {
                     System.out.println("Successfully joined game.");
                     printBoards();
                     playerInGame();
@@ -179,41 +199,39 @@ public class PregameUI {
                     System.out.println(result.getMessage());
                 }
             }
-        } catch(NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             invalidInput();
         }
     }
 
-    static void observeGame() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("\nPlease enter the gameID of the game you would like to observe: ");
+    private void observeGame() {
+        System.out.println("\nPlease enter the [GAME_ID] of the game you would like to observe: ");
         String gameID = scan.nextLine();
         try {
             int gameNum = Integer.parseInt(gameID);
             JoinGameRes result = serverFacade.joinGame(gameNum, "SPECTATOR", authToken);
             if(result.getMessage() == null) {
                 System.out.println("Successfully joined game.");
+                System.out.println("Observing game ID: " + gameNum);
                 printBoards();
                 playerInGame();
             } else {
                 System.out.println(result.getMessage());
             }
-        } catch(NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             invalidInput();
         }
-
     }
 
-    static void playerInGame() {
-        Scanner scan = new Scanner(System.in);
-        String input = "start";
-        while(!input.equalsIgnoreCase("quit")) {
-            System.out.println("When you are ready to leave the game, please enter ['quit']");
+    private void playerInGame() {
+        String input = "";
+        while (!input.equalsIgnoreCase("quit")) {
+            System.out.println("When you are ready to leave the game, please enter 'quit':");
             input = scan.nextLine();
         }
     }
 
-    static void printBoards(){
+    private void printBoards() {
         ChessPiece[][] newBoard = new ChessGame().getBoard().getBoard();
         BoardUI gameBoard = new BoardUI(newBoard);
         System.out.println("[WHITE_BOARD...] ");
@@ -222,7 +240,7 @@ public class PregameUI {
         gameBoard.printBoard(false);
     }
 
-    static void invalidInput() {
+    private void invalidInput() {
         System.out.println("\nInvalid input detected. Please follow these guidelines:");
         System.out.println("  - To select an option, input the number or the exact word of the option.");
         System.out.println("    Example: To access the help screen, enter '1' or 'help'.");

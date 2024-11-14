@@ -1,9 +1,7 @@
 package facade;
 import com.google.gson.Gson;
 import request.ParentReq;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -12,61 +10,52 @@ import java.net.URISyntaxException;
 
 public class ClientInputReader {
 
-    int port;
+    private final int port;
+    private final Gson gson;
 
     public ClientInputReader(int port) {
         this.port = port;
+        this.gson = new Gson();
     }
 
     public InputStreamReader clientToServer(ParentReq request, Url clientUrl) {
         InputStreamReader reader = null;
-
-        try {
+       try {
             String urlString = "http://localhost:" + port + clientUrl.getUrlPath();
             URI uri = new URI(urlString);
 
-            HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
-            http.setRequestMethod(clientUrl.getRequestMethod());
-            http.setDoOutput(true);
-            http.addRequestProperty("Authorization", clientUrl.getAuthToken());
+            HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+            connection.setRequestMethod(clientUrl.getRequestMethod());
+            connection.setDoOutput(true);
 
-            if (!clientUrl.getRequestMethod().equals("GET")) {
-                try (OutputStream requestBody = http.getOutputStream()) {
-                    String json = new Gson().toJson(request);
+            String authToken = clientUrl.getAuthToken();
+            if (authToken != null && !authToken.isEmpty()) {
+                connection.addRequestProperty("Authorization", authToken);
+            }
+
+            if (!"GET".equalsIgnoreCase(clientUrl.getRequestMethod())) {
+                String json = gson.toJson(request);
+                try (OutputStream requestBody = connection.getOutputStream()) {
                     requestBody.write(json.getBytes());
                 }
             }
 
-            // Connect to the server
-            http.connect();
+            connection.connect();
 
-            int responseCode = http.getResponseCode();
+            int responseCode = connection.getResponseCode();
 
-            InputStream responseBody;
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                responseBody = http.getInputStream();
+                reader = new InputStreamReader(connection.getInputStream());
             } else {
-                responseBody = http.getErrorStream();
-//                System.out.println("Error Stream: " + responseBody);
+                reader = new InputStreamReader(connection.getErrorStream());
             }
-
-            if (responseBody != null) {
-                reader = new InputStreamReader(responseBody);
-            } else {
-                System.out.println("Error: Response body is null.");
-            }
-
-        } catch (URISyntaxException uriException) {
+        } catch (URISyntaxException e) {
             System.out.println("Error: Invalid URL syntax.");
-            uriException.printStackTrace();
-        } catch (java.net.ProtocolException protocolException) {
-            System.out.println("Error: Protocol setting issue.");
-            protocolException.printStackTrace();
-        } catch (IOException ioException) {
+            e.printStackTrace();
+        } catch (IOException e) {
             System.out.println("Error: IO issue while trying to connect.");
-            ioException.printStackTrace();
+            e.printStackTrace();
         }
-
         return reader;
     }
 }

@@ -14,7 +14,8 @@ public class BoardUI {
     public void printBoard(boolean isWhiteSide) {
         printLetters(isWhiteSide);
         System.out.println();
-
+//        isWhiteSide = true = white
+//        isWhiteSide = false = black
         if (isWhiteSide) {
             for (int row = 8; row >= 1; row--) {
                 printRow(row, isWhiteSide);
@@ -26,7 +27,6 @@ public class BoardUI {
                 System.out.println();
             }
         }
-
         printLetters(isWhiteSide);
         System.out.println();
     }
@@ -34,7 +34,6 @@ public class BoardUI {
     private void printLetters(boolean isWhiteSide) {
         setTextColor();
         printEmptySpace();
-
         if (isWhiteSide) {
             for (String letter : LETTERS) {
                 System.out.print(letter);
@@ -44,14 +43,12 @@ public class BoardUI {
                 System.out.print(LETTERS[i]);
             }
         }
-
         printEmptySpace();
         resetTextColor();
     }
 
     private void printRow(int row, boolean isWhiteSide) {
         printEdge(row);
-
         if (isWhiteSide) {
             for (int col = 1; col <= 8; col++) {
                 setBackgroundColor(row, col);
@@ -65,7 +62,6 @@ public class BoardUI {
                 printPieceType(row, col);
             }
         }
-
         printEdge(row);
         resetTextColor();
     }
