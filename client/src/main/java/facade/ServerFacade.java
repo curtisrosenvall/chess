@@ -1,6 +1,7 @@
 package facade;
 import com.google.gson.Gson;
 import request.LoginReq;
+import request.LogoutReq;
 import request.RegisterReq;
 import result.*;
 
@@ -36,9 +37,15 @@ public class ServerFacade {
     }
 
     public LogoutRes logoutUser(String authToken){
-//        logout User
-        return null;
-    };
+        System.out.println("Logging out user with authToken: " + authToken);
+        LogoutReq request = new LogoutReq(authToken);
+        Url clientUrl = new Url("/session", "DELETE", authToken);
+        InputStreamReader reader = clientReader.clientToServer(request, clientUrl);
+        if (reader == null) {
+            System.out.println("Failed to logout user with authToken: " + authToken);
+        }
+        return new Gson().fromJson(reader, LogoutRes.class);
+    }
 
     public CreateGameRes createGame(String gameName, String AuthToken){
 //        createGame

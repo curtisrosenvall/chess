@@ -12,8 +12,11 @@ public class PregameUI {
     static String authToken;
     String input = "start";
 
-    public PregameUI() {
-        serverFacade = new ServerFacade(8080);
+    public PregameUI(){
+    }
+
+
+    public void playChess() {
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN);
         System.out.println("240 Chess Client: " + piece);
         serverFacade = new ServerFacade(8080);
@@ -38,7 +41,7 @@ public class PregameUI {
                 }
             } else { //loggedIn = true
                 if(input.equalsIgnoreCase("logout") || input.equals("3")) {
-//                    loggedIn = logoutUser();
+                    loggedIn = logoutUser();
                 } else if(input.equalsIgnoreCase("create game") || input.equals("4")) {
 //                    createGame();
                 } else if(input.equalsIgnoreCase("list games") || input.equals("5")) {
@@ -94,6 +97,19 @@ public class PregameUI {
             System.out.println("Successfully logged in.");
             System.out.println("\n[LOGGED_IN >>> ]");
             authToken = result.getAuthToken();
+            return true;
+        }
+    }
+
+    static boolean logoutUser() {
+        LogoutRes result = serverFacade.logoutUser(authToken);
+        if(result.getMessage() == null) {
+            System.out.println("Successfully logged out.");
+            System.out.println("\n[LOGGED_OUT >>> ]");
+            authToken = null;
+            return false;
+        } else {
+            System.out.println(result.getMessage());
             return true;
         }
     }
