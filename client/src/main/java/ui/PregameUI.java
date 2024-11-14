@@ -9,7 +9,6 @@ import models.GameData;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
@@ -22,7 +21,7 @@ public class PregameUI {
         facade = new ServerFacade(8080);
     }
 
-    public void beginJourney() {
+    public void playChess() {
         PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         out.print(ERASE_SCREEN);
         out.print(SET_BG_COLOR_BLACK);
@@ -69,10 +68,10 @@ public class PregameUI {
     }
 
     private void displayPreLoginHelp(PrintStream out) {
-        tableWriter(out, "register <USERNAME> <PASSWORD> <EMAIL>", "to create an account");
-        tableWriter(out, "login <USERNAME> <PASSWORD>", "to play chess");
-        tableWriter(out, "quit", "exit the application");
-        tableWriter(out, "help", "display available commands");
+        write(out, "register <USERNAME> <PASSWORD> <EMAIL>", "to create an account");
+        write(out, "login <USERNAME> <PASSWORD>", "to play chess");
+        write(out, "quit", "exit the application");
+        write(out, "help", "display available commands");
     }
 
     private void handleLogin(PrintStream out, String[] tokens) {
@@ -168,13 +167,13 @@ public class PregameUI {
     }
 
     private void displayPostLoginHelp(PrintStream out) {
-        tableWriter(out, "create <NAME>", "create a game");
-        tableWriter(out, "list", "list available games");
-        tableWriter(out, "join <ID> [WHITE|BLACK]", "join a game");
-        tableWriter(out, "observe <ID>", "observe a game");
-        tableWriter(out, "logout", "log out of your account");
-        tableWriter(out, "quit", "exit the application");
-        tableWriter(out, "help", "display available commands");
+        write(out, "create <NAME>", "create a game");
+        write(out, "list", "list available games");
+        write(out, "join <ID> [WHITE|BLACK]", "join a game");
+        write(out, "observe <ID>", "observe a game");
+        write(out, "logout", "log out of your account");
+        write(out, "quit", "exit the application");
+        write(out, "help", "display available commands");
     }
 
     private void handleLogout(PrintStream out, String authToken) {
@@ -268,7 +267,7 @@ public class PregameUI {
         out.print(RESET_BG_COLOR);
     }
 
-    private void tableWriter(PrintStream out, String message, String explanation) {
+    private void write(PrintStream out, String message, String explanation) {
         out.print("  ");
         out.print(SET_TEXT_COLOR_LIGHT_GREY);
         out.print(message);
