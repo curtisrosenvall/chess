@@ -1,5 +1,6 @@
 package facade;
 import com.google.gson.Gson;
+import request.LoginReq;
 import request.RegisterReq;
 import result.*;
 
@@ -13,7 +14,7 @@ public class ServerFacade {
     }
 
     public RegisterRes registerUser(String username, String password, String email){
-        System.out.println("Registering user: "+ username);
+        System.out.println("[REGISTERING_USER]: "+ username);
         RegisterReq request = new RegisterReq(username,password,email);
         Url clientUrl = new Url("/user", "POST", "");
         InputStreamReader reader = clientReader.clientToServer(request,clientUrl);
@@ -21,12 +22,18 @@ public class ServerFacade {
             System.out.println("[FAILED] User was not registered: " + username);
         }
         return new Gson().fromJson(reader,RegisterRes.class);
-    };
+    }
 
     public LoginRes loginUser(String username, String password){
-//        login user
-        return null;
-    };
+        System.out.println("[LOGGING_IN]: " + username);
+        LoginReq request = new LoginReq(username,password);
+        Url clientUrl = new Url("/session","POST","");
+        InputStreamReader reader = clientReader.clientToServer(request,clientUrl);
+        if(reader == null){
+            System.out.println("[FAILED]User was not logged in: " + username);
+        }
+        return new Gson().fromJson(reader,LoginRes.class);
+    }
 
     public LogoutRes logoutUser(String authToken){
 //        logout User

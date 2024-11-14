@@ -32,7 +32,7 @@ public class PregameUI {
                 if(input.equalsIgnoreCase("register") || input.equals("3")) {
                     loggedIn = registerUser();
                 } else if(input.equalsIgnoreCase("login") || input.equals("4")) {
-//                    loggedIn = loginUser();
+                    loggedIn = loginUser();
                 } else {
 //                    invalidInput();
                 }
@@ -79,6 +79,24 @@ public class PregameUI {
         }
     }
 
+    static boolean loginUser() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nPlease enter your username: ");
+        String username = scan.nextLine();
+        System.out.println("Please enter your password: ");
+        String password = scan.nextLine();
+        LoginRes result = serverFacade.loginUser(username, password);
+
+        if(result.getAuthToken() == null) {
+            System.out.println(result.getMessage());
+            return false;
+        } else {
+            System.out.println("Successfully logged in.");
+            System.out.println("\n[LOGGED_IN >>> ]");
+            authToken = result.getAuthToken();
+            return true;
+        }
+    }
 
     static boolean registerUser(){
         Scanner scan = new Scanner(System.in);
