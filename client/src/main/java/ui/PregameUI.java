@@ -37,6 +37,8 @@ public class PregameUI {
             input = scan.nextLine().trim();
 
             if (input.equalsIgnoreCase("quit") || input.equals("2")) {
+//                playerInGame();
+//                playChess();
                 break;
             } else if (input.equalsIgnoreCase("help") || input.equals("1")) {
                 helpExplainOptions(loggedIn);
@@ -88,6 +90,11 @@ public class PregameUI {
     private void chessStart() {
         System.out.println(EscapeSequences.SET_TEXT_BOLD + "\n** [WELCOME!] to Curt's Chess Game Server **" + EscapeSequences.RESET_TEXT_BOLD_FAINT);
     }
+
+    private void leaveGame() {
+        System.out.println("[QUITTING_GAME]");
+    }
+
 
     private void helpExplainOptions(boolean loggedIn) {
         if (!loggedIn) {
@@ -182,10 +189,12 @@ public class PregameUI {
             System.out.println(result.getMessage());
         } else {
             System.out.println("List of games: ");
+            int gameNumber = 1;
             for (GameData game : result.getGames()) {
-                System.out.println("[GAME_ID]= " + game.gameID() + " [GAME_NAME]: " + game.gameName());
+                System.out.println("[GAME_NUMBER]= " + gameNumber + " [GAME_ID]= " + game.gameID() + " [GAME_NAME]: " + game.gameName());
                 System.out.println("  White Username: " + ((game.whiteUsername() == null) ? "[Available]" : game.whiteUsername()));
                 System.out.println("  Black Username: " + ((game.blackUsername() == null) ? "[Available]" : game.blackUsername()) + "\n");
+                gameNumber++;
             }
         }
     }

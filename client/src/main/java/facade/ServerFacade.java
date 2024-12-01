@@ -35,7 +35,7 @@ public class ServerFacade {
     }
 
     public LogoutRes logoutUser(String authToken){
-        System.out.println("[LOGGING_OUT]: " + authToken);
+//        System.out.println("[LOGGING_OUT]: " + authToken);
         LogoutReq request = new LogoutReq(authToken);
         Url clientUrl = new Url("/session", "DELETE", authToken);
         InputStreamReader reader = clientReader.clientToServer(request, clientUrl);
@@ -59,7 +59,7 @@ public class ServerFacade {
     }
 
     public ListGamesRes listGames(String authToken){
-        System.out.println("[LISTING_GAMES..]" + " for authToken: " + authToken);
+        System.out.println("[LISTING_GAMES..]");
         ListGamesReq request = new ListGamesReq(authToken);
         Url clientUrl = new Url("/game", "GET", authToken);
         InputStreamReader reader = clientReader.clientToServer(request, clientUrl);
@@ -81,6 +81,7 @@ public class ServerFacade {
         }
         return new Gson().fromJson(reader, JoinGameRes.class);
     }
+
 
     public ClearRes clear(){
         ClearReq request = new ClearReq();
