@@ -1,10 +1,8 @@
 package facade;
+import websocket.messages.*;
 
-import websocket.messages.ServerMessage;
-
-
-public class Watcher {
-    void loadGame(?);
-    void error(?);
-    void notification(?);
+public interface Watcher {
+    void loadGame(LoadGame loadGame);
+    void errorMessage(ErrorMessage errorMessage);
+    void notification(Notification notification);
 }
