@@ -10,14 +10,8 @@ import java.util.Objects;
  */
 public class UserGameCommand {
 
-    private final CommandType commandType;
 
-    private final String authToken;
-
-    private final Integer gameID;
-
-    public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
-        this.commandType = commandType;
+    public UserGameCommand(String authToken, Integer gameID) {
         this.authToken = authToken;
         this.gameID = gameID;
     }
@@ -29,34 +23,38 @@ public class UserGameCommand {
         RESIGN
     }
 
-    public CommandType getCommandType() {
-        return commandType;
-    }
+    protected CommandType commandType;
+    private final int gameID;
+    private final String authToken;
+
 
     public String getAuthToken() {
         return authToken;
     }
 
-    public Integer getGameID() {
-        return gameID;
+    public int getGameID() {
+        return this.gameID;
+    }
+
+    public CommandType getCommandType() {
+        return this.commandType;
+    }
+
+    public void setCommandType(CommandType type) {
+        this.commandType = type;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
+        if (this == o)
             return true;
-        }
-        if (!(o instanceof UserGameCommand)) {
+        if (!(o instanceof UserGameCommand))
             return false;
-        }
         UserGameCommand that = (UserGameCommand) o;
-        return getCommandType() == that.getCommandType() &&
-                Objects.equals(getAuthToken(), that.getAuthToken()) &&
-                Objects.equals(getGameID(), that.getGameID());
+        return getCommandType() == that.getCommandType() && Objects.equals(getAuthToken(), that.getAuthToken());
     }
-
     @Override
     public int hashCode() {
-        return Objects.hash(getCommandType(), getAuthToken(), getGameID());
+        return Objects.hash(getCommandType(), getAuthToken());
     }
 }
