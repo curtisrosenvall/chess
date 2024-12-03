@@ -34,16 +34,16 @@ public class ServerFacade {
         return new Gson().fromJson(reader,LoginRes.class);
     }
 
-//    public LogoutRes logoutUser(String authToken){
-////        System.out.println("[LOGGING_OUT]: " + authToken);
-//        LogoutReq request = new LogoutReq(authToken);
-//        Url clientUrl = new Url("/session", "DELETE", authToken);
-//        InputStreamReader reader = clientReader.clientToServer(request, clientUrl);
-//        if (reader == null) {
-//            System.out.println("Failed to logout user with authToken: " + authToken);
-//        }
-//        return new Gson().fromJson(reader, LogoutRes.class);
-//    }
+    public LogoutRes logoutUser(String authToken){
+//        System.out.println("[LOGGING_OUT]: " + authToken);
+        LogoutReq request = new LogoutReq(authToken);
+        Url clientUrl = new Url("/session", "DELETE", authToken);
+        InputStreamReader reader = clientReader.clientToServer(request, clientUrl);
+        if (reader == null) {
+            System.out.println("Failed to logout user with authToken: " + authToken);
+        }
+        return new Gson().fromJson(reader, LogoutRes.class);
+    }
 
 //    once loggedIN
 
