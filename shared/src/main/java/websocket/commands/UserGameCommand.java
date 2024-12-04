@@ -10,7 +10,6 @@ import java.util.Objects;
  */
 public class UserGameCommand {
 
-
     public UserGameCommand(String authToken, Integer gameID) {
         this.authToken = authToken;
         this.gameID = gameID;
@@ -24,37 +23,29 @@ public class UserGameCommand {
     }
 
     protected CommandType commandType;
-    private final int gameID;
+
     private final String authToken;
 
+    private final Integer gameID;
 
-    public String getAuthToken() {
+    public String getAuthString() {
         return authToken;
-    }
-
-    public int getGameID() {
-        return this.gameID;
     }
 
     public CommandType getCommandType() {
         return this.commandType;
     }
 
-    public void setCommandType(CommandType type) {
-        this.commandType = type;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserGameCommand that = (UserGameCommand) o;
+        return commandType == that.commandType && Objects.equals(authToken, that.authToken) && Objects.equals(gameID, that.gameID);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof UserGameCommand))
-            return false;
-        UserGameCommand that = (UserGameCommand) o;
-        return getCommandType() == that.getCommandType() && Objects.equals(getAuthToken(), that.getAuthToken());
-    }
-    @Override
     public int hashCode() {
-        return Objects.hash(getCommandType(), getAuthToken());
+        return Objects.hash(commandType, authToken, gameID);
     }
 }

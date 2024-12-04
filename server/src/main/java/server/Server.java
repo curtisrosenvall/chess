@@ -1,7 +1,14 @@
 package server;
+import com.google.gson.Gson;
 import dataaccess.*;
 import handlers.*;
+import models.AuthData;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import spark.*;
+import websocket.commands.*;
+import websocket.messages.ErrorMessage;
+
+import static javax.management.remote.JMXConnectorFactory.connect;
 
 public class Server {
 
@@ -31,6 +38,36 @@ public class Server {
     public void stop() {
         Spark.stop();
         Spark.awaitStop();
+    }
+
+    @OnWebSocketMessage
+    public void onMessage(Session session, String message) throws Exception {
+        System.out.printf("Received: %s\n", message);
+        try {
+            UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
+            AuthData auth = database.getAuth(command.getAuthString());
+            String username = auth.username();
+            switch (command.getCommandType()) {
+                case CONNECT -> {
+                    Connect connectCommand = new Gson().fromJson(message, Connect.class);
+//                    connectCommand(session, username, connectCommand);
+                }
+                case MAKE_MOVE -> {
+                    MakeMove moveCommand = new Gson().fromJson(message, MakeMove.class);
+//                    moveCommand(session, username, moveCommand);
+                }
+                case LEAVE -> {
+                    Leave leaveCommand = new Gson().fromJson(message, Leave.class);
+//                    leaveCommand(session, username, leaveCommand);
+                }
+                case RESIGN -> {
+                    Resign resignCommand = new Gson().fromJson(message, Resign.class);
+//                    resign(session, username, resignCommand);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 }

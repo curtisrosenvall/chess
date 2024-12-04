@@ -3,9 +3,9 @@ import chess.*;
 
 public class MakeMove extends UserGameCommand {
 
-    private ChessMove move;
+    private final ChessMove move;
 
-    public MakeMove(String authToken, int gameID, ChessMove move) {
+    public MakeMove(String authToken, Integer gameID, ChessMove move) {
         super(authToken, gameID);
         this.commandType = CommandType.MAKE_MOVE;
         this.move = move;
