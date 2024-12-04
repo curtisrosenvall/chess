@@ -4,10 +4,11 @@ import dataaccess.*;
 import handlers.*;
 import models.AuthData;
 import models.GameData;
+import org.eclipse.jetty.websocket.api.*;
+import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
-import javax.websocket.RemoteEndpoint;
-import javax.websocket.Session;
-import spark.Spark;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import spark.*;
 import websocket.commands.*;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGame;
@@ -16,11 +17,14 @@ import websocket.messages.ServerMessage;
 
 import java.util.ArrayList;
 
-import static javax.management.remote.JMXConnectorFactory.connect;
 
 public class Server {
 
     Database database;
+
+    public Server(){
+        database = new Database();
+    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -28,9 +32,7 @@ public class Server {
         Spark.staticFiles.location("web");
 
         Spark.webSocket("/ws", Server.class);
-        database = new Database();
 
-        // Register your endpoints and handle exceptions here.
         Spark.post("/user", (req, res) -> (new Register(database)).handle(req,res));
         Spark.post("/session", (req, res) -> (new Login(database)).handle(req,res));
         Spark.delete("/session", (req, res) -> (new Logout(database)).handle(req, res));
@@ -49,7 +51,7 @@ public class Server {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws Exception {
+    public void onMessage(Session session, String message) {
         System.out.printf("Received: %s\n", message);
         try {
             UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
@@ -58,30 +60,31 @@ public class Server {
             switch (command.getCommandType()) {
                 case CONNECT -> {
                     Connect connectCommand = new Gson().fromJson(message, Connect.class);
-                    connectCommand(session, username, connectCommand);
+                    connect(session, username, connectCommand);
                 }
                 case MAKE_MOVE -> {
                     MakeMove moveCommand = new Gson().fromJson(message, MakeMove.class);
-//                    moveCommand(session, username, moveCommand);
+                    // Implement moveCommand handling here
                 }
                 case LEAVE -> {
                     Leave leaveCommand = new Gson().fromJson(message, Leave.class);
-//                    leaveCommand(session, username, leaveCommand);
+                    // Implement leaveCommand handling here
                 }
                 case RESIGN -> {
                     Resign resignCommand = new Gson().fromJson(message, Resign.class);
-//                    resign(session, username, resignCommand);
+                    // Implement resign handling here
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            sendMessage(session, new ErrorMessage("Error: " + ex.getMessage()));
         }
     }
 
-    public void sendMessage(RemoteEndpoint endpoint, ServerMessage message) {
+    public void sendMessage(Session session, ServerMessage message) {
         try {
             String json = new Gson().toJson(message);
-            endpoint.sendString(json);
+            session.getRemote().sendString(json);
         } catch(Exception ex) {
             System.out.println("Error when trying to send message: " + message);
         }
@@ -110,20 +113,30 @@ public class Server {
         try {
             GameData game = database.getGame(command.getGameID());
 
-            if((game.whiteUsername() != null ) && game.whiteUsername().equals(username))
+            if (game.whiteUsername() != null && game.whiteUsername().equals(username))
                 color = "White";
-            else if((game.blackUsername() != null) && game.blackUsername().equals(username))
+            else if (game.blackUsername() != null && game.blackUsername().equals(username))
                 color = "Black";
             else
                 color = "an Observer";
-        } catch(Exception ex) {
-            sendMessage(session.getRemote(), new ErrorMessage("Error: " + ex.getMessage()));
+        } catch (Exception ex) {
+            sendMessage(session, new ErrorMessage("Error: " + ex.getMessage()));
             return;
         }
         try {
-            notifySessions(database.getSessionList(command.getGameID()), session, new LoadGame(database.getGame(command.getGameID())), "ROOT");
-            notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " joined the game as " + color), "NOT_ROOT");
-        } catch(Exception ex) {
+            notifySessions(
+                    database.getSessionList(command.getGameID()),
+                    session,
+                    new LoadGame(database.getGame(command.getGameID())),
+                    "ROOT"
+            );
+            notifySessions(
+                    database.getSessionList(command.getGameID()),
+                    session,
+                    new Notification(username + " joined the game as " + color),
+                    "NOT_ROOT"
+            );
+        } catch (Exception ex) {
             System.out.println("Error trying to get the database");
         }
     }
