@@ -1,20 +1,25 @@
 package dataaccess;
 import models.*;
+
+import javax.websocket.Session;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Database {
      AuthDAO authDataBase;
      UserDAO userDataBase;
      GameDAO gameDataBase;
+     HashMap<Integer, ArrayList<Session>> sessionMap;
 
     public Database() {
         createTables();
         authDataBase = new SQLAuthDAO();
         userDataBase = new SQLUserDAO();
         gameDataBase = new SQLGameDAO();
+        sessionMap = new HashMap<>();
     }
 
 //    clear
@@ -199,6 +204,24 @@ public class Database {
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
         }
+    }
+
+    public void addSession(Integer gameID, Session session) {
+        ArrayList<Session> sessionList = sessionMap.get(gameID);
+        if(sessionList == null)
+            sessionList = new ArrayList<>();
+        sessionList.add(session);
+        sessionMap.put(gameID, sessionList);
+    }
+
+    public ArrayList<Session> getSessionList(Integer gameID) {
+        return sessionMap.get(gameID);
+    }
+
+    public void removeSession(Integer gameID, Session session) {
+        ArrayList<Session> sessionList = sessionMap.get(gameID);
+        sessionList.remove(session);
+        sessionMap.put(gameID, sessionList);
     }
 
 }
