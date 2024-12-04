@@ -12,7 +12,7 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-
+        Spark.webSocket("/ws", Server.class);
         database = new Database();
 
         // Register your endpoints and handle exceptions here.
@@ -32,4 +32,5 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
+
 }

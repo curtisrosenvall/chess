@@ -1,11 +1,15 @@
 package ui;
 import chess.*;
 
+import java.util.Collection;
+
 
 public class BoardUI {
 
     private ChessPiece[][] board;
     private static final String[] LETTERS = {" A ", " B ", " C ", " D ", " E ", " F ", " G ", " H "};
+    private Collection<ChessMove> validMoves;
+    private ChessPosition selectedPiece;
 
     public BoardUI(ChessPiece[][] board) {
         this.board = board;
@@ -100,6 +104,14 @@ public class BoardUI {
                     break;
             }
         }
+    }
+
+    public void setValidMoves(Collection<ChessMove> validMoves) {
+        this.validMoves = validMoves;
+    }
+
+    public void setSelectedPiece(ChessPosition startPos) {
+        selectedPiece = startPos;
     }
 
     private void printEmptySpace() {
