@@ -106,6 +106,7 @@ public class Game extends Endpoint {
                     }
                     break;
                 } else if (input.equals("4") || input.equalsIgnoreCase("move") || input.equalsIgnoreCase("make move")) {
+                    System.out.println("Make move option selected. Calling makeMove...");
                     makeMove();
                 } else if (input.equals("5") || input.equalsIgnoreCase("resign")) {
                     try {
@@ -275,61 +276,64 @@ public class Game extends Endpoint {
     }
 
     public void makeMove() {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Please input starting position");
+        String startPos = scan.nextLine();
+        System.out.println("Please input end position");
+        String endPos = scan.nextLine();
 
-        System.out.println("Please input starting position:");
-        String startPos = scanner.nextLine();
+        int startRow;
+        int startCol;
+        int endRow;
+        int endCol;
 
-        System.out.println("Please input end position:");
-        String endPos = scanner.nextLine();
-
-        int startCol = charToInt(startPos.charAt(0));
-        int endCol = charToInt(endPos.charAt(0));
-
-        if (startCol == -1 || endCol == -1) {
-            System.out.println("Invalid move");
-            return;
-        }
-
-        int startRow, endRow;
         try {
             startRow = Integer.parseInt(String.valueOf(startPos.charAt(1)));
             endRow = Integer.parseInt(String.valueOf(endPos.charAt(1)));
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             System.out.println("Invalid move");
             return;
         }
 
-        ChessPiece.PieceType pawnPromotion = null;
-        ChessPiece piece = gameData.game().getBoard().getPiece(new ChessPosition(startRow, startCol));
-        if (piece != null && piece.getPieceType() == ChessPiece.PieceType.PAWN && endRow == 8) {
-            System.out.println("Please input pawn promotion (Queen, Rook, Bishop, or Knight):");
-            String promotionInput = scanner.nextLine();
-            pawnPromotion = switch (promotionInput.toLowerCase()) {
-                case "queen" -> ChessPiece.PieceType.QUEEN;
-                case "rook" -> ChessPiece.PieceType.ROOK;
-                case "bishop" -> ChessPiece.PieceType.BISHOP;
-                case "knight" -> ChessPiece.PieceType.KNIGHT;
-                default -> {
-                    System.out.println("Invalid promotion");
-                    yield null;
-                }
-            };
-            if (pawnPromotion == null) {
-                return;
-            }
+        if(charToInt(startPos.charAt(0)) == -1) {
+            System.out.println("Invalid move");
+            return;
+        } else {
+            startCol = charToInt(startPos.charAt(0));
         }
 
+        if(charToInt(endPos.charAt(0)) == -1) {
+            System.out.println("Invalid move");
+            return;
+        } else
+            endCol = charToInt(endPos.charAt(0));
+
+        String promotionInput;
+        ChessPiece.PieceType pawnPromotion;
+        if((gameData.game().getBoard().getPiece(new ChessPosition(startRow, startCol)) != null) && (gameData.game().getBoard().getPiece(new ChessPosition(startRow, startCol)).getPieceType() == ChessPiece.PieceType.PAWN) && (endRow == 8)) {
+            System.out.println("Please input pawn promotion (Queen, Rook, Bishop, or Knight)");
+            promotionInput = scan.nextLine();
+            if(promotionInput.equalsIgnoreCase("QUEEN"))
+                pawnPromotion = ChessPiece.PieceType.QUEEN;
+            else if(promotionInput.equalsIgnoreCase("ROOK"))
+                pawnPromotion = ChessPiece.PieceType.ROOK;
+            else if(promotionInput.equalsIgnoreCase("BISHOP"))
+                pawnPromotion = ChessPiece.PieceType.BISHOP;
+            else if(promotionInput.equalsIgnoreCase("KNIGHT"))
+                pawnPromotion = ChessPiece.PieceType.KNIGHT;
+            else {
+                System.out.println("Invalid move");
+                return;
+            }
+        } else
+            pawnPromotion = null;
+
         try {
-            ChessMove move = new ChessMove(
-                    new ChessPosition(startRow, startCol),
-                    new ChessPosition(endRow, endCol),
-                    pawnPromotion
-            );
+            ChessMove move = new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(endRow, endCol), pawnPromotion);
             String json = new Gson().toJson(new MakeMove(authToken, gameID, move));
             send(json);
-        } catch (Exception ex) {
-            System.out.println("Error sending make move message.");
+        } catch(Exception ex) {
+            System.out.println("Make Move Message Sending Error");
         }
     }
 }
