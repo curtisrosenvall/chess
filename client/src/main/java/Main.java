@@ -1,9 +1,9 @@
 import chess.*;
-import ui.PregameUI;
+import ui.*;
 
 public class Main {
     public static void main(String[] args) {
-        PregameUI user = new PregameUI();;
+        ChessGameUI user = new ChessGameUI();;
         user.playChess();
     }
 }

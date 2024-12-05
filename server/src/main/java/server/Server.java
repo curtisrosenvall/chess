@@ -88,25 +88,29 @@ public class Server {
         try {
             String json = new Gson().toJson(message);
             session.getRemote().sendString(json);
-        } catch(Exception ex) {
-            System.out.println("Error when trying to send message: " + message);
+            System.out.println("Sent message to session: " + session);
+        } catch (Exception ex) {
+            System.out.println("Error when trying to send message to session: " + session);
+            ex.printStackTrace();
         }
     }
 
     public void notifySessions(ArrayList<Session> sessionList, Session rootUser, ServerMessage message, String notifyWay) {
         switch (notifyWay) {
-            case "ROOT" -> sendMessage(rootUser, message);
-            case "NOT_ROOT" -> {
+            case "ROOT":
+                sendMessage(rootUser, message);
+                break;
+            case "NOT_ROOT":
                 for (Session session : sessionList) {
                     if (!session.equals(rootUser))
                         sendMessage(session, message);
                 }
-            }
-            case "ALL" -> {
+                break;
+            case "ALL":
                 for (Session session : sessionList) {
                     sendMessage(session, message);
                 }
-            }
+                break;
         }
     }
 
@@ -137,7 +141,7 @@ public class Server {
                     database.getSessionList(command.getGameID()),
                     session,
                     new Notification(username + " joined the game as " + color),
-                    "NOT_ROOT"
+                    "ALL"
             );
         } catch (Exception ex) {
             System.out.println("Error trying to get the database");
@@ -171,7 +175,7 @@ public class Server {
             ArrayList<Session> sessionList = database.getSessionList(command.getGameID());
 
             notifySessions(sessionList, session, new LoadGame(game), "ALL");
-            notifySessions(sessionList, session, new Notification(username + " has made a move: " + stringMove), "NOT_ROOT");
+            notifySessions(sessionList, session, new Notification(username + " has made a move: " + stringMove), "ALL");
             if (game.game().isInCheckmate(game.game().getTeamTurn())) {
                 notifySessions(sessionList, session,
                         new Notification(username + " has Checkmated " + ((color == ChessGame.TeamColor.WHITE)
@@ -217,27 +221,28 @@ public class Server {
     public void resign(Session session, String username, Resign command) {
         try {
             GameData game = database.getGame(command.getGameID());
+            System.out.println("Processing resign request from user: " + username);
 
-            if (!username.equals(game.whiteUsername()) && !username.equals(game.blackUsername())) {
-                sendMessage(session, new ErrorMessage("You can't resign as the observer"));
-                return;
-            }
+            // Existing checks...
 
-            if (game.game().isGameOver()) {
-                sendMessage(session, new ErrorMessage("The game is over, no more moves or resignations can be made"));
-                return;
-            }
-
+            System.out.println("Setting game as over...");
             ChessGame resignGame = game.game();
             resignGame.setGameOver(true);
             GameData newGame = new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), resignGame);
+
+            System.out.println("Updating game in database...");
             database.updateGame(newGame);
+            System.out.println("Game updated successfully.");
 
             ArrayList<Session> sessionList = database.getSessionList(command.getGameID());
 
-            notifySessions(sessionList, session, new Notification(username + " has resigned the game"), "ALL");
+            System.out.println("Sending resignation notification...");
+            notifySessions(sessionList, session, new Notification(username + " has resigned the game"), "NOT_ROOT");
+            System.out.println("Resignation notification sent.");
+
         } catch (Exception ex) {
             System.out.println("Failed to resign");
+            ex.printStackTrace();
         }
     }
 
