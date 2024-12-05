@@ -208,11 +208,11 @@ public class Server {
             else if((game.whiteUsername() != null) && game.whiteUsername().equals(username)) {
                 newGame = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
             }
-            else {
+            else
                 newGame = game;
                 database.updateGame(newGame);
                 notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " has left the game"), "NOT_ROOT");
-            }
+
         } catch(Exception ex) {
             System.out.println("NOT IN GAME!!!");
         }

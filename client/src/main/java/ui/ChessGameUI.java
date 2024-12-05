@@ -90,16 +90,20 @@ public class ChessGameUI extends Endpoint {
     }
     private void helpExplainOptions(boolean loggedIn) {
         if (!loggedIn) {
-            System.out.println("\nTo " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_BLUE + "[REGISTER_USER] press [3]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'register'.");
+            System.out.println("\nTo " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_BLUE + "[REGISTER_USER] press [3]" + EscapeSequences.RESET_TEXT_BOLD_FAINT
+                    + EscapeSequences.RESET_TEXT_COLOR + " or enter 'register'.");
             System.out.println("You will then be prompted to provide a username, password, and email address.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_YELLOW + "[LOGIN] press [4]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'login'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_YELLOW +
+                    "[LOGIN] press [4]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'login'.");
             System.out.println("Simply input your username and password when prompted.");
         } else {
             System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "[LOGGED_IN >>>]" + EscapeSequences.RESET_TEXT_COLOR);
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_RED + "[LOGOUT]" + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_RED + "[LOGOUT]"
+                    + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
             System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "[CREATE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '4' or enter 'create game'. " + "You will need to input a game name.");
             System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_BLUE + "[LIST_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '5' or enter 'list games'.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_ORANGE + "[JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '6' or enter 'join game'. " + "You will need to input the game ID and your team color.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_ORANGE + "[JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR
+                    + ", press '6' or enter 'join game'. " + "You will need to input the game ID and your team color.");
             System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_WHITE + "[OBSERVE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '7' or enter 'observe game'. " + "You will need to input the game ID you want to watch.");
         }
         System.out.println("\nPress [2] to quit the game.");
