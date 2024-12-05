@@ -13,7 +13,7 @@ public class ServerFacade {
     }
 
     public RegisterRes registerUser(String username, String password, String email){
-        System.out.println("[REGISTERING_USER]"+ "="  + username);
+//        System.out.println("[REGISTERING_USER]"+ "="  + username);
         RegisterReq request = new RegisterReq(username,password,email);
         Url clientUrl = new Url("/user", "POST", "");
         InputStreamReader reader = clientReader.clientToServer(request,clientUrl);
@@ -22,7 +22,6 @@ public class ServerFacade {
         }
         return new Gson().fromJson(reader,RegisterRes.class);
     }
-
     public LoginRes loginUser(String username, String password){
         System.out.println("[LOGGING_IN....]: " + username);
         LoginReq request = new LoginReq(username,password);
@@ -33,7 +32,6 @@ public class ServerFacade {
         }
         return new Gson().fromJson(reader,LoginRes.class);
     }
-
     public LogoutRes logoutUser(String authToken){
 //        System.out.println("[LOGGING_OUT]: " + authToken);
         LogoutReq request = new LogoutReq(authToken);
@@ -57,7 +55,6 @@ public class ServerFacade {
         }
         return new Gson().fromJson(reader, CreateGameRes.class);
     }
-
     public ListGamesRes listGames(String authToken){
         System.out.println("[LISTING_GAMES..]");
         ListGamesReq request = new ListGamesReq(authToken);
@@ -65,11 +62,9 @@ public class ServerFacade {
         InputStreamReader reader = clientReader.clientToServer(request, clientUrl);
         if (reader == null) {
             System.out.println("Failed to list games for authToken: " + authToken);
-
         }
         return new Gson().fromJson(reader, ListGamesRes.class);
     }
-
     public JoinGameRes joinGame(Integer gameID, String playerColor, String authToken){
         System.out.println("[JOINING_GAME...]: " + gameID + " as " + playerColor);
         JoinGameReq request = new JoinGameReq(authToken, playerColor, gameID);
@@ -81,7 +76,6 @@ public class ServerFacade {
         }
         return new Gson().fromJson(reader, JoinGameRes.class);
     }
-
 
     public ClearRes clear(){
         ClearReq request = new ClearReq();

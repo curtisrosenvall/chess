@@ -20,8 +20,6 @@ public class BoardUI {
     public void printBoard(boolean isWhiteSide) {
         printLetters(isWhiteSide);
         System.out.println();
-//        isWhiteSide = true = white
-//        isWhiteSide = false = black
         if (isWhiteSide) {
             for (int row = 8; row >= 1; row--) {
                 printRow(row, isWhiteSide);
@@ -90,7 +88,7 @@ public class BoardUI {
         }
 
         if (isValidDestination) {
-            System.out.print(SET_TEXT_COLOR_YELLOW); // Set text color to yellow
+            System.out.print(SET_TEXT_COLOR_YELLOW);
         }
 
         ChessPiece piece = board[row - 1][col - 1];
@@ -136,7 +134,6 @@ public class BoardUI {
     private void setBackgroundColor(int row, int col) {
         boolean isValidDestination = false;
         if (validMoves != null) {
-            // Check if any valid move ends at (row, col)
             for (ChessMove move : validMoves) {
                 ChessPosition endPos = move.getEndPosition();
                 if (endPos.getRow() == row && endPos.getColumn() == col) {
@@ -145,12 +142,9 @@ public class BoardUI {
                 }
             }
         }
-
         if (isValidDestination) {
-            // Set background to yellow if it's a valid move destination
-            System.out.print("\u001B[43m"); // ANSI for yellow background
+            System.out.print("\u001B[103m");
         } else {
-            // Default black/white pattern
             if ((row + col) % 2 == 0) {
                 System.out.print(EscapeSequences.SET_BG_COLOR_BLACK);
             } else {
@@ -158,7 +152,6 @@ public class BoardUI {
             }
         }
     }
-
     private void setTextColor(int row, int col) {
         ChessPiece piece = board[row - 1][col - 1];
         if (piece != null) {

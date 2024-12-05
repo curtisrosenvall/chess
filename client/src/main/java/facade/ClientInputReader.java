@@ -23,25 +23,20 @@ public class ClientInputReader {
        try {
             String urlString = "http://localhost:" + port + clientUrl.getUrlPath();
             URI uri = new URI(urlString);
-
             HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
             connection.setRequestMethod(clientUrl.getRequestMethod());
             connection.setDoOutput(true);
-
             String authToken = clientUrl.getAuthToken();
             if (authToken != null && !authToken.isEmpty()) {
                 connection.addRequestProperty("Authorization", authToken);
             }
-
             if (!"GET".equalsIgnoreCase(clientUrl.getRequestMethod())) {
                 String json = gson.toJson(request);
                 try (OutputStream requestBody = connection.getOutputStream()) {
                     requestBody.write(json.getBytes());
                 }
             }
-
             connection.connect();
-
             int responseCode = connection.getResponseCode();
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
