@@ -199,26 +199,29 @@ public class PregameUI {
         }
     }
 
-    private void joinGame() {
-        System.out.println("\nPlease enter the [GAME_ID] of the game you would like to join: ");
+    public void joinGame() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nPlease enter the number of the game you would like to join: ");
         String gameID = scan.nextLine();
-        System.out.println("Please enter which color you would like to play as (WHITE or BLACK): ");
+        System.out.println("Please enter which color you would like to play as (WHITE or BLACK)");
         String playerColor = scan.nextLine();
         try {
             int gameNum = Integer.parseInt(gameID);
-            if (!playerColor.equalsIgnoreCase("WHITE") && !playerColor.equalsIgnoreCase("BLACK")) {
+            if(!(playerColor.equalsIgnoreCase("WHITE") || playerColor.equalsIgnoreCase("BLACK")))
                 invalidInput();
-            } else {
-                JoinGameRes result = serverFacade.joinGame(gameNum, playerColor.toUpperCase(), authToken);
-                if (result.getMessage() == null) {
-                    System.out.println("Successfully joined game.");
-                    printBoards();
-                    playerInGame();
+            else {
+                JoinGameRes result = serverFacade.joinGame(gameNum, playerColor, authToken);
+                if(result.getMessage() == null) {
+                    Game gameUI = new Game(gameNum, playerColor, authToken);
+                    if(gameUI.tryConnectToGame()) {
+                        // Do not call inGame() here
+                        // The inGame() method will be called after receiving LOAD_GAME
+                    }
                 } else {
                     System.out.println(result.getMessage());
                 }
             }
-        } catch (NumberFormatException ex) {
+        } catch(NumberFormatException ex) {
             invalidInput();
         }
     }
@@ -230,36 +233,35 @@ public class PregameUI {
             int gameNum = Integer.parseInt(gameID);
             JoinGameRes result = serverFacade.joinGame(gameNum, "SPECTATOR", authToken);
             if(result.getMessage() == null) {
-                System.out.println("Successfully joined game.");
-                System.out.println("Observing game ID: " + gameNum);
-                printBoards();
-                playerInGame();
+                Game gameUI = new Game(gameNum, "SPECTATOR", authToken);
+                if(gameUI.tryConnectToGame())
+                    gameUI.inGame(true);
             } else {
                 System.out.println(result.getMessage());
             }
-        } catch (NumberFormatException ex) {
+        } catch(NumberFormatException ex) {
             invalidInput();
         }
     }
 
-    private void playerInGame() {
-        String input = "";
-        while (!input.equalsIgnoreCase("quit")) {
-            System.out.println("When you are ready to leave the game, please enter 'quit':");
-            input = scan.nextLine();
-        }
-    }
+//    private void playerInGame() {
+//        String input = "";
+//        while (!input.equalsIgnoreCase("quit")) {
+//            System.out.println("When you are ready to leave the game, please enter 'quit':");
+//            input = scan.nextLine();
+//        }
+//    }
 
-    private void printBoards() {
-        ChessPiece[][] newBoard = new ChessGame().getBoard().getBoard();
-        BoardUI gameBoard = new BoardUI(newBoard);
-        System.out.println("[WHITE_BOARD...] ");
-        gameBoard.printBoard(true);
-        System.out.println("\n[BLACK_BOARD...]");
-        gameBoard.printBoard(false);
-    }
+//    private void printBoards() {
+//        ChessPiece[][] newBoard = new ChessGame().getBoard().getBoard();
+//        BoardUI gameBoard = new BoardUI(newBoard);
+//        System.out.println("[WHITE_BOARD...] ");
+//        gameBoard.printBoard(true);
+//        System.out.println("\n[BLACK_BOARD...]");
+//        gameBoard.printBoard(false);
+//    }
 
-    private void invalidInput() {
+    static void invalidInput() {
         System.out.println("\nInvalid input detected. Please follow these guidelines:");
         System.out.println("  - To select an option, input the number or the exact word of the option.");
         System.out.println("    Example: To access the help screen, enter '1' or 'help'.");

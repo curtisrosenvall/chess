@@ -40,39 +40,44 @@ public class Game extends Endpoint {
             URI uri = new URI("ws://localhost:8080/ws");
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, uri);
-
             String json = new Gson().toJson(new Connect(authToken, gameID));
             send(json);
+            this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+                @Override
+                public void onMessage(String message) {
+                    ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+                    switch(serverMessage.getServerMessageType()) {
+                        case NOTIFICATION -> {
+                            Notification notification = new Gson().fromJson(message, Notification.class);
+                            System.out.printf(EscapeSequences.SET_TEXT_COLOR_YELLOW);
+                            System.out.println(notification.getMessage());
+                            System.out.printf(EscapeSequences.RESET_TEXT_COLOR);
+                            editGameData(notification.getMessage());
+                        }
+                        case ERROR -> {
+                            ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
+                            System.out.printf(EscapeSequences.SET_TEXT_COLOR_RED);
+                            System.out.println(errorMessage.getErrorMessage());
+                            System.out.printf(EscapeSequences.RESET_TEXT_COLOR);
+                        }
+                        case LOAD_GAME -> {
+                            LoadGame loadMessage = new Gson().fromJson(message, LoadGame.class);
+                            gameData = loadMessage.getGame();
+                            printBoards();
+                            if(teamColor.equalsIgnoreCase("SPECTATOR"))
+                                listObserveOptions();
+                            else
+                                listGameOptions();
 
-            this.session.addMessageHandler((MessageHandler.Whole<String>) message -> {
-                ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-                switch (serverMessage.getServerMessageType()) {
-                    case NOTIFICATION -> {
-                        Notification notification = new Gson().fromJson(message, Notification.class);
-                        System.out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
-                        System.out.println(notification.getMessage());
-                        System.out.print(EscapeSequences.RESET_TEXT_COLOR);
-                        editGameData(notification.getMessage());
-                    }
-                    case ERROR -> {
-                        ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
-                        System.out.print(EscapeSequences.SET_TEXT_COLOR_RED);
-                        System.out.println(errorMessage.getErrorMessage());
-                        System.out.print(EscapeSequences.RESET_TEXT_COLOR);
-                    }
-                    case LOAD_GAME -> {
-                        LoadGame loadMessage = new Gson().fromJson(message, LoadGame.class);
-                        gameData = loadMessage.getGame();
-                        printBoards();
-                        if (teamColor.equalsIgnoreCase("SPECTATOR")) {
-                            listObserveOptions();
-                        } else {
-                            listGameOptions();
+                            // Start inGame() in a new thread
+                            new Thread(() -> {
+                                inGame(teamColor.equalsIgnoreCase("SPECTATOR"));
+                            }).start();
                         }
                     }
                 }
             });
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             return false;
         }
         return true;
@@ -119,8 +124,8 @@ public class Game extends Endpoint {
         } else {
             boolean stop = false;
             while (!stop) {
-                listObserveOptions();
                 System.out.println("\nPlease input your selection: ");
+                listObserveOptions();
                 input = scanner.nextLine();
 
                 if (input.equals("1") || input.equalsIgnoreCase("help")) {
