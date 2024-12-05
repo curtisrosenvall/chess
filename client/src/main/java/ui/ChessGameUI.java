@@ -426,7 +426,7 @@ public class ChessGameUI extends Endpoint {
 
     public void printValidMoves() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please input the position of the piece you would like to see the valid moves of:");
+        System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "Please input the position of the piece you would like to see the valid moves of:" + EscapeSequences.RESET_TEXT_COLOR);
         String startPos = scanner.nextLine();
 
         int startCol = charToInt(startPos.charAt(0));

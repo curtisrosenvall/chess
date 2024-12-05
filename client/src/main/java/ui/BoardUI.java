@@ -3,6 +3,8 @@ import chess.*;
 
 import java.util.Collection;
 
+import static ui.EscapeSequences.SET_TEXT_COLOR_YELLOW;
+
 
 public class BoardUI {
 
@@ -76,33 +78,38 @@ public class BoardUI {
     }
 
     private void printPieceType(int row, int col) {
+        boolean isValidDestination = false;
+        if (validMoves != null) {
+            for (ChessMove move : validMoves) {
+                ChessPosition endPos = move.getEndPosition();
+                if (endPos.getRow() == row && endPos.getColumn() == col) {
+                    isValidDestination = true;
+                    break;
+                }
+            }
+        }
+
+        if (isValidDestination) {
+            System.out.print(SET_TEXT_COLOR_YELLOW); // Set text color to yellow
+        }
+
         ChessPiece piece = board[row - 1][col - 1];
         if (piece == null) {
             printEmptySpace();
         } else {
             switch (piece.getPieceType()) {
-                case PAWN:
-                    System.out.print(" P ");
-                    break;
-                case KNIGHT:
-                    System.out.print(" N ");
-                    break;
-                case ROOK:
-                    System.out.print(" R ");
-                    break;
-                case BISHOP:
-                    System.out.print(" B ");
-                    break;
-                case QUEEN:
-                    System.out.print(" Q ");
-                    break;
-                case KING:
-                    System.out.print(" K ");
-                    break;
-                default:
-                    printEmptySpace();
-                    break;
+                case PAWN -> System.out.print(" P ");
+                case KNIGHT -> System.out.print(" N ");
+                case ROOK -> System.out.print(" R ");
+                case BISHOP -> System.out.print(" B ");
+                case QUEEN -> System.out.print(" Q ");
+                case KING -> System.out.print(" K ");
+                default -> printEmptySpace();
             }
+        }
+
+        if (isValidDestination) {
+            resetTextColor();
         }
     }
 
@@ -127,10 +134,28 @@ public class BoardUI {
     }
 
     private void setBackgroundColor(int row, int col) {
-        if ((row + col) % 2 == 0) {
-            System.out.print(EscapeSequences.SET_BG_COLOR_BLACK);
+        boolean isValidDestination = false;
+        if (validMoves != null) {
+            // Check if any valid move ends at (row, col)
+            for (ChessMove move : validMoves) {
+                ChessPosition endPos = move.getEndPosition();
+                if (endPos.getRow() == row && endPos.getColumn() == col) {
+                    isValidDestination = true;
+                    break;
+                }
+            }
+        }
+
+        if (isValidDestination) {
+            // Set background to yellow if it's a valid move destination
+            System.out.print("\u001B[43m"); // ANSI for yellow background
         } else {
-            System.out.print(EscapeSequences.SET_BG_COLOR_WHITE);
+            // Default black/white pattern
+            if ((row + col) % 2 == 0) {
+                System.out.print(EscapeSequences.SET_BG_COLOR_BLACK);
+            } else {
+                System.out.print(EscapeSequences.SET_BG_COLOR_WHITE);
+            }
         }
     }
 

@@ -141,7 +141,7 @@ public class Server {
                     database.getSessionList(command.getGameID()),
                     session,
                     new Notification(username + " joined the game as " + color),
-                    "ALL"
+                    "NOT_ROOT"
             );
         } catch (Exception ex) {
             System.out.println("Error trying to get the database");
@@ -175,7 +175,7 @@ public class Server {
             ArrayList<Session> sessionList = database.getSessionList(command.getGameID());
 
             notifySessions(sessionList, session, new LoadGame(game), "ALL");
-            notifySessions(sessionList, session, new Notification(username + " has made a move: " + stringMove), "ALL");
+            notifySessions(sessionList, session, new Notification(username + " has made a move: " + stringMove), "NOT_ROOT");
             if (game.game().isInCheckmate(game.game().getTeamTurn())) {
                 notifySessions(sessionList, session,
                         new Notification(username + " has Checkmated " + ((color == ChessGame.TeamColor.WHITE)
@@ -221,28 +221,21 @@ public class Server {
     public void resign(Session session, String username, Resign command) {
         try {
             GameData game = database.getGame(command.getGameID());
-            System.out.println("Processing resign request from user: " + username);
-
-            // Existing checks...
-
-            System.out.println("Setting game as over...");
+            if(!username.equals(game.whiteUsername()) && !username.equals(game.blackUsername())) {
+                sendMessage(session, new ErrorMessage("You can't resign as the observer"));
+                return;
+            }
+            if(game.game().isGameOver()) {
+                sendMessage(session, new ErrorMessage("The game is over, no more moves or resignations can be made"));
+                return;
+            }
             ChessGame resignGame = game.game();
             resignGame.setGameOver(true);
             GameData newGame = new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), resignGame);
-
-            System.out.println("Updating game in database...");
             database.updateGame(newGame);
-            System.out.println("Game updated successfully.");
-
-            ArrayList<Session> sessionList = database.getSessionList(command.getGameID());
-
-            System.out.println("Sending resignation notification...");
-            notifySessions(sessionList, session, new Notification(username + " has resigned the game"), "NOT_ROOT");
-            System.out.println("Resignation notification sent.");
-
-        } catch (Exception ex) {
+            notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " has resigned the game"), "ALL");
+        } catch(Exception ex) {
             System.out.println("Failed to resign");
-            ex.printStackTrace();
         }
     }
 
