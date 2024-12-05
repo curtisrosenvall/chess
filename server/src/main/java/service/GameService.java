@@ -35,42 +35,55 @@ public class GameService {
     public JoinGameRes joinGame(JoinGameReq request) {
         String authToken = request.getAuthToken();
         JoinGameRes result;
+
         try {
             AuthData auth = database.getAuth(authToken);
             GameData game = database.getGame(request.getGameID());
-            GameData newGame;
-            if (request.getPlayerColor().equalsIgnoreCase("WHITE")) {
-                if (database.getPlayerFromColor(game, "WHITE") != null) {
-                    throw new DataAccessException("Error: White player spot already taken");
-                }
-                newGame = new GameData(
-                        game.gameID(),
-                        auth.username(),
-                        game.blackUsername(),
-                        game.gameName(),
-                        game.game()
-                );
-                database.updateGame(newGame);
 
-            } else if (request.getPlayerColor().equalsIgnoreCase("BLACK")) {
-                if (database.getPlayerFromColor(game, "BLACK") != null) {
-                    throw new DataAccessException("Error: Black player spot already taken");
-                }
-                newGame = new GameData(
-                        game.gameID(),
-                        game.whiteUsername(),
-                        auth.username(),
-                        game.gameName(),
-                        game.game()
-                );
-                database.updateGame(newGame);
-            } else {
-                throw new DataAccessException("Error: Invalid player color specified");
+            String playerColor = request.getPlayerColor().toUpperCase();
+
+            switch (playerColor) {
+                case "WHITE":
+                    if (database.getPlayerFromColor(game, "WHITE") != null) {
+                        throw new DataAccessException("Error: White player spot already taken");
+                    }
+                    GameData newWhiteGame = new GameData(
+                            game.gameID(),
+                            auth.username(),
+                            game.blackUsername(),
+                            game.gameName(),
+                            game.game()
+                    );
+                    database.updateGame(newWhiteGame);
+                    break;
+
+                case "BLACK":
+                    if (database.getPlayerFromColor(game, "BLACK") != null) {
+                        throw new DataAccessException("Error: Black player spot already taken");
+                    }
+                    GameData newBlackGame = new GameData(
+                            game.gameID(),
+                            game.whiteUsername(),
+                            auth.username(),
+                            game.gameName(),
+                            game.game()
+                    );
+                    database.updateGame(newBlackGame);
+                    break;
+
+                case "SPECTATOR":
+                    break;
+
+                default:
+                    throw new DataAccessException("Error: Invalid player color specified");
             }
+
             result = new JoinGameRes(true, null);
+
         } catch (DataAccessException ex) {
             result = new JoinGameRes(false, ex.getMessage());
         }
+
         return result;
     }
 

@@ -242,7 +242,7 @@ public class ChessGameUI extends Endpoint {
                 this.gameID = gameNum;
                 this.teamColor = "SPECTATOR";
                 if (tryConnectToGame()) {
-                    // The inGame() method will be called after receiving LOAD_GAME
+
                 }
             } else {
                 System.out.println(result.getMessage());
@@ -361,7 +361,7 @@ public class ChessGameUI extends Endpoint {
             boolean stop = false;
             while (!stop) {
                 System.out.println("\nPlease input your selection: ");
-                listObserveOptions();
+//                listObserveOptions();
                 input = scanner.nextLine();
 
                 if (input.equals("1") || input.equalsIgnoreCase("help")) {

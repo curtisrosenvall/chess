@@ -141,7 +141,7 @@ public class Server {
                     database.getSessionList(command.getGameID()),
                     session,
                     new Notification(username + " joined the game as " + color),
-                    "NOT_ROOT"
+                    "ALL"
             );
         } catch (Exception ex) {
             System.out.println("Error trying to get the database");
@@ -212,7 +212,7 @@ public class Server {
             else
                 newGame = game;
             database.updateGame(newGame);
-            notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " has left the game"), "NOT_ROOT");
+            notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " has left the game"), "ALL");
         } catch(Exception ex) {
             System.out.println("NOT IN GAME!!!");
         }
