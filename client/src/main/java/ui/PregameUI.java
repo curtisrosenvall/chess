@@ -1,6 +1,4 @@
 package ui;
-import chess.ChessGame;
-import chess.ChessPiece;
 import facade.ServerFacade;
 import models.GameData;
 import result.*;
