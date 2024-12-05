@@ -102,8 +102,9 @@ public class Server {
                 break;
             case "NOT_ROOT":
                 for (Session session : sessionList) {
-                    if (!session.equals(rootUser))
+                    if (!session.equals(rootUser)){
                         sendMessage(session, message);
+                    }
                 }
                 break;
             case "ALL":
@@ -119,13 +120,9 @@ public class Server {
         String color;
         try {
             GameData game = database.getGame(command.getGameID());
-
-            if (game.whiteUsername() != null && game.whiteUsername().equals(username))
-                color = "White";
-            else if (game.blackUsername() != null && game.blackUsername().equals(username))
-                color = "Black";
-            else
-                color = "a Spectator";
+            if (game.whiteUsername() != null && game.whiteUsername().equals(username)){color = "White";}
+            else if (game.blackUsername() != null && game.blackUsername().equals(username)) {color = "Black";}
+            else {color = "a Spectator";}
         } catch (Exception ex) {
             sendMessage(session, new ErrorMessage("Error: " + ex.getMessage()));
             return;
@@ -205,14 +202,17 @@ public class Server {
         try {
             GameData game = database.getGame(command.getGameID());
             GameData newGame;
-            if((game.blackUsername() != null) && game.blackUsername().equals(username))
+            if((game.blackUsername() != null) && game.blackUsername().equals(username)) {
                 newGame = new GameData(game.gameID(), game.whiteUsername(), null, game.gameName(), game.game());
-            else if((game.whiteUsername() != null) && game.whiteUsername().equals(username))
+            }
+            else if((game.whiteUsername() != null) && game.whiteUsername().equals(username)) {
                 newGame = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
-            else
+            }
+            else {
                 newGame = game;
-            database.updateGame(newGame);
-            notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " has left the game"), "NOT_ROOT");
+                database.updateGame(newGame);
+                notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " has left the game"), "NOT_ROOT");
+            }
         } catch(Exception ex) {
             System.out.println("NOT IN GAME!!!");
         }
@@ -233,7 +233,8 @@ public class Server {
             resignGame.setGameOver(true);
             GameData newGame = new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), resignGame);
             database.updateGame(newGame);
-            notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " has resigned the game, the game is over"), "ALL");
+            notifySessions(database.getSessionList(command.getGameID()), session,
+                    new Notification(username + " has resigned the game, the game is over"), "ALL");
         } catch(Exception ex) {
             System.out.println("Failed to resign");
         }

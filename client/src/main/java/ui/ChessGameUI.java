@@ -1,5 +1,4 @@
 package ui;
-
 import chess.*;
 import com.google.gson.Gson;
 import facade.ServerFacade;
@@ -8,14 +7,10 @@ import result.*;
 import java.util.Scanner;
 import websocket.commands.*;
 import websocket.messages.*;
-import models.*;
 import javax.websocket.*;
 import java.util.concurrent.CountDownLatch;
 import java.net.URI;
-
-
 public class ChessGameUI extends Endpoint {
-
     private ServerFacade serverFacade;
     private String authToken;
     private Scanner scan;
@@ -25,30 +20,24 @@ public class ChessGameUI extends Endpoint {
     private GameData gameData;
     private boolean loadedGame;
     private CountDownLatch gameLoadedLatch;
-
     public ChessGameUI() {
         serverFacade = new ServerFacade(8080);
         scan = new Scanner(System.in);
         loadedGame = false;
     }
-
     public void playChess() {
         boolean loggedIn = false;
         String input = "start";
-
         while (true) {
             if (input.equalsIgnoreCase("quit") || input.equals("2")) {
                 break;
             }
-
             if (input.equalsIgnoreCase("start")) {
                 chessStart();
             }
-
             System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "\nFor [GAME_OPTIONS] press [1] " + EscapeSequences.RESET_TEXT_COLOR);
             System.out.println(EscapeSequences.SET_TEXT_COLOR_WHITE + "\nPlease input your selection: " + EscapeSequences.RESET_TEXT_COLOR);
             input = scan.nextLine().trim();
-
             if (input.equalsIgnoreCase("quit") || input.equals("2")) {
                 break;
             } else if (input.equalsIgnoreCase("help") || input.equals("1")) {
@@ -68,7 +57,6 @@ public class ChessGameUI extends Endpoint {
                         break;
                 }
             } else {
-                // User is logged in
                 switch (input.toLowerCase()) {
                     case "logout":
                     case "3":
@@ -97,38 +85,25 @@ public class ChessGameUI extends Endpoint {
             }
         }
     }
-
     private void chessStart() {
         System.out.println(EscapeSequences.SET_TEXT_BOLD + "\n** [WELCOME!] to Curt's Chess Game Server **" + EscapeSequences.RESET_TEXT_BOLD_FAINT);
     }
-
     private void helpExplainOptions(boolean loggedIn) {
         if (!loggedIn) {
-            System.out.println("\nTo " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_BLUE +
-                    "[REGISTER_USER] press [3]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'register'.");
+            System.out.println("\nTo " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_BLUE + "[REGISTER_USER] press [3]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'register'.");
             System.out.println("You will then be prompted to provide a username, password, and email address.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_YELLOW +
-                    "[LOGIN] press [4]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'login'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_YELLOW + "[LOGIN] press [4]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'login'.");
             System.out.println("Simply input your username and password when prompted.");
         } else {
             System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "[LOGGED_IN >>>]" + EscapeSequences.RESET_TEXT_COLOR);
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_RED + "[LOGOUT]"
-                    + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "[CREATE_GAME]"
-                    + EscapeSequences.RESET_TEXT_COLOR + ", press '4' or enter 'create game'. " +
-                    "You will need to input a game name.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_BLUE + "[LIST_GAME]"
-                    + EscapeSequences.RESET_TEXT_COLOR + ", press '5' or enter 'list games'.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_ORANGE + "[JOIN_GAME]"
-                    + EscapeSequences.RESET_TEXT_COLOR + ", press '6' or enter 'join game'. " +
-                    "You will need to input the game ID and your team color.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_WHITE + "[OBSERVE_GAME]"
-                    + EscapeSequences.RESET_TEXT_COLOR + ", press '7' or enter 'observe game'. " +
-                    "You will need to input the game ID you want to watch.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_RED + "[LOGOUT]" + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "[CREATE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '4' or enter 'create game'. " + "You will need to input a game name.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_BLUE + "[LIST_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '5' or enter 'list games'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_ORANGE + "[JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '6' or enter 'join game'. " + "You will need to input the game ID and your team color.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_WHITE + "[OBSERVE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '7' or enter 'observe game'. " + "You will need to input the game ID you want to watch.");
         }
         System.out.println("\nPress [2] to quit the game.");
     }
-
     private boolean registerUser() {
         System.out.println("\nPlease enter your [USERNAME]: ");
         String username = scan.nextLine();
@@ -137,7 +112,6 @@ public class ChessGameUI extends Endpoint {
         System.out.println("Please enter your [EMAIL]: ");
         String email = scan.nextLine();
         RegisterRes result = serverFacade.registerUser(username, password, email);
-
         if (result.getAuthToken() == null) {
             System.out.println(result.getMessage());
             return false;
@@ -147,7 +121,6 @@ public class ChessGameUI extends Endpoint {
             return true;
         }
     }
-
     private boolean loginUser() {
         System.out.println("\nPlease enter your [USERNAME]: ");
         String username = scan.nextLine();
@@ -163,7 +136,6 @@ public class ChessGameUI extends Endpoint {
             return true;
         }
     }
-
     private boolean logoutUser() {
         LogoutRes result = serverFacade.logoutUser(authToken);
         if (result.getMessage() == null) {
@@ -176,7 +148,6 @@ public class ChessGameUI extends Endpoint {
             return true;
         }
     }
-
     private void createGame() {
         System.out.println("\nPlease enter the [GAME NAME] you would like to create: ");
         String gameName = scan.nextLine();
@@ -187,7 +158,6 @@ public class ChessGameUI extends Endpoint {
             System.out.println("Successfully created \"" + gameName + "\", can be found with [GAME_ID] " + result.getGameId());
         }
     }
-
     private void listGames() {
         ListGamesRes result = serverFacade.listGames(authToken);
         if (result.getGames() == null) {
@@ -203,7 +173,6 @@ public class ChessGameUI extends Endpoint {
             }
         }
     }
-
     public void joinGame() {
         System.out.println("\n" + EscapeSequences.SET_TEXT_COLOR_GREEN + "Please enter the number of the game you would like to join: " + EscapeSequences.RESET_TEXT_COLOR);
         String gameIDStr = scan.nextLine();
@@ -228,7 +197,6 @@ public class ChessGameUI extends Endpoint {
             invalidInput();
         }
     }
-
     private void observeGame() {
         System.out.println("\nPlease enter the [GAME_ID] of the game you would like to observe: ");
         String gameIDStr = scan.nextLine();
@@ -248,7 +216,6 @@ public class ChessGameUI extends Endpoint {
             invalidInput();
         }
     }
-
     static void invalidInput() {
         System.out.println("\nInvalid input detected. Please follow these guidelines:");
         System.out.println("  - To select an option, input the number or the exact word of the option.");
@@ -256,16 +223,13 @@ public class ChessGameUI extends Endpoint {
         System.out.println("  - To join or observe a game, input the game number only.");
         System.out.println("    Example: To join the game with ID '1', enter '1' without any spaces or additional characters.");
     }
-
     public void send(String msg) throws Exception {
         this.session.getBasicRemote().sendText(msg);
     }
-
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
         // Called when a new WebSocket connection is opened
     }
-
     public boolean tryConnectToGame() {
         try {
             URI uri = new URI("ws://localhost:8080/ws");
@@ -313,12 +277,10 @@ public class ChessGameUI extends Endpoint {
         }
         return true;
     }
-
     public void inGame(boolean isObserver) {
         System.out.println("\nSuccessfully joined game.");
         Scanner scanner = new Scanner(System.in);
         String input;
-
         if (!isObserver) {
             while (true) {
                 System.out.println("\nPlease input your selection: ");
@@ -357,7 +319,6 @@ public class ChessGameUI extends Endpoint {
             while (!stop) {
                 System.out.println("\nPlease input your selection: ");
                 input = scanner.nextLine();
-
                 if (input.equals("1") || input.equalsIgnoreCase("help")) {
                     listObserveOptions();
                 } else if (input.equals("2") || input.equalsIgnoreCase("quit")) {
@@ -378,15 +339,12 @@ public class ChessGameUI extends Endpoint {
             }
         }
     }
-
     private static void listObserveOptions() {
         System.out.println("\n 1. Help");
         System.out.println(" 2. Quit");
         System.out.println(" 3. Redraw Chess Board");
         System.out.println(" 4. Highlight Legal Moves");
     }
-
-
     private static void listGameOptions() {
         System.out.println("\n 1. Help");
         System.out.println(" 2. Redraw Chess Board");
@@ -395,25 +353,21 @@ public class ChessGameUI extends Endpoint {
         System.out.println(" 5. Resign");
         System.out.println(" 6. Highlight Legal Moves");
     }
-
     public void printBoards() {
         BoardUI ui = new BoardUI(gameData.game().getBoard().getBoard());
         printInfo();
         boolean isWhite = !teamColor.equalsIgnoreCase("BLACK");
         ui.printBoard(isWhite);
     }
-
     public void printValidMoves() {
         Scanner scanner = new Scanner(System.in);
         System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "Please input the position of the piece you would like to see the valid moves of:" + EscapeSequences.RESET_TEXT_COLOR);
         String startPos = scanner.nextLine();
-
         int startCol = charToInt(startPos.charAt(0));
         if (startCol == -1) {
             System.out.println("Invalid position");
             return;
         }
-
         int startRow;
         try {
             startRow = Integer.parseInt(String.valueOf(startPos.charAt(1)));
@@ -421,7 +375,6 @@ public class ChessGameUI extends Endpoint {
             System.out.println("Invalid position");
             return;
         }
-
         BoardUI ui = new BoardUI(gameData.game().getBoard().getBoard());
         printInfo();
         ChessPosition position = new ChessPosition(startRow, startCol);
@@ -431,7 +384,6 @@ public class ChessGameUI extends Endpoint {
         boolean isWhite = !teamColor.equalsIgnoreCase("BLACK");
         ui.printBoard(isWhite);
     }
-
     public void printInfo() {
         System.out.println(EscapeSequences.SET_TEXT_COLOR_BLUE + "\nGame number: " + gameData.gameID() + ", Game name: " + gameData.gameName() + EscapeSequences.RESET_TEXT_COLOR);
         String whiteUsername = (gameData.whiteUsername() == null) ? "<Empty>" : gameData.whiteUsername();
@@ -440,11 +392,9 @@ public class ChessGameUI extends Endpoint {
         String gameCondition = gameData.game().isGameOver() ? "Finished" : "Ongoing";
         System.out.println(EscapeSequences.SET_TEXT_COLOR_YELLOW + "Current game condition: " + gameCondition + EscapeSequences.RESET_TEXT_COLOR);
     }
-
     public void editGameData(String message) {
         String username;
         GameData newGameData;
-
         if (message.endsWith("joined the game as White")) {
             username = extractUsername(message, 25);
             newGameData = new GameData(gameData.gameID(), username, gameData.blackUsername(), gameData.gameName(), gameData.game());
@@ -470,11 +420,9 @@ public class ChessGameUI extends Endpoint {
         }
         gameData = newGameData;
     }
-
     public String extractUsername(String message, int cutOffAmount) {
         return message.substring(0, message.length() - cutOffAmount);
     }
-
     public int charToInt(char columnChar) {
         return switch (Character.toLowerCase(columnChar)) {
             case 'a' -> 1;
@@ -488,19 +436,16 @@ public class ChessGameUI extends Endpoint {
             default -> -1;
         };
     }
-
     public void makeMove() {
         Scanner scan = new Scanner(System.in);
         System.out.println("Please input starting position");
         String startPos = scan.nextLine();
         System.out.println("Please input end position");
         String endPos = scan.nextLine();
-
         int startRow;
         int startCol;
         int endRow;
         int endCol;
-
         try {
             startRow = Integer.parseInt(String.valueOf(startPos.charAt(1)));
             endRow = Integer.parseInt(String.valueOf(endPos.charAt(1)));
@@ -508,7 +453,6 @@ public class ChessGameUI extends Endpoint {
             System.out.println("Invalid move");
             return;
         }
-
         startCol = charToInt(startPos.charAt(0));
         endCol = charToInt(endPos.charAt(0));
 
@@ -516,7 +460,6 @@ public class ChessGameUI extends Endpoint {
             System.out.println("Invalid move");
             return;
         }
-
         ChessPiece.PieceType pawnPromotion = null;
         if ((gameData.game().getBoard().getPiece(new ChessPosition(startRow, startCol)) != null)
                 && (gameData.game().getBoard().getPiece(new ChessPosition(startRow, startCol)).getPieceType() == ChessPiece.PieceType.PAWN)
@@ -541,7 +484,6 @@ public class ChessGameUI extends Endpoint {
                     return;
             }
         }
-
         try {
             ChessMove move = new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(endRow, endCol), pawnPromotion);
             String json = new Gson().toJson(new MakeMove(authToken, gameID, move));
