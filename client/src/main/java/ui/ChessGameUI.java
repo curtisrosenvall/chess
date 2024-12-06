@@ -304,11 +304,19 @@ public class ChessGameUI extends Endpoint {
                 } else if (input.equals("4") || input.equalsIgnoreCase("move") || input.equalsIgnoreCase("make move")) {
                     makeMove();
                 } else if (input.equals("5") || input.equalsIgnoreCase("resign")) {
-                    try {
-                        String json = new Gson().toJson(new Resign(authToken, gameID));
-                        send(json);
-                    } catch (Exception ex) {
-                        System.out.println("Error sending resign message.");
+                    System.out.println("Are you sure you want to resign? (yes/no)");
+                    String confirmation = scanner.nextLine().trim();
+                    if (confirmation.equalsIgnoreCase("yes") || confirmation.equalsIgnoreCase("y")) {
+                        try {
+                            String json = new Gson().toJson(new Resign(authToken, gameID));
+                            send(json);
+                            System.out.println("You have resigned from the game.");
+                            break; // Exit the game loop after resigning
+                        } catch (Exception ex) {
+                            System.out.println("Error sending resign message.");
+                        }
+                    } else {
+                        System.out.println("Resignation canceled.");
                     }
                 } else if (input.equals("6") || input.equalsIgnoreCase("highlight") || input.equalsIgnoreCase("highlight legal moves")) {
                     printValidMoves();

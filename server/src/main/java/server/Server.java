@@ -138,7 +138,7 @@ public class Server {
                     database.getSessionList(command.getGameID()),
                     session,
                     new Notification(username + " joined the game as " + color),
-                    "NOT_ROOT"
+                    "ALL"
             );
         } catch (Exception ex) {
             System.out.println("Error trying to get the database");
@@ -172,7 +172,7 @@ public class Server {
             ArrayList<Session> sessionList = database.getSessionList(command.getGameID());
 
             notifySessions(sessionList, session, new LoadGame(game), "ALL");
-            notifySessions(sessionList, session, new Notification(username + " has made a move: " + stringMove), "NOT_ROOT");
+            notifySessions(sessionList, session, new Notification(username + " has made a move: " + stringMove), "ALL");
             if (game.game().isInCheckmate(game.game().getTeamTurn())) {
                 notifySessions(sessionList, session,
                         new Notification(username + " has Checkmated " + ((color == ChessGame.TeamColor.WHITE)
@@ -197,21 +197,20 @@ public class Server {
         }
     }
 
+
     public void leaveGame(Session session, String username, Leave command) {
         database.removeSession(command.getGameID(), session);
         try {
             GameData game = database.getGame(command.getGameID());
             GameData newGame;
-            if((game.blackUsername() != null) && game.blackUsername().equals(username)) {
+            if((game.blackUsername() != null) && game.blackUsername().equals(username))
                 newGame = new GameData(game.gameID(), game.whiteUsername(), null, game.gameName(), game.game());
-
-            }
-            else if((game.whiteUsername() != null) && game.whiteUsername().equals(username)) {
+            else if((game.whiteUsername() != null) && game.whiteUsername().equals(username))
                 newGame = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
-            }
-            else {newGame = game;}
+            else
+                newGame = game;
+            notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " has left the game"), "ALL");
             database.updateGame(newGame);
-            notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " has left the game"), "NOT_ROOT");
         } catch(Exception ex) {
             System.out.println("NOT IN GAME!!!");
         }
