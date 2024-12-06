@@ -1,4 +1,5 @@
 package ui;
+
 import chess.*;
 import com.google.gson.Gson;
 import facade.ServerFacade;
@@ -10,6 +11,8 @@ import websocket.messages.*;
 import javax.websocket.*;
 import java.util.concurrent.CountDownLatch;
 import java.net.URI;
+
+
 public class ChessGameUI extends Endpoint {
     private ServerFacade serverFacade;
     private String authToken;
@@ -45,42 +48,24 @@ public class ChessGameUI extends Endpoint {
             } else if (!loggedIn) {
                 switch (input.toLowerCase()) {
                     case "register":
-                    case "3":
-                        loggedIn = registerUser();
-                        break;
+                    case "3": loggedIn = registerUser();break;
                     case "login":
-                    case "4":
-                        loggedIn = loginUser();
-                        break;
-                    default:
-                        invalidInput();
-                        break;
+                    case "4": loggedIn = loginUser();break;
+                    default: invalidInput();break;
                 }
             } else {
                 switch (input.toLowerCase()) {
                     case "logout":
-                    case "3":
-                        loggedIn = logoutUser();
-                        break;
+                    case "3": loggedIn = logoutUser();break;
                     case "create game":
-                    case "4":
-                        createGame();
-                        break;
+                    case "4": createGame();break;
                     case "list games":
-                    case "5":
-                        listGames();
-                        break;
+                    case "5": listGames();break;
                     case "play game":
-                    case "6":
-                        joinGame();
-                        break;
+                    case "6": joinGame();break;
                     case "observe game":
-                    case "7":
-                        observeGame();
-                        break;
-                    default:
-                        invalidInput();
-                        break;
+                    case "7": observeGame();break;
+                    default: invalidInput();break;
                 }
             }
         }
@@ -90,21 +75,22 @@ public class ChessGameUI extends Endpoint {
     }
     private void helpExplainOptions(boolean loggedIn) {
         if (!loggedIn) {
-            System.out.println("\nTo " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_BLUE + "[REGISTER_USER] press [3]" + EscapeSequences.RESET_TEXT_BOLD_FAINT
-                    + EscapeSequences.RESET_TEXT_COLOR + " or enter 'register'.");
+            System.out.println("\nTo " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_BLUE + "[REGISTER_USER] press [3]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'register'.");
             System.out.println("You will then be prompted to provide a username, password, and email address.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_YELLOW +
-                    "[LOGIN] press [4]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'login'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_YELLOW + "[LOGIN] press [4]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'login'.");
             System.out.println("Simply input your username and password when prompted.");
         } else {
-            System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "[LOGGED_IN >>>]" + EscapeSequences.RESET_TEXT_COLOR);
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_RED + "[LOGOUT]"
-                    + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_YELLOW + "[CREATE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '4' or enter 'create game'. " + "You will need to input a game name.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_BLUE + "[LIST_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '5' or enter 'list games'.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_ORANGE + "[JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR
-                    + ", press '6' or enter 'join game'. " + "You will need to input the game ID and your team color.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_WHITE + "[OBSERVE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '7' or enter 'observe game'. " + "You will need to input the game ID you want to watch.");
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "[LOGGED_IN >>>]"
+                    + EscapeSequences.RESET_TEXT_COLOR);
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_RED + "[LOGOUT]" + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_YELLOW
+                    + "[CREATE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '4' or enter 'create game'. " + "You will need to input a game name.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_BLUE
+                    + "[LIST_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '5' or enter 'list games'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_ORANGE
+                    + "[JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '6' or enter 'join game'. " + "You will need to input the game ID and your team color.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_WHITE + "[OBSERVE_GAME]" + EscapeSequences.RESET_TEXT_COLOR +
+                    ", press '7' or enter 'observe game'. " + "You will need to input the game ID you want to watch.");
         }
         System.out.println("\nPress [2] to quit the game.");
     }
@@ -120,7 +106,8 @@ public class ChessGameUI extends Endpoint {
             System.out.println(result.getMessage());
             return false;
         } else {
-            System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "[REGISTERED_SUCCESS] " + username + EscapeSequences.RESET_TEXT_COLOR);
+            System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "[REGISTERED_SUCCESS] "
+                    + username + EscapeSequences.RESET_TEXT_COLOR);
             authToken = result.getAuthToken();
             return true;
         }
@@ -170,21 +157,28 @@ public class ChessGameUI extends Endpoint {
             System.out.println("List of games: ");
             int gameNumber = 1;
             for (GameData game : result.getGames()) {
-                System.out.println(EscapeSequences.SET_TEXT_COLOR_YELLOW + "[GAME_NUMBER]= " + EscapeSequences.RESET_TEXT_COLOR + gameNumber + EscapeSequences.SET_TEXT_COLOR_BLUE + " [GAME_ID]= " + EscapeSequences.RESET_TEXT_COLOR + game.gameID() + EscapeSequences.SET_TEXT_COLOR_ORANGE + " [GAME_NAME]: " + EscapeSequences.RESET_TEXT_COLOR +  game.gameName());
-                System.out.println(EscapeSequences.SET_TEXT_COLOR_WHITE +"  [White Username]: " + EscapeSequences.RESET_TEXT_COLOR + ((game.whiteUsername() == null) ? "[Available]" : game.whiteUsername()));
-                System.out.println(EscapeSequences.SET_TEXT_COLOR_WHITE +"  [Black Username]: " + EscapeSequences.RESET_TEXT_COLOR + ((game.blackUsername() == null) ? "[Available]" : game.blackUsername()) + "\n");
+                System.out.println(EscapeSequences.SET_TEXT_COLOR_YELLOW + "[GAME_NUMBER]= " +
+                        EscapeSequences.RESET_TEXT_COLOR + gameNumber + EscapeSequences.SET_TEXT_COLOR_BLUE + " [GAME_ID]= " + EscapeSequences.RESET_TEXT_COLOR + game.gameID() + EscapeSequences.SET_TEXT_COLOR_ORANGE
+                        + " [GAME_NAME]: " + EscapeSequences.RESET_TEXT_COLOR +  game.gameName());
+                System.out.println(EscapeSequences.SET_TEXT_COLOR_WHITE +"  [White Username]: " +
+                        EscapeSequences.RESET_TEXT_COLOR + ((game.whiteUsername() == null) ? "[Available]" : game.whiteUsername()));
+                System.out.println(EscapeSequences.SET_TEXT_COLOR_WHITE +"  [Black Username]: " +
+                        EscapeSequences.RESET_TEXT_COLOR + ((game.blackUsername() == null) ? "[Available]" : game.blackUsername()) + "\n");
                 gameNumber++;
             }
         }
     }
     public void joinGame() {
-        System.out.println("\n" + EscapeSequences.SET_TEXT_COLOR_GREEN + "Please enter the number of the game you would like to join: " + EscapeSequences.RESET_TEXT_COLOR);
+        System.out.println("\n" + EscapeSequences.SET_TEXT_COLOR_GREEN + "Please enter the number of " +
+                "the game you would like to join: " + EscapeSequences.RESET_TEXT_COLOR);
         String gameIDStr = scan.nextLine();
-        System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "Please enter which color you would like to play as (WHITE or BLACK)" + EscapeSequences.RESET_TEXT_COLOR);
+        System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "Please enter which color you would " +
+                "like to play as (WHITE or BLACK)" + EscapeSequences.RESET_TEXT_COLOR);
         String playerColor = scan.nextLine();
         try {
             int gameNum = Integer.parseInt(gameIDStr);
-            if (!(playerColor.equalsIgnoreCase("WHITE") || playerColor.equalsIgnoreCase("BLACK")))
+            if (!(playerColor.equalsIgnoreCase("WHITE")
+                    || playerColor.equalsIgnoreCase("BLACK")))
                 invalidInput();
             else {
                 JoinGameRes result = serverFacade.joinGame(gameNum, playerColor, authToken);
@@ -194,7 +188,8 @@ public class ChessGameUI extends Endpoint {
                     if (tryConnectToGame()) {
                     }
                 } else {
-                    System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + result.getMessage() + EscapeSequences.RESET_TEXT_COLOR);
+                    System.out.println(EscapeSequences.SET_TEXT_COLOR_RED + result.getMessage() +
+                            EscapeSequences.RESET_TEXT_COLOR);
                 }
             }
         } catch (NumberFormatException ex) {
@@ -365,7 +360,8 @@ public class ChessGameUI extends Endpoint {
     }
     public void printValidMoves() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "Please input the position of the piece you would like to see the valid moves of:" + EscapeSequences.RESET_TEXT_COLOR);
+        System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "Please input the position of the " +
+                "piece you would like to see the valid moves of:" + EscapeSequences.RESET_TEXT_COLOR);
         String startPos = scanner.nextLine();
         int startCol = charToInt(startPos.charAt(0));
         if (startCol == -1) {
@@ -389,12 +385,15 @@ public class ChessGameUI extends Endpoint {
         ui.printBoard(isWhite);
     }
     public void printInfo() {
-        System.out.println(EscapeSequences.SET_TEXT_COLOR_BLUE + "\nGame number: " + gameData.gameID() + ", Game name: " + gameData.gameName() + EscapeSequences.RESET_TEXT_COLOR);
+        System.out.println(EscapeSequences.SET_TEXT_COLOR_BLUE + "\nGame number: "
+                + gameData.gameID() + ", Game name: " + gameData.gameName() + EscapeSequences.RESET_TEXT_COLOR);
         String whiteUsername = (gameData.whiteUsername() == null) ? "<Empty>" : gameData.whiteUsername();
         String blackUsername = (gameData.blackUsername() == null) ? "<Empty>" : gameData.blackUsername();
-        System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "White username: " + whiteUsername + ", Black username: " + blackUsername + EscapeSequences.RESET_TEXT_COLOR);
+        System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "White username: "
+                + whiteUsername + ", Black username: " + blackUsername + EscapeSequences.RESET_TEXT_COLOR);
         String gameCondition = gameData.game().isGameOver() ? "Finished" : "Ongoing";
-        System.out.println(EscapeSequences.SET_TEXT_COLOR_YELLOW + "Current game condition: " + gameCondition + EscapeSequences.RESET_TEXT_COLOR);
+        System.out.println(EscapeSequences.SET_TEXT_COLOR_YELLOW + "Current game condition: "
+                + gameCondition + EscapeSequences.RESET_TEXT_COLOR);
     }
     public void editGameData(String message) {
         String username;
