@@ -204,15 +204,14 @@ public class Server {
             GameData newGame;
             if((game.blackUsername() != null) && game.blackUsername().equals(username)) {
                 newGame = new GameData(game.gameID(), game.whiteUsername(), null, game.gameName(), game.game());
+
             }
             else if((game.whiteUsername() != null) && game.whiteUsername().equals(username)) {
                 newGame = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
             }
-            else
-                newGame = game;
-                database.updateGame(newGame);
-                notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " has left the game"), "NOT_ROOT");
-
+            else {newGame = game;}
+            database.updateGame(newGame);
+            notifySessions(database.getSessionList(command.getGameID()), session, new Notification(username + " has left the game"), "NOT_ROOT");
         } catch(Exception ex) {
             System.out.println("NOT IN GAME!!!");
         }
