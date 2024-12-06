@@ -75,20 +75,24 @@ public class ChessGameUI extends Endpoint {
     }
     private void helpExplainOptions(boolean loggedIn) {
         if (!loggedIn) {
-            System.out.println("\nTo " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_BLUE + "[REGISTER_USER] press [3]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'register'.");
+            System.out.println("\nTo " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_BLUE
+                    + "[REGISTER_USER] press [3]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'register'.");
             System.out.println("You will then be prompted to provide a username, password, and email address.");
-            System.out.println("To " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_YELLOW + "[LOGIN] press [4]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'login'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_BOLD + EscapeSequences.SET_TEXT_COLOR_YELLOW
+                    + "[LOGIN] press [4]" + EscapeSequences.RESET_TEXT_BOLD_FAINT + EscapeSequences.RESET_TEXT_COLOR + " or enter 'login'.");
             System.out.println("Simply input your username and password when prompted.");
         } else {
             System.out.println(EscapeSequences.SET_TEXT_COLOR_GREEN + "[LOGGED_IN >>>]"
                     + EscapeSequences.RESET_TEXT_COLOR);
-            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_RED + "[LOGOUT]" + EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
+            System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_RED + "[LOGOUT]" +
+                    EscapeSequences.RESET_TEXT_COLOR + ", press '3' or enter 'logout'.");
             System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_YELLOW
                     + "[CREATE_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '4' or enter 'create game'. " + "You will need to input a game name.");
             System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_BLUE
                     + "[LIST_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '5' or enter 'list games'.");
             System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_ORANGE
-                    + "[JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '6' or enter 'join game'. " + "You will need to input the game ID and your team color.");
+                    + "[JOIN_GAME]" + EscapeSequences.RESET_TEXT_COLOR + ", press '6' or enter 'join game'. "
+                    + "You will need to input the game ID and your team color.");
             System.out.println("To " + EscapeSequences.SET_TEXT_COLOR_WHITE + "[OBSERVE_GAME]" + EscapeSequences.RESET_TEXT_COLOR +
                     ", press '7' or enter 'observe game'. " + "You will need to input the game ID you want to watch.");
         }
@@ -158,7 +162,8 @@ public class ChessGameUI extends Endpoint {
             int gameNumber = 1;
             for (GameData game : result.getGames()) {
                 System.out.println(EscapeSequences.SET_TEXT_COLOR_YELLOW + "[GAME_NUMBER]= " +
-                        EscapeSequences.RESET_TEXT_COLOR + gameNumber + EscapeSequences.SET_TEXT_COLOR_BLUE + " [GAME_ID]= " + EscapeSequences.RESET_TEXT_COLOR + game.gameID() + EscapeSequences.SET_TEXT_COLOR_ORANGE
+                        EscapeSequences.RESET_TEXT_COLOR + gameNumber + EscapeSequences.SET_TEXT_COLOR_BLUE
+                        + " [GAME_ID]= " + EscapeSequences.RESET_TEXT_COLOR + game.gameID() + EscapeSequences.SET_TEXT_COLOR_ORANGE
                         + " [GAME_NAME]: " + EscapeSequences.RESET_TEXT_COLOR +  game.gameName());
                 System.out.println(EscapeSequences.SET_TEXT_COLOR_WHITE +"  [White Username]: " +
                         EscapeSequences.RESET_TEXT_COLOR + ((game.whiteUsername() == null) ? "[Available]" : game.whiteUsername()));
@@ -178,8 +183,7 @@ public class ChessGameUI extends Endpoint {
         try {
             int gameNum = Integer.parseInt(gameIDStr);
             if (!(playerColor.equalsIgnoreCase("WHITE")
-                    || playerColor.equalsIgnoreCase("BLACK")))
-                invalidInput();
+                    || playerColor.equalsIgnoreCase("BLACK"))) {invalidInput();}
             else {
                 JoinGameRes result = serverFacade.joinGame(gameNum, playerColor, authToken);
                 if (result.getMessage() == null) {
@@ -259,10 +263,8 @@ public class ChessGameUI extends Endpoint {
                             LoadGame loadMessage = new Gson().fromJson(message, LoadGame.class);
                             gameData = loadMessage.getGame();
                             printBoards();
-                            if (teamColor.equalsIgnoreCase("SPECTATOR"))
-                                listObserveOptions();
-                            else
-                                listGameOptions();
+                            if (teamColor.equalsIgnoreCase("SPECTATOR")) {listObserveOptions();}
+                            else{listGameOptions();}
                             gameLoadedLatch.countDown();
                         }
                     }
@@ -470,21 +472,11 @@ public class ChessGameUI extends Endpoint {
             System.out.println("Please input pawn promotion (Queen, Rook, Bishop, or Knight)");
             String promotionInput = scan.nextLine();
             switch (promotionInput.toUpperCase()) {
-                case "QUEEN":
-                    pawnPromotion = ChessPiece.PieceType.QUEEN;
-                    break;
-                case "ROOK":
-                    pawnPromotion = ChessPiece.PieceType.ROOK;
-                    break;
-                case "BISHOP":
-                    pawnPromotion = ChessPiece.PieceType.BISHOP;
-                    break;
-                case "KNIGHT":
-                    pawnPromotion = ChessPiece.PieceType.KNIGHT;
-                    break;
-                default:
-                    System.out.println("Invalid promotion choice");
-                    return;
+                case "QUEEN": pawnPromotion = ChessPiece.PieceType.QUEEN;break;
+                case "ROOK": pawnPromotion = ChessPiece.PieceType.ROOK;break;
+                case "BISHOP": pawnPromotion = ChessPiece.PieceType.BISHOP;break;
+                case "KNIGHT": pawnPromotion = ChessPiece.PieceType.KNIGHT;break;
+                default: System.out.println("Invalid promotion choice");return;
             }
         }
         try {

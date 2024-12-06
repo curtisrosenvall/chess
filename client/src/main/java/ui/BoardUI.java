@@ -132,17 +132,17 @@ public class BoardUI {
     }
 
     private void setBackgroundColor(int row, int col) {
-        boolean isValidDestination = false;
+        boolean isValidDestinations = false;
         if (validMoves != null) {
             for (ChessMove move : validMoves) {
                 ChessPosition endPos = move.getEndPosition();
                 if (endPos.getRow() == row && endPos.getColumn() == col) {
-                    isValidDestination = true;
+                    isValidDestinations = true;
                     break;
                 }
             }
         }
-        if (isValidDestination) {
+        if (isValidDestinations) {
             System.out.print("\u001B[103m");
         } else {
             if ((row + col) % 2 == 0) {
